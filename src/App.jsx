@@ -6,6 +6,8 @@ import { METRICS } from './constants/metrics.js'
 import StatCard from './components/dashboard/StatCard.jsx'
 import EmptyState from './components/dashboard/EmptyState.jsx'
 import BotTable from './components/dashboard/BotTable.jsx'
+import OverlayChart from './components/charts/OverlayChart.jsx'
+import RankingChart from './components/charts/RankingChart.jsx'
 import AddBotModal from './components/modals/AddBotModal.jsx'
 import AddSnapshotModal from './components/modals/AddSnapshotModal.jsx'
 import EditBotModal from './components/modals/EditBotModal.jsx'
@@ -23,6 +25,7 @@ export default function App() {
     allTags, totals, sorted, filteredCount,
   } = useDashboard(bots)
 
+  const [activeView, setActiveView] = useState('table')
   const [showImport, setShowImport] = useState(false)
   const [adding, setAdding] = useState(false)
   const [detailBotId, setDetailBotId] = useState(null)
@@ -88,6 +91,26 @@ export default function App() {
               ))}
             </section>
 
+            <div className="flex items-center gap-1 mb-5">
+              {[
+                { id: 'table', label: 'Table' },
+                { id: 'timeline', label: 'Timeline' },
+                { id: 'ranking', label: 'Ranking' },
+              ].map(v => (
+                <button
+                  key={v.id}
+                  onClick={() => setActiveView(v.id)}
+                  className={`px-3 py-1.5 text-xs uppercase tracking-wider rounded transition ${
+                    activeView === v.id
+                      ? 'bg-amber-300/15 text-amber-200 border border-amber-300/30'
+                      : 'text-stone-500 hover:text-stone-300 border border-transparent'
+                  }`}
+                >
+                  {v.label}
+                </button>
+              ))}
+            </div>
+
             <section className="flex flex-wrap items-center gap-3 mb-4">
               <div className="relative flex-1 min-w-[240px] max-w-md">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500" />
@@ -121,16 +144,24 @@ export default function App() {
               )}
             </section>
 
-            <BotTable
-              sorted={sorted}
-              sortBy={sortBy}
-              sortDir={sortDir}
-              toggleSort={toggleSort}
-              onViewBot={setDetailBotId}
-              onEditBot={setEditingBotId}
-              onAddSnapshot={setAddingSnapshotForId}
-              onDeleteBot={deleteBot}
-            />
+            {activeView === 'table' && (
+              <BotTable
+                sorted={sorted}
+                sortBy={sortBy}
+                sortDir={sortDir}
+                toggleSort={toggleSort}
+                onViewBot={setDetailBotId}
+                onEditBot={setEditingBotId}
+                onAddSnapshot={setAddingSnapshotForId}
+                onDeleteBot={deleteBot}
+              />
+            )}
+            {activeView === 'timeline' && (
+              <OverlayChart bots={sorted} onViewBot={setDetailBotId} />
+            )}
+            {activeView === 'ranking' && (
+              <RankingChart bots={sorted} onViewBot={setDetailBotId} />
+            )}
           </>
         )}
       </div>

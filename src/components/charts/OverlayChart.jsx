@@ -1,0 +1,195 @@
+import { useState, useMemo } from 'react'
+import { TrendingUp } from 'lucide-react'
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+} from 'recharts'
+import { METRICS } from '../../constants/metrics.js'
+import { CHART_COLORS } from '../../constants/chart-colors.js'
+import { fmt } from '../../constants/format.js'
+
+function buildData(bots, metric, relative) {
+  const eligible = bots
+    .map(bot => {
+      const totalSnaps = (bot.snapshots || [])
+        .filter(s => s.scope === 'Total')
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+      return { bot, totalSnaps }
+    })
+    .filter(({ totalSnaps }) => totalSnaps.length >= 1)
+
+  if (eligible.length === 0) return { data: [], eligibleBots: [] }
+
+  const dateSet = new Set()
+  eligible.forEach(({ totalSnaps }) => {
+    totalSnaps.forEach(s => dateSet.add(new Date(s.date).getTime()))
+  })
+  const dates = [...dateSet].sort((a, b) => a - b)
+
+  const data = dates.map(ts => {
+    const entry = { date: ts }
+    eligible.forEach(({ bot, totalSnaps }) => {
+      const snap = totalSnaps.find(s => new Date(s.date).getTime() === ts)
+      if (snap !== undefined) {
+        const base = relative ? (totalSnaps[0][metric] ?? 0) : 0
+        entry[bot.id] = (snap[metric] ?? 0) - base
+      }
+    })
+    return entry
+  })
+
+  return {
+    data,
+    eligibleBots: eligible.map(({ bot }, i) => ({
+      ...bot,
+      color: CHART_COLORS[i % CHART_COLORS.length],
+    })),
+  }
+}
+
+function OverlayTooltip({ active, payload, label, eligibleBots, relative }) {
+  if (!active || !payload?.length) return null
+
+  const date = new Date(label).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  const present = payload
+    .filter(p => p.value != null)
+    .sort((a, b) => (b.value ?? 0) - (a.value ?? 0))
+
+  return (
+    <div className="bg-stone-950 border border-stone-700 rounded px-3 py-2 shadow-xl max-w-[220px]">
+      <div className="text-stone-500 text-[10px] mb-1.5">{date}</div>
+      {present.slice(0, 12).map(p => (
+        <div key={p.dataKey} className="flex justify-between gap-4 text-xs">
+          <span className="text-stone-400 truncate">{p.name}</span>
+          <span className="num shrink-0" style={{ color: p.stroke }}>
+            {relative && p.value > 0 ? '+' : ''}{fmt(p.value)}
+          </span>
+        </div>
+      ))}
+      {present.length > 12 && (
+        <div className="text-stone-600 text-[10px] mt-1">+{present.length - 12} more</div>
+      )}
+    </div>
+  )
+}
+
+export default function OverlayChart({ bots, onViewBot }) {
+  const [metric, setMetric] = useState('messages')
+  const [relative, setRelative] = useState(false)
+
+  const { data, eligibleBots } = useMemo(
+    () => buildData(bots, metric, relative),
+    [bots, metric, relative]
+  )
+
+  const metricObj = METRICS.find(m => m.key === metric)
+
+  if (eligibleBots.length === 0) {
+    return (
+      <section className="border border-stone-800 rounded-lg bg-stone-950/50 flex items-center justify-center py-20">
+        <p className="text-stone-500 text-sm text-center max-w-xs">
+          No bots have Total-scope snapshots to plot.<br />
+          <span className="text-stone-600 text-xs">Add snapshots from the CharSnap "Total" tab.</span>
+        </p>
+      </section>
+    )
+  }
+
+  return (
+    <section className="border border-stone-800 rounded-lg bg-stone-950/50">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-stone-800">
+        <div className="flex items-center gap-2 text-sm text-stone-300">
+          <TrendingUp size={16} className="text-amber-300/70" />
+          {eligibleBots.length} bot{eligibleBots.length !== 1 ? 's' : ''} · {metricObj?.label}
+          {relative && <span className="text-stone-500 text-xs ml-1">(growth from first snapshot)</span>}
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex gap-1 p-0.5 bg-stone-900 rounded">
+            {METRICS.map(m => (
+              <button
+                key={m.key}
+                onClick={() => setMetric(m.key)}
+                className={`px-2.5 py-1 text-xs rounded transition ${metric === m.key ? 'bg-stone-800 text-stone-100' : 'text-stone-500 hover:text-stone-300'}`}
+                style={metric === m.key ? { boxShadow: `inset 0 0 0 1px ${m.color}40` } : {}}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-1 p-0.5 bg-stone-900 rounded">
+            <button
+              onClick={() => setRelative(false)}
+              className={`px-2.5 py-1 text-xs rounded transition ${!relative ? 'bg-stone-800 text-stone-100' : 'text-stone-500 hover:text-stone-300'}`}
+            >
+              Total
+            </button>
+            <button
+              onClick={() => setRelative(true)}
+              className={`px-2.5 py-1 text-xs rounded transition ${relative ? 'bg-stone-800 text-stone-100' : 'text-stone-500 hover:text-stone-300'}`}
+            >
+              Growth
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="p-5">
+        <div style={{ height: 360 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+              <CartesianGrid stroke="#292524" strokeDasharray="3 3" />
+              <XAxis
+                dataKey="date"
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={ts => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                stroke="#78716c"
+                style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                axisLine={{ stroke: '#44403c' }}
+                tickLine={{ stroke: '#44403c' }}
+                scale="time"
+              />
+              <YAxis
+                tickFormatter={fmt}
+                stroke="#78716c"
+                style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                axisLine={{ stroke: '#44403c' }}
+                tickLine={{ stroke: '#44403c' }}
+                width={52}
+              />
+              <Tooltip
+                content={(props) => (
+                  <OverlayTooltip {...props} eligibleBots={eligibleBots} relative={relative} />
+                )}
+              />
+              {eligibleBots.map(bot => (
+                <Line
+                  key={bot.id}
+                  type="monotone"
+                  dataKey={bot.id}
+                  name={bot.name}
+                  stroke={bot.color}
+                  strokeWidth={1.5}
+                  dot={false}
+                  activeDot={{ r: 4, strokeWidth: 0 }}
+                  connectNulls
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 max-h-24 overflow-y-auto scrollbar-thin">
+          {eligibleBots.map(bot => (
+            <button
+              key={bot.id}
+              onClick={() => onViewBot?.(bot.id)}
+              className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-200 transition min-w-0"
+              title={bot.name}
+            >
+              <div className="w-4 h-[2px] rounded-full shrink-0" style={{ backgroundColor: bot.color }} />
+              <span className="truncate max-w-[140px]">{bot.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

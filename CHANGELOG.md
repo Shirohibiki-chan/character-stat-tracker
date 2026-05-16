@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-05-16 (Phase 7)
+
+### Additions
+- Tampermonkey userscript (`userscript/charsnap-capture.user.js`) — injects a "Capture" button into CharSnap stats modals opened manually by the user. Automatically switches to the Total tab if needed, reads bot name, avatar, and the three stat values (plus optional solo/group message breakdown), and queues the capture locally. A floating HUD shows the queue count and lets you copy the full queue as JSON (ready to paste into the app's Import modal) or clear it with a two-step confirm.
+
+---
+
 ## 2026-05-16 (Phase 6)
 
 ### Additions

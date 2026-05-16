@@ -100,6 +100,19 @@ Components live at `src/components/[layer]/File.jsx` — two levels deep from `s
   - **Already extracted** through Phase 3: table layout, modals, sort/filter/search, parser, avatar normalization, disambiguation. No need to revisit those sections.
   - **Remaining value:** chart components (LineChart, overlay chart, ranking chart) and export/reset logic — relevant for Phases 4–5 only.
 
+## Userscript
+
+`userscript/charsnap-capture.user.js` — a Tampermonkey userscript that lives alongside the main app but is **not** part of the Vite build.
+
+- **Standalone vanilla JS** — no bundler, no React, no npm. Single file.
+- **Install:** drag the file into the Tampermonkey dashboard, or point Tampermonkey at the raw GitHub URL.
+- **Runs on:** `https://charsnap.ai/*`
+- **What it does:** watches for stats modals the user opens manually; injects a "Capture" button near the modal's Copy button; on click, ensures the Total tab is active, reads the rendered DOM (bot name, avatar URL, three stat values, optional messages breakdown), and pushes to a local queue stored via `GM_getValue`/`GM_setValue`.
+- **Floating HUD:** always-visible bottom-right panel showing queue count, a "Copy queue" button (copies JSON to clipboard via `GM_setClipboard`), and a two-step "Clear" confirm.
+- **Output format:** `{ captures: [...] }` — matches the app's existing batch JSON import path exactly. User copies from HUD, pastes into the app's Import modal.
+- **Does not share storage with the main app** (different origins / storage scopes). Export → clipboard → paste-import is the handoff.
+- **Policy:** reads DOM of manually-opened modals only. Makes zero HTTP requests. See Policy Boundary.
+
 ## Deployment
 
 GitHub Pages. `vite.config.js` reads `GITHUB_REPOSITORY` from the Actions environment and sets the base path to `/<repo-name>/` automatically. Push to `main` triggers deploy via `.github/workflows/main.yml`.

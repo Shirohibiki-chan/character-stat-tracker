@@ -48,7 +48,7 @@ Every snapshot stores its `scope`. The main growth chart filters to `scope === "
 
 ## Eight-Sampos Problem
 
-CharSnap allows duplicate bot names. The user has eight bots named "Sampo Koski." Therefore name alone is not a stable identifier.
+CharSnap allows duplicate bot names. A user may have multiple bots with identical names. Therefore name alone is not a stable identifier.
 
 **Solution:** the normalized **avatar URL** is the primary key for matching captures to existing bots. If two bots have the same name but different avatars, they're different bots. If the avatar URL hasn't been seen before but the name matches an existing bot, ask the user which one.
 

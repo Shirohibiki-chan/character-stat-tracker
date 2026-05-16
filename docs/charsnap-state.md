@@ -119,4 +119,4 @@ CharSnap bots have a stable UUID visible in their public character URL: `https:/
 
 ## Policy reminder
 
-CharSnap's API is off-limits per ToS (per direct ruling from Aki to the user during a prior project). Reading the rendered DOM of a manually-opened modal is the only sanctioned automation path, and even that is "personal use okay, distribute only with permission." Auto-opening modals counts as API access in effect (each modal-open triggers a server request) and is prohibited.
+CharSnap's API is off-limits per ToS. Reading the rendered DOM of a manually-opened modal is the only sanctioned automation path, and even that is "personal use okay, distribute only with permission." Auto-opening modals counts as API access in effect (each modal-open triggers a server request) and is prohibited.

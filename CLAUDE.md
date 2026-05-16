@@ -42,13 +42,13 @@ npm run build     # production build → dist/
 npm run preview   # serve the production build locally
 ```
 
-No tests or linters configured.
+No tests configured. ESLint is set up via `eslint.config.js`; run with `npm run lint`.
 
 ## Architecture
 
-Browser-only SPA (React 18 + Vite). No backend, no database, no authentication. All persistence is **IndexedDB** via `storage-service.js`.
+Browser-only SPA (React 19 + Vite). No backend, no database, no authentication. All persistence is **IndexedDB** via `storage-service.js`.
 
-State management: pick what makes sense for the scale (Zustand is a small, reasonable default; built-in React state also fine). Pick once during Phase 1 and stay consistent.
+State management: **Zustand** (already installed). The store lives in `src/state/`. Hooks access it via `src/hooks/`; components never import the store directly.
 
 ### Strict layer order — imports only flow downward:
 

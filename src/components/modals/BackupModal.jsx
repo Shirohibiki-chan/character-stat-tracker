@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { X, Download, Upload, Trash2 } from 'lucide-react'
 import { useBackup } from '../../hooks/use-backup.js'
+import Modal from './Modal.jsx'
 
 export default function BackupModal({ onClose }) {
   const { exportBots, importBotsFromFile, resetBots, botCount } = useBackup()
@@ -35,8 +36,8 @@ export default function BackupModal({ onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-stone-950 border border-stone-800 rounded-xl shadow-2xl">
+    <Modal onClose={onClose}>
+      <div className="w-full max-w-md bg-stone-950 border border-stone-800 rounded-xl shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800">
           <h2 className="font-medium text-stone-100">Data &amp; Backup</h2>
           <button onClick={onClose} className="text-stone-500 hover:text-stone-300 transition">
@@ -158,6 +159,6 @@ export default function BackupModal({ onClose }) {
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }

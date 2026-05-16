@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { X } from 'lucide-react'
 import { createBot, createSnapshot, SCOPES } from '../../constants/schema.js'
 import { parseNum } from '../../constants/format.js'
+import Modal from './Modal.jsx'
 
 export default function AddBotModal({ onClose, onAdd }) {
   const [name, setName] = useState('')
@@ -10,6 +11,8 @@ export default function AddBotModal({ onClose, onAdd }) {
   const [messages, setMessages] = useState('')
   const [favorites, setFavorites] = useState('')
   const [scope, setScope] = useState('Total')
+
+  const isDirty = !!(name || tags || chats || messages || favorites)
 
   function submit() {
     if (!name.trim()) return
@@ -29,12 +32,14 @@ export default function AddBotModal({ onClose, onAdd }) {
 
   function onKeyDown(e) {
     if (e.key === 'Enter' && name.trim()) submit()
-    if (e.key === 'Escape') onClose()
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-md shadow-2xl">
+    <Modal onClose={onClose} isDirty={isDirty}>
+      <div
+        className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-md shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
         <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800">
           <h2 className="font-display text-xl">Add bot manually</h2>
           <button onClick={onClose} className="text-stone-500 hover:text-stone-200 transition">
@@ -115,6 +120,6 @@ export default function AddBotModal({ onClose, onAdd }) {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }

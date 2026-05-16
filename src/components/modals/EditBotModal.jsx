@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import { X } from 'lucide-react'
+import Modal from './Modal.jsx'
 
 export default function EditBotModal({ bot, onClose, onSave }) {
   const [name, setName] = useState(bot.name)
   const [tags, setTags] = useState((bot.tags || []).join(', '))
+
+  const originalTags = (bot.tags || []).join(', ')
+  const isDirty = name !== bot.name || tags !== originalTags
 
   function submit() {
     if (!name.trim()) return
@@ -15,12 +19,14 @@ export default function EditBotModal({ bot, onClose, onSave }) {
 
   function onKeyDown(e) {
     if (e.key === 'Enter' && name.trim()) submit()
-    if (e.key === 'Escape') onClose()
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-sm shadow-2xl">
+    <Modal onClose={onClose} isDirty={isDirty}>
+      <div
+        className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-sm shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
         <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800">
           <h2 className="font-display text-xl">Edit bot</h2>
           <button onClick={onClose} className="text-stone-500 hover:text-stone-200 transition">
@@ -64,6 +70,6 @@ export default function EditBotModal({ bot, onClose, onSave }) {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }

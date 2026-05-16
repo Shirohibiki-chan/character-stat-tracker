@@ -4,6 +4,7 @@ import { parsePasteInput } from '../../services/parser.js'
 import { useImport } from '../../hooks/use-import.js'
 import { METRICS } from '../../constants/metrics.js'
 import { fmt } from '../../constants/format.js'
+import Modal from './Modal.jsx'
 
 function ScopePill({ scope }) {
   const isTotal = scope === 'Total'
@@ -87,6 +88,8 @@ export default function ImportModal({ onClose }) {
   const [parseError, setParseError] = useState(null)
   const [reviewItems, setReviewItems] = useState([])
 
+  const isDirty = step === 'preview' || raw.trim() !== ''
+
   const allBots = Object.values(bots).sort((a, b) => a.name.localeCompare(b.name))
 
   function handleParse() {
@@ -121,8 +124,11 @@ export default function ImportModal({ onClose }) {
   const hasNonTotal = reviewItems.some(i => i.capture.scope !== 'Total')
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh]">
+    <Modal onClose={onClose} isDirty={isDirty}>
+      <div
+        className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh]"
+        onClick={e => e.stopPropagation()}
+      >
         <div className="flex items-center px-5 py-4 border-b border-stone-800 gap-3 shrink-0">
           {step === 'preview' && (
             <button
@@ -148,7 +154,6 @@ export default function ImportModal({ onClose }) {
                 autoFocus
                 value={raw}
                 onChange={e => { setRaw(e.target.value); setParseError(null) }}
-                onKeyDown={e => e.key === 'Escape' && onClose()}
                 className="w-full h-36 bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm font-mono text-stone-200 resize-none focus:outline-none focus:border-amber-300/40 scrollbar-thin"
                 placeholder={"📊 Creator Analytics (All Time)\n━━━━━━━━━━━━━━━━\n💬 Messages: 1,234,567\n❤️ Favorites: 890\n🗨️ Threads: 1,234"}
               />
@@ -212,6 +217,6 @@ export default function ImportModal({ onClose }) {
           )}
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }

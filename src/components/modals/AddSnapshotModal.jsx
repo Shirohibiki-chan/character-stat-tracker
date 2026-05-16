@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { X } from 'lucide-react'
 import { createSnapshot, SCOPES } from '../../constants/schema.js'
 import { parseNum } from '../../constants/format.js'
+import Modal from './Modal.jsx'
 
 export default function AddSnapshotModal({ bot, onClose, onAdd }) {
   const today = new Date().toISOString().slice(0, 10)
@@ -10,6 +11,8 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
   const [messages, setMessages] = useState('')
   const [favorites, setFavorites] = useState('')
   const [scope, setScope] = useState('Total')
+
+  const isDirty = !!(chats || messages || favorites)
 
   function submit() {
     onAdd(createSnapshot({
@@ -21,13 +24,12 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
     }))
   }
 
-  function onKeyDown(e) {
-    if (e.key === 'Escape') onClose()
-  }
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-sm shadow-2xl">
+    <Modal onClose={onClose} isDirty={isDirty}>
+      <div
+        className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-sm shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
         <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800">
           <div>
             <h2 className="font-display text-xl">Add snapshot</h2>
@@ -44,7 +46,6 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
               type="date"
               value={date}
               onChange={e => setDate(e.target.value)}
-              onKeyDown={onKeyDown}
               className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-300/40"
             />
           </div>
@@ -55,7 +56,6 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
                 placeholder="threads"
                 value={chats}
                 onChange={e => setChats(e.target.value)}
-                onKeyDown={onKeyDown}
                 autoFocus
                 className="num bg-stone-900 border border-stone-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-amber-300/40"
               />
@@ -63,14 +63,12 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
                 placeholder="messages"
                 value={messages}
                 onChange={e => setMessages(e.target.value)}
-                onKeyDown={onKeyDown}
                 className="num bg-stone-900 border border-stone-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-amber-300/40"
               />
               <input
                 placeholder="favorites"
                 value={favorites}
                 onChange={e => setFavorites(e.target.value)}
-                onKeyDown={onKeyDown}
                 className="num bg-stone-900 border border-stone-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-amber-300/40"
               />
             </div>
@@ -100,6 +98,6 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }

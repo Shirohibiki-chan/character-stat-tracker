@@ -6,6 +6,7 @@ import {
 import { METRICS } from '../../constants/metrics.js'
 import { fmt, fmtFull, fmtDate, parseNum } from '../../constants/format.js'
 import { createSnapshot, SCOPES } from '../../constants/schema.js'
+import Modal from './Modal.jsx'
 
 function ChartTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
@@ -34,6 +35,8 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
     date: new Date().toISOString().slice(0, 10),
     chats: '', messages: '', favorites: '', scope: 'Total',
   })
+
+  const isDirty = addingSnap && !!(newSnap.chats || newSnap.messages || newSnap.favorites)
 
   const sortedSnaps = useMemo(
     () => [...(bot.snapshots || [])].sort((a, b) => new Date(a.date) - new Date(b.date)),
@@ -83,8 +86,11 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+    <Modal onClose={onClose} isDirty={isDirty}>
+      <div
+        className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
 
         {/* Header */}
         <div className="flex items-center gap-4 px-6 py-5 border-b border-stone-800 shrink-0">
@@ -385,6 +391,6 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
 
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }

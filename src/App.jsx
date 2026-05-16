@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, Search, Hash, MessageSquare, MessagesSquare, Heart } from 'lucide-react'
+import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart } from 'lucide-react'
 import { useBots } from './hooks/use-bots.js'
 import { useDashboard } from './hooks/use-dashboard.js'
 import { METRICS } from './constants/metrics.js'
@@ -9,6 +9,7 @@ import BotTable from './components/dashboard/BotTable.jsx'
 import AddBotModal from './components/modals/AddBotModal.jsx'
 import AddSnapshotModal from './components/modals/AddSnapshotModal.jsx'
 import EditBotModal from './components/modals/EditBotModal.jsx'
+import ImportModal from './components/modals/ImportModal.jsx'
 
 const ICON_MAP = { MessageSquare, MessagesSquare, Heart }
 
@@ -21,6 +22,7 @@ export default function App() {
     allTags, totals, sorted, filteredCount,
   } = useDashboard(bots)
 
+  const [showImport, setShowImport] = useState(false)
   const [adding, setAdding] = useState(false)
   const [editingBotId, setEditingBotId] = useState(null)
   const [addingSnapshotForId, setAddingSnapshotForId] = useState(null)
@@ -50,12 +52,20 @@ export default function App() {
               {totalBotCount} {totalBotCount === 1 ? 'bot' : 'bots'} tracked
             </p>
           </div>
-          <button
-            onClick={() => setAdding(true)}
-            className="px-3 py-2 text-xs uppercase tracking-wider bg-amber-300/90 text-stone-950 hover:bg-amber-300 rounded transition flex items-center gap-2 font-medium"
-          >
-            <Plus size={14} /> Add bot
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowImport(true)}
+              className="px-3 py-2 text-xs uppercase tracking-wider text-stone-400 hover:text-stone-200 border border-stone-700 hover:border-stone-500 rounded transition flex items-center gap-2"
+            >
+              <Upload size={14} /> Import
+            </button>
+            <button
+              onClick={() => setAdding(true)}
+              className="px-3 py-2 text-xs uppercase tracking-wider bg-amber-300/90 text-stone-950 hover:bg-amber-300 rounded transition flex items-center gap-2 font-medium"
+            >
+              <Plus size={14} /> Add bot
+            </button>
+          </div>
         </header>
 
         {totalBotCount === 0 ? (
@@ -121,6 +131,9 @@ export default function App() {
         )}
       </div>
 
+      {showImport && (
+        <ImportModal onClose={() => setShowImport(false)} />
+      )}
       {adding && (
         <AddBotModal
           onClose={() => setAdding(false)}

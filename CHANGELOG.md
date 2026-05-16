@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-05-16 (Phase 4)
+
+### Additions
+- Per-bot detail view — click any row to open; shows metric cards, growth chart, and full snapshot history.
+- Growth chart — line chart of all three metrics over time using only Total-scope snapshots; dual Y-axis so messages (much larger scale) doesn't squash threads and favorites.
+- Delta display — each metric card shows gain/loss since the previous snapshot, with the date it was captured.
+- Snapshot management — add snapshots inline from the detail view; delete individual snapshots with a confirm step.
+- Bot management from detail view — edit name/tags inline; delete bot (with confirm) without returning to the table.
+
+---
+
 ## 2026-05-16
 
 ### Additions

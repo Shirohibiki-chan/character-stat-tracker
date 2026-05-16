@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-05-16 (Phase 5a)
+
+### Additions
+- View switcher — three tabs (Table / Timeline / Ranking) above the filter bar; search and tag filter apply to all three views.
+- Timeline view — overlay line chart with one line per bot; pick Threads, Messages, or Favorites; toggle between absolute totals and growth-from-first-snapshot (relative); 20-color bot palette; sparse series connected across gaps; clicking a bot name in the legend opens its detail view.
+- Ranking view — horizontal bar chart showing top N bots by any metric; configurable N (10 / 15 / 25 / 50 / All); clicking a bar opens that bot's detail.
+
+---
+
 ## 2026-05-16 (Phase 4)
 
 ### Additions

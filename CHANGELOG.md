@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-05-16 (Phase 5b)
+
+### Additions
+- Gains tab — rolling-window gain ranking: pick 7d / 30d / 90d / All Time and a metric; shows bots sorted by how much they gained in that window; baseline is the snapshot just before the window opened (or oldest available); click a bar to open bot detail.
+- History tab — day-picker snapshot gain ranking: pick any date; shows each bot's gain between their two most recent Total snapshots at or before that date; defaults to the date of the latest Total snapshot in the current filter; click a bar to open bot detail.
+
+---
+
 ## 2026-05-16 (Phase 5a)
 
 ### Additions

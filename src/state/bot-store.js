@@ -35,4 +35,12 @@ export const useBotStore = create((set, get) => ({
     set({ bots })
     scheduleSave(bots)
   },
+
+  deleteSnapshot(botId, date) {
+    const bot = get().bots[botId]
+    const updated = { ...bot, snapshots: bot.snapshots.filter(s => s.date !== date) }
+    const bots = { ...get().bots, [botId]: updated }
+    set({ bots })
+    scheduleSave(bots)
+  },
 }))

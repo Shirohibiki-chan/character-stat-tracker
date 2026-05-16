@@ -10,11 +10,12 @@ import AddBotModal from './components/modals/AddBotModal.jsx'
 import AddSnapshotModal from './components/modals/AddSnapshotModal.jsx'
 import EditBotModal from './components/modals/EditBotModal.jsx'
 import ImportModal from './components/modals/ImportModal.jsx'
+import BotDetailModal from './components/modals/BotDetailModal.jsx'
 
 const ICON_MAP = { MessageSquare, MessagesSquare, Heart }
 
 export default function App() {
-  const { bots, addBot, updateBot, deleteBot, addSnapshot } = useBots()
+  const { bots, addBot, updateBot, deleteBot, addSnapshot, deleteSnapshot } = useBots()
   const {
     search, setSearch,
     activeTag, setActiveTag,
@@ -24,10 +25,12 @@ export default function App() {
 
   const [showImport, setShowImport] = useState(false)
   const [adding, setAdding] = useState(false)
+  const [detailBotId, setDetailBotId] = useState(null)
   const [editingBotId, setEditingBotId] = useState(null)
   const [addingSnapshotForId, setAddingSnapshotForId] = useState(null)
 
   const totalBotCount = Object.keys(bots).length
+  const detailBot = detailBotId ? bots[detailBotId] : null
   const editingBot = editingBotId ? bots[editingBotId] : null
   const snapshotBot = addingSnapshotForId ? bots[addingSnapshotForId] : null
 
@@ -123,6 +126,7 @@ export default function App() {
               sortBy={sortBy}
               sortDir={sortDir}
               toggleSort={toggleSort}
+              onViewBot={setDetailBotId}
               onEditBot={setEditingBotId}
               onAddSnapshot={setAddingSnapshotForId}
               onDeleteBot={deleteBot}
@@ -131,6 +135,16 @@ export default function App() {
         )}
       </div>
 
+      {detailBot && (
+        <BotDetailModal
+          bot={detailBot}
+          onClose={() => setDetailBotId(null)}
+          onAddSnapshot={snap => addSnapshot(detailBotId, snap)}
+          onDeleteSnapshot={date => deleteSnapshot(detailBotId, date)}
+          onUpdateMeta={patch => updateBot(detailBotId, patch)}
+          onDelete={() => { deleteBot(detailBotId); setDetailBotId(null) }}
+        />
+      )}
       {showImport && (
         <ImportModal onClose={() => setShowImport(false)} />
       )}

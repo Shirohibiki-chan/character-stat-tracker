@@ -17,7 +17,7 @@ function SortHeader({ label, active, dir, onClick, className = '' }) {
   )
 }
 
-export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onEditBot, onAddSnapshot, onDeleteBot }) {
+export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBot, onEditBot, onAddSnapshot, onDeleteBot }) {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null)
 
   return (
@@ -65,7 +65,11 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onEditBo
               </tr>
             )}
             {sorted.map((bot, idx) => (
-              <tr key={bot.id} className="border-b border-stone-900 hover:bg-stone-900/30 transition">
+              <tr
+                key={bot.id}
+                className="border-b border-stone-900 hover:bg-stone-900/30 transition cursor-pointer"
+                onClick={() => onViewBot(bot.id)}
+              >
                 <td className="pl-5 py-3 font-medium">
                   <div className="flex items-center gap-3">
                     <span className="text-stone-600 text-xs num w-6 shrink-0">{idx + 1}</span>
@@ -117,7 +121,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onEditBo
                     ))}
                   </div>
                 </td>
-                <td className="py-3 px-3">
+                <td className="py-3 px-3" onClick={e => e.stopPropagation()}>
                   {confirmDeleteId === bot.id ? (
                     <div className="flex items-center gap-1.5 justify-end">
                       <span className="text-stone-400 text-xs whitespace-nowrap">Delete?</span>

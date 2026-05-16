@@ -3,7 +3,7 @@ import { useBotStore } from '../state/bot-store.js'
 import { loadBots } from '../services/storage-service.js'
 
 export function useBots() {
-  const { bots, initialized, setBots, addBot, updateBot, deleteBot, addSnapshot } = useBotStore()
+  const { bots, initialized, setBots, addBot, updateBot, deleteBot, addSnapshot, deleteSnapshot } = useBotStore()
 
   useEffect(() => {
     if (initialized) return
@@ -17,5 +17,6 @@ export function useBots() {
     updateBot,
     deleteBot,
     addSnapshot,
+    deleteSnapshot,
   }
 }

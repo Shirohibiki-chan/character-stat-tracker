@@ -1,1 +1,20 @@
 @import "tailwindcss";
+
+@layer utilities {
+  .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-feature-settings: 'tnum';
+  }
+  .font-display {
+    font-family: 'Fraunces', serif;
+    font-optical-sizing: auto;
+  }
+}
+
+.scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #44403c; border-radius: 4px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #57534e; }
+
+::selection { background: #e8b858; color: #0c0a09; }
+input::placeholder, textarea::placeholder { color: #78716c; }

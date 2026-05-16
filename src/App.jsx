@@ -8,6 +8,8 @@ import EmptyState from './components/dashboard/EmptyState.jsx'
 import BotTable from './components/dashboard/BotTable.jsx'
 import OverlayChart from './components/charts/OverlayChart.jsx'
 import RankingChart from './components/charts/RankingChart.jsx'
+import GainsChart from './components/charts/GainsChart.jsx'
+import HistoryChart from './components/charts/HistoryChart.jsx'
 import AddBotModal from './components/modals/AddBotModal.jsx'
 import AddSnapshotModal from './components/modals/AddSnapshotModal.jsx'
 import EditBotModal from './components/modals/EditBotModal.jsx'
@@ -96,6 +98,8 @@ export default function App() {
                 { id: 'table', label: 'Table' },
                 { id: 'timeline', label: 'Timeline' },
                 { id: 'ranking', label: 'Ranking' },
+                { id: 'gains', label: 'Gains' },
+                { id: 'history', label: 'History' },
               ].map(v => (
                 <button
                   key={v.id}
@@ -161,6 +165,12 @@ export default function App() {
             )}
             {activeView === 'ranking' && (
               <RankingChart bots={sorted} onViewBot={setDetailBotId} />
+            )}
+            {activeView === 'gains' && (
+              <GainsChart bots={sorted} onViewBot={setDetailBotId} />
+            )}
+            {activeView === 'history' && (
+              <HistoryChart bots={sorted} onViewBot={setDetailBotId} />
             )}
           </>
         )}

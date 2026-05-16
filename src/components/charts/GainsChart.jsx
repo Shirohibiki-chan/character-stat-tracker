@@ -1,0 +1,177 @@
+import { useState, useMemo } from 'react'
+import { TrendingUp } from 'lucide-react'
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, ResponsiveContainer,
+} from 'recharts'
+import { METRICS } from '../../constants/metrics.js'
+import { fmt, fmtFull, fmtDate } from '../../constants/format.js'
+
+const WINDOWS = [
+  { label: '7d', days: 7 },
+  { label: '30d', days: 30 },
+  { label: '90d', days: 90 },
+  { label: 'All', days: 0 },
+]
+
+function computeGains(bots, metric, windowDays) {
+  const now = Date.now()
+  const windowMs = windowDays === 0 ? Infinity : windowDays * 24 * 60 * 60 * 1000
+  const windowStart = now - windowMs
+
+  return bots
+    .map(bot => {
+      const totalSnaps = (bot.snapshots || [])
+        .filter(s => s.scope === 'Total')
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+
+      if (totalSnaps.length < 2) return null
+
+      const recent = totalSnaps[totalSnaps.length - 1]
+
+      // Baseline: most recent snapshot before window opened, or oldest snapshot inside window
+      const beforeWindow = totalSnaps.filter(s => new Date(s.date).getTime() <= windowStart)
+      const baseline = beforeWindow.length > 0
+        ? beforeWindow[beforeWindow.length - 1]
+        : totalSnaps[0]
+
+      if (baseline === recent) return null
+
+      const gain = (recent[metric] ?? 0) - (baseline[metric] ?? 0)
+      if (gain <= 0) return null
+
+      return {
+        ...bot,
+        gain,
+        _val: gain,
+        fromDate: baseline.date,
+        toDate: recent.date,
+      }
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.gain - a.gain)
+}
+
+export default function GainsChart({ bots, onViewBot }) {
+  const [windowDays, setWindowDays] = useState(30)
+  const [metric, setMetric] = useState('messages')
+
+  const m = METRICS.find(mx => mx.key === metric)
+
+  const data = useMemo(
+    () => computeGains(bots, metric, windowDays),
+    [bots, metric, windowDays]
+  )
+
+  const windowLabel = WINDOWS.find(w => w.days === windowDays)?.label ?? ''
+
+  if (data.length === 0) {
+    return (
+      <section className="border border-stone-800 rounded-lg bg-stone-950/50 flex items-center justify-center py-20">
+        <p className="text-stone-500 text-sm text-center max-w-xs">
+          No gains found in this window.<br />
+          <span className="text-stone-600 text-xs">
+            Bots need at least 2 Total-scope snapshots to compute gains. Try a wider window.
+          </span>
+        </p>
+      </section>
+    )
+  }
+
+  const chartHeight = Math.max(300, data.length * 28 + 40)
+
+  return (
+    <section className="border border-stone-800 rounded-lg bg-stone-950/50">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-stone-800">
+        <div className="flex items-center gap-2 text-sm text-stone-300">
+          <TrendingUp size={16} className="text-amber-300/70" />
+          Top gainers · {m?.label} · {windowDays === 0 ? 'all time' : `last ${windowLabel}`}
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex gap-1 p-0.5 bg-stone-900 rounded">
+            {METRICS.map(mx => (
+              <button
+                key={mx.key}
+                onClick={() => setMetric(mx.key)}
+                className={`px-2.5 py-1 text-xs rounded transition ${metric === mx.key ? 'bg-stone-800 text-stone-100' : 'text-stone-500 hover:text-stone-300'}`}
+                style={metric === mx.key ? { boxShadow: `inset 0 0 0 1px ${mx.color}40` } : {}}
+              >
+                {mx.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-1 p-0.5 bg-stone-900 rounded">
+            {WINDOWS.map(w => (
+              <button
+                key={w.days}
+                onClick={() => setWindowDays(w.days)}
+                className={`px-2.5 py-1 text-xs rounded transition ${windowDays === w.days ? 'bg-stone-800 text-stone-100' : 'text-stone-500 hover:text-stone-300'}`}
+              >
+                {w.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="p-5">
+        <div style={{ height: chartHeight }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data} layout="vertical" margin={{ top: 5, right: 80, left: 0, bottom: 5 }}>
+              <CartesianGrid horizontal={false} stroke="#292524" />
+              <XAxis
+                type="number"
+                tickFormatter={n => '+' + fmt(n)}
+                stroke="#78716c"
+                style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                axisLine={{ stroke: '#44403c' }}
+                tickLine={{ stroke: '#44403c' }}
+              />
+              <YAxis
+                type="category"
+                dataKey="name"
+                stroke="#a8a29e"
+                width={150}
+                style={{ fontSize: 12, fontFamily: 'Geist, system-ui, sans-serif' }}
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#a8a29e' }}
+              />
+              <Tooltip
+                cursor={{ fill: '#ffffff08' }}
+                content={({ active, payload }) => {
+                  if (!active || !payload?.length) return null
+                  const d = payload[0].payload
+                  return (
+                    <div className="bg-stone-950 border border-stone-700 rounded px-3 py-2 shadow-xl">
+                      <div className="font-medium text-sm mb-1 truncate max-w-[200px]">{d.name}</div>
+                      <div className="text-[10px] text-stone-500 mb-1.5">
+                        {fmtDate(d.fromDate)} → {fmtDate(d.toDate)}
+                      </div>
+                      <div className="flex justify-between gap-6 text-xs">
+                        <span className="text-stone-500">{m?.label} gain</span>
+                        <span className="num" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
+                      </div>
+                    </div>
+                  )
+                }}
+              />
+              <Bar
+                dataKey="_val"
+                fill={m?.color}
+                radius={[0, 3, 3, 0]}
+                onClick={d => onViewBot?.(d.id)}
+                className="cursor-pointer"
+              >
+                <LabelList
+                  dataKey="_val"
+                  position="right"
+                  formatter={n => '+' + fmt(n)}
+                  style={{ fill: '#a8a29e', fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </section>
+  )
+}

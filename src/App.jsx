@@ -10,6 +10,7 @@ import OverlayChart from './components/charts/OverlayChart.jsx'
 import RankingChart from './components/charts/RankingChart.jsx'
 import GainsChart from './components/charts/GainsChart.jsx'
 import HistoryChart from './components/charts/HistoryChart.jsx'
+import TagsChart from './components/charts/TagsChart.jsx'
 import AddBotModal from './components/modals/AddBotModal.jsx'
 import AddSnapshotModal from './components/modals/AddSnapshotModal.jsx'
 import EditBotModal from './components/modals/EditBotModal.jsx'
@@ -100,6 +101,7 @@ export default function App() {
                 { id: 'ranking', label: 'Ranking' },
                 { id: 'gains', label: 'Gains' },
                 { id: 'history', label: 'History' },
+                { id: 'tags', label: 'Tags' },
               ].map(v => (
                 <button
                   key={v.id}
@@ -171,6 +173,9 @@ export default function App() {
             )}
             {activeView === 'history' && (
               <HistoryChart bots={sorted} onViewBot={setDetailBotId} />
+            )}
+            {activeView === 'tags' && (
+              <TagsChart bots={sorted} />
             )}
           </>
         )}

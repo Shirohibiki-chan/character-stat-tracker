@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-05-16 (Phase 5c)
+
+### Additions
+- Tags tab — horizontal bar chart summing Threads, Messages, or Favorites across all bots sharing each tag; shows bot count per tag in the tooltip; inherits search and tag filter.
+
+---
+
 ## 2026-05-16 (Phase 5b)
 
 ### Additions

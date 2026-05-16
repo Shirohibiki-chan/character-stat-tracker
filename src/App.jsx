@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart } from 'lucide-react'
+import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart, Settings2, Newspaper } from 'lucide-react'
 import { useBots } from './hooks/use-bots.js'
 import { useDashboard } from './hooks/use-dashboard.js'
 import { METRICS } from './constants/metrics.js'
 import StatCard from './components/dashboard/StatCard.jsx'
 import EmptyState from './components/dashboard/EmptyState.jsx'
+import OnboardingBanner from './components/dashboard/OnboardingBanner.jsx'
 import BotTable from './components/dashboard/BotTable.jsx'
 import OverlayChart from './components/charts/OverlayChart.jsx'
 import RankingChart from './components/charts/RankingChart.jsx'
@@ -16,6 +17,8 @@ import AddSnapshotModal from './components/modals/AddSnapshotModal.jsx'
 import EditBotModal from './components/modals/EditBotModal.jsx'
 import ImportModal from './components/modals/ImportModal.jsx'
 import BotDetailModal from './components/modals/BotDetailModal.jsx'
+import BackupModal from './components/modals/BackupModal.jsx'
+import ChangelogModal from './components/modals/ChangelogModal.jsx'
 
 const ICON_MAP = { MessageSquare, MessagesSquare, Heart }
 
@@ -30,6 +33,8 @@ export default function App() {
 
   const [activeView, setActiveView] = useState('table')
   const [showImport, setShowImport] = useState(false)
+  const [showBackup, setShowBackup] = useState(false)
+  const [showChangelog, setShowChangelog] = useState(false)
   const [adding, setAdding] = useState(false)
   const [detailBotId, setDetailBotId] = useState(null)
   const [editingBotId, setEditingBotId] = useState(null)
@@ -61,7 +66,21 @@ export default function App() {
               {totalBotCount} {totalBotCount === 1 ? 'bot' : 'bots'} tracked
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            <button
+              onClick={() => setShowChangelog(true)}
+              className="p-2 text-stone-500 hover:text-stone-300 transition"
+              title="What's new"
+            >
+              <Newspaper size={15} />
+            </button>
+            <button
+              onClick={() => setShowBackup(true)}
+              className="p-2 text-stone-500 hover:text-stone-300 transition"
+              title="Data & Backup"
+            >
+              <Settings2 size={15} />
+            </button>
             <button
               onClick={() => setShowImport(true)}
               className="px-3 py-2 text-xs uppercase tracking-wider text-stone-400 hover:text-stone-200 border border-stone-700 hover:border-stone-500 rounded transition flex items-center gap-2"
@@ -78,9 +97,10 @@ export default function App() {
         </header>
 
         {totalBotCount === 0 ? (
-          <EmptyState onAdd={() => setAdding(true)} />
+          <EmptyState onAdd={() => setAdding(true)} onImport={() => setShowImport(true)} />
         ) : (
           <>
+            <OnboardingBanner onImport={() => setShowImport(true)} />
             <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
               <StatCard label="Total bots" value={filteredCount} accent="#f5f5f4" />
               {METRICS.map(m => (
@@ -94,7 +114,8 @@ export default function App() {
               ))}
             </section>
 
-            <div className="flex items-center gap-1 mb-5">
+            <div className="overflow-x-auto -mx-1 px-1 mb-5">
+            <div className="flex items-center gap-1 w-max min-w-full">
               {[
                 { id: 'table', label: 'Table' },
                 { id: 'timeline', label: 'Timeline' },
@@ -115,6 +136,7 @@ export default function App() {
                   {v.label}
                 </button>
               ))}
+            </div>
             </div>
 
             <section className="flex flex-wrap items-center gap-3 mb-4">
@@ -214,6 +236,8 @@ export default function App() {
           onAdd={(snapshot) => { addSnapshot(addingSnapshotForId, snapshot); setAddingSnapshotForId(null) }}
         />
       )}
+      {showBackup && <BackupModal onClose={() => setShowBackup(false)} />}
+      {showChangelog && <ChangelogModal onClose={() => setShowChangelog(false)} />}
     </div>
   )
 }

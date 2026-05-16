@@ -43,4 +43,9 @@ export const useBotStore = create((set, get) => ({
     set({ bots })
     scheduleSave(bots)
   },
+
+  resetBots() {
+    set({ bots: {} })
+    scheduleSave({})
+  },
 }))

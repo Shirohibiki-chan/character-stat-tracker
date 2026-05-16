@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-05-16 (Phase 6)
+
+### Additions
+- Enhanced empty state — richer first-time lander with feature-highlight cards and a two-step "how to start" guide; Import paste is now the primary CTA.
+- Onboarding banner — dismissible tip bar that appears for users who already have bots, pointing to the Import button; stored in localStorage so it only shows once.
+- Data & Backup modal (⚙ icon in header) — export full JSON backup, import from backup file (with replace-all confirmation), and reset all data (two-step confirm).
+- What's New modal (newspaper icon in header) — renders this changelog in-app via Vite raw import; no external dependency.
+- Tab bar now scrolls horizontally on narrow screens.
+- README with project description, feature list, screenshot placeholders, and quick-start guide.
+
+---
+
 ## 2026-05-16 (Phase 5c)
 
 ### Additions

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.6
+// @version      1.7
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -366,10 +366,11 @@ function savePillPos(top, left) {
 function applyPillPos() {
   const stored = loadPillPos()
   if (stored) {
+    const { top, left } = clampPos(stored.top, stored.left)
     hudEl.style.removeProperty('bottom')
     hudEl.style.removeProperty('right')
-    hudEl.style.setProperty('top',  stored.top  + 'px', 'important')
-    hudEl.style.setProperty('left', stored.left + 'px', 'important')
+    hudEl.style.setProperty('top',  top  + 'px', 'important')
+    hudEl.style.setProperty('left', left + 'px', 'important')
   } else {
     hudEl.style.removeProperty('top')
     hudEl.style.removeProperty('left')

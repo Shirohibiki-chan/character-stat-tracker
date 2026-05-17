@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-05-17 (Polish — bug fixes)
+
+### Fixes
+- Charts: removed a thin white rectangular border that appeared around chart components (Recharts default focus outline).
+- Userscript (v1.7): pill position is now re-clamped when the page loads, so a position saved before a browser window resize can no longer put the pill fully off-screen.
+
+---
+
 ## 2026-05-16 (Phase 7, v1.6)
 
 ### Changes

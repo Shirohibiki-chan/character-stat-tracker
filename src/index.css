@@ -18,3 +18,5 @@
 
 ::selection { background: #e8b858; color: #0c0a09; }
 input::placeholder, textarea::placeholder { color: #78716c; }
+
+.recharts-surface { outline: none; }

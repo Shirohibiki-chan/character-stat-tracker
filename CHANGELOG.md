@@ -1,6 +1,9 @@
 # Changelog
 
-## 2026-05-17 (Polish — bug fixes)
+## 2026-05-17 (Polish — metric ordering + bug fixes)
+
+### Adjustments
+- Metric order changed to Messages → Threads → Favorites everywhere in the app (stat columns, chart pickers, tooltips, dropdowns).
 
 ### Fixes
 - Charts: removed a thin white rectangular border that appeared around chart components (Recharts default focus outline).

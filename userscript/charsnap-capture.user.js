@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.4.0
+// @version      1.5.0
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -205,7 +205,17 @@ function ensureToastContainer() {
   if (toastContainerEl) return
   toastContainerEl = document.createElement('div')
   toastContainerEl.id = 'charsnap-toasts'
-  document.body.appendChild(toastContainerEl)
+  toastContainerEl.style.cssText = [
+    'position: fixed !important',
+    'bottom: 68px !important',
+    'right: 20px !important',
+    'z-index: 2147483647 !important',
+    'display: flex',
+    'flex-direction: column',
+    'gap: 6px',
+    'align-items: flex-end',
+  ].join(';')
+  document.documentElement.appendChild(toastContainerEl)
   toastContainerEl.addEventListener('click', e => {
     const btn = e.target.closest('.cs-toast-undo')
     if (!btn) return
@@ -351,7 +361,24 @@ function renderHUD() {
   if (hudEl) return
   hudEl = document.createElement('div')
   hudEl.id = 'charsnap-hud'
-  document.body.appendChild(hudEl)
+  // Inline !important styles escape any stacking context CharSnap's body may create.
+  hudEl.style.cssText = [
+    'position: fixed !important',
+    'bottom: 20px !important',
+    'right: 20px !important',
+    'z-index: 2147483647 !important',
+    'isolation: isolate !important',
+    'pointer-events: auto !important',
+    'font-family: system-ui, sans-serif',
+    'font-size: 12px',
+  ].join(';')
+  // Append to <html>, not <body>, so we're a sibling of CharSnap's React root
+  // and outside any stacking context it establishes.
+  document.documentElement.appendChild(hudEl)
+  // Re-inject if the element is ever evicted (React re-renders can wipe injected nodes)
+  new MutationObserver(() => {
+    if (!hudEl.isConnected) document.documentElement.appendChild(hudEl)
+  }).observe(document.documentElement, { childList: true })
   updateHUD()
 }
 
@@ -531,14 +558,6 @@ function injectStyles() {
     }
 
     /* ── HUD ── */
-    #charsnap-hud {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 2147483647;
-      font-family: system-ui, sans-serif;
-      font-size: 12px;
-    }
 
     /* Collapsed pill */
     .cs-hud-pill {
@@ -656,10 +675,6 @@ function injectStyles() {
 
     /* ── Toasts ── */
     #charsnap-toasts {
-      position: fixed;
-      bottom: 68px;
-      right: 20px;
-      z-index: 2147483647;
       display: flex;
       flex-direction: column;
       gap: 6px;

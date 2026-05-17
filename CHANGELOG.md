@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-05-16 (Phase 7, v1.5)
+
+### Fixes
+- Userscript: HUD pill and toast container are now appended to `<html>` instead of `<body>`, making them siblings of CharSnap's React root rather than descendants of it — this escapes any stacking context the page body creates. Positioning styles are applied as inline `!important` declarations so framework CSS cannot override them. A MutationObserver re-injects the HUD if it is ever evicted from the DOM by a React re-render.
+
+---
+
 ## 2026-05-16 (Phase 7, v1.4)
 
 ### Changes

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-05-16 (Phase 7, v1.2)
+
+### Fixes
+- Userscript: programmatic tab switch now dispatches a full `pointerdown → pointerup → click` PointerEvent chain instead of a bare `.click()` — Radix UI tab components listen on `pointerdown` and were silently ignoring `.click()`.
+- Userscript: capture no longer depends on the programmatic switch succeeding. A `MutationObserver` watches for the Total tab's `data-state` to become `"active"` (regardless of what caused it), so the capture fires even if the script's click was ignored and the user clicked manually instead. A hint toast appears after 1.5 s if the tab still hasn't switched, telling the user to click Total themselves.
+
+---
+
 ## 2026-05-16 (Phase 7, v1.1)
 
 ### Fixes

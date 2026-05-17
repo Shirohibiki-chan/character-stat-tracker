@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.1.0
+// @version      1.2.0
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -93,23 +93,39 @@ function getAutoCapture() {
 function setAutoCapture(on) {
   GM_setValue(AUTO_KEY, on ? '1' : '0')
   updateHUD()
-  // Apply immediately to any currently-open dialog
   const dialog = document.querySelector('[role="dialog"][data-state="open"]')
   if (!dialog) return
   if (on) {
     dialog.querySelector('[data-charsnap-injected]')?.remove()
     performAutoCapture(dialog)
   } else {
+    disconnectTabWatcher()
     injectCaptureButton(dialog)
   }
 }
 
-// ── Tab gating ────────────────────────────────────────────────────────────────
+// ── Pointer-event dispatch ────────────────────────────────────────────────────
+//
+// Radix UI tab components respond to pointerdown, not click. A bare .click()
+// call only fires the click event and is silently ignored by the framework.
+// Dispatching the full pointer sequence triggers the same handler a real
+// finger/mouse press would.
+
+function dispatchPointerClick(el) {
+  const opts = { bubbles: true, cancelable: true }
+  el.dispatchEvent(new PointerEvent('pointerdown', opts))
+  el.dispatchEvent(new PointerEvent('pointerup',   opts))
+  el.dispatchEvent(new MouseEvent('click',         opts))
+}
+
+// ── Tab helpers ───────────────────────────────────────────────────────────────
 
 function getActiveTabName(dialog) {
   return dialog.querySelector('button[role="tab"][data-state="active"]')?.textContent?.trim() ?? ''
 }
 
+// waitForTotalTab — used only by the manual Capture button (Auto OFF mode).
+// Attempts a programmatic switch then polls until Radix confirms it.
 function waitForTotalTab(dialog) {
   return new Promise((resolve, reject) => {
     if (getActiveTabName(dialog) === 'Total') { resolve(); return }
@@ -122,28 +138,22 @@ function waitForTotalTab(dialog) {
       return
     }
 
-    totalTab.click()
+    dispatchPointerClick(totalTab)
 
-    // Poll until Radix marks Total as active (5 s / 50 ticks at 100 ms each).
-    // Retry the click once at ~1.5 s in case the first click was swallowed
-    // before the tab list was fully interactive.
-    let ticks = 0
-    let retried = false
+    let ticks = 0, retried = false
     const timer = setInterval(() => {
       if (getActiveTabName(dialog) === 'Total') {
         clearInterval(timer)
-        setTimeout(resolve, 200) // brief pause for stat values to render
+        setTimeout(resolve, 200)
         return
       }
-      if (!retried && ticks === 15) {
-        retried = true
-        totalTab.click()
-      }
+      if (!retried && ticks === 15) { retried = true; dispatchPointerClick(totalTab) }
       if (++ticks > 50) {
         clearInterval(timer)
         const nowActive = getActiveTabName(dialog)
         reject(new Error(
-          `Timed out switching to Total tab (active: "${nowActive || 'unknown'}"). Try again.`
+          `Could not switch to Total tab (active: "${nowActive || 'unknown'}"). ` +
+          'Click the Total tab manually first.'
         ))
       }
     }, 100)
@@ -157,8 +167,6 @@ function readStats(dialog) {
   const avatarEl = dialog.querySelector('img[src*="cdn.charsnap"]') ?? dialog.querySelector('img')
   const avatarUrl = avatarEl?.src ?? null
 
-  // Three stat value divs in DOM order: chats, messages, favorites.
-  // Fall back to the broader div.text-3xl if CharSnap changes class names.
   let statEls = Array.from(dialog.querySelectorAll('div.text-3xl.font-bold'))
   if (statEls.length < 3) statEls = Array.from(dialog.querySelectorAll('div.text-3xl'))
   if (statEls.length < 3) return null
@@ -189,7 +197,6 @@ function ensureToastContainer() {
   toastContainerEl = document.createElement('div')
   toastContainerEl.id = 'charsnap-toasts'
   document.body.appendChild(toastContainerEl)
-  // Event delegation — one listener handles all Undo buttons
   toastContainerEl.addEventListener('click', e => {
     const btn = e.target.closest('.cs-toast-undo')
     if (!btn) return
@@ -208,15 +215,25 @@ function showToast(html, durationMs = 5000) {
 }
 
 // ── Auto-capture ──────────────────────────────────────────────────────────────
+//
+// Design: rather than requiring the programmatic click to succeed, we watch
+// for the Total tab's data-state to become "active" via MutationObserver.
+// The PointerEvent click is attempted as a convenience (saves the user one
+// manual click) but the capture fires regardless of who activated the tab.
 
-async function performAutoCapture(dialog) {
-  try {
-    await waitForTotalTab(dialog)
+let activeTabWatcher = null
+
+function disconnectTabWatcher() {
+  if (activeTabWatcher) { activeTabWatcher.disconnect(); activeTabWatcher = null }
+}
+
+function performAutoCapture(dialog) {
+  disconnectTabWatcher()
+
+  async function doCapture() {
+    await new Promise(r => setTimeout(r, 200)) // let stats re-render after tab switch
     const capture = readStats(dialog)
-    if (!capture || !capture.name) {
-      showToast('Could not read stats from modal.')
-      return
-    }
+    if (!capture || !capture.name) { showToast('Could not read stats from modal.'); return }
     if (isDuplicateInQueue(capture.avatarUrl)) {
       showToast(`Already captured <b>${escHtml(capture.name)}</b> — skipped.`)
       return
@@ -227,16 +244,45 @@ async function performAutoCapture(dialog) {
       `Captured <b>${escHtml(capture.name)}</b>.` +
       ` <button class="cs-toast-undo" data-ts="${escHtml(capture.capturedAt)}">Undo</button>`
     )
-  } catch (err) {
-    showToast(`Capture failed: ${escHtml(err.message)}`)
   }
+
+  // Already on Total — nothing to wait for
+  if (getActiveTabName(dialog) === 'Total') { doCapture(); return }
+
+  // Attempt programmatic switch (PointerEvent chain works with Radix UI)
+  const tabs = Array.from(dialog.querySelectorAll('button[role="tab"]'))
+  const totalTab = tabs.find(t => t.textContent.trim() === 'Total')
+  if (totalTab) dispatchPointerClick(totalTab)
+
+  // Watch for Total to become active — fires whether our click worked or the
+  // user clicked manually. This is the reliable path.
+  let fired = false
+  const observer = new MutationObserver(() => {
+    if (fired || getActiveTabName(dialog) !== 'Total') return
+    fired = true
+    disconnectTabWatcher()
+    doCapture()
+  })
+
+  observer.observe(dialog, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['data-state'],
+  })
+  activeTabWatcher = observer
+
+  // If the programmatic switch hasn't fired after 1.5 s, prompt the user
+  setTimeout(() => {
+    if (!fired && document.body.contains(dialog) && getActiveTabName(dialog) !== 'Total') {
+      showToast('Click the <b>Total</b> tab to capture.', 8000)
+    }
+  }, 1500)
 }
 
-// ── Manual Capture button (Auto-capture OFF mode) ─────────────────────────────
+// ── Manual Capture button (Auto OFF mode) ─────────────────────────────────────
 
 function injectCaptureButton(dialog) {
   if (dialog.querySelector('[data-charsnap-injected]')) return
-  // Bail if this isn't a stats modal (Copy stats button is the reliable indicator)
   const copyBtn = dialog.querySelector('button[title="Copy stats"]')
   if (!copyBtn) return
 
@@ -354,7 +400,6 @@ function onDialogOpen(dialog) {
 }
 
 function observeModals() {
-  // Track the currently-open dialog so we fire once per open, not once per mutation
   let currentDialog = null
 
   function handlePotentialOpen(dialog) {
@@ -363,13 +408,11 @@ function observeModals() {
     onDialogOpen(dialog)
   }
 
-  // Handle a dialog already open when the script loads
   const existing = document.querySelector('[role="dialog"][data-state="open"]')
   if (existing) handlePotentialOpen(existing)
 
   const observer = new MutationObserver(mutations => {
     for (const mutation of mutations) {
-      // Attribute change: data-state flipped on a dialog element
       if (mutation.type === 'attributes') {
         const el = mutation.target
         if (el.getAttribute('role') !== 'dialog') continue
@@ -377,10 +420,10 @@ function observeModals() {
         if (newState === 'open' && mutation.oldValue !== 'open') {
           handlePotentialOpen(el)
         } else if (newState !== 'open' && el === currentDialog) {
-          currentDialog = null // reset so a re-open of the same node triggers again
+          currentDialog = null
+          disconnectTabWatcher()
         }
       }
-      // childList: a new dialog node added to DOM already marked open
       if (mutation.type === 'childList') {
         for (const node of mutation.addedNodes) {
           if (node.nodeType !== 1) continue

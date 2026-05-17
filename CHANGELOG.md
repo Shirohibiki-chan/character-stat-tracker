@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-05-16 (Phase 7, v1.1)
+
+### Fixes
+- Userscript: Total-tab timeout increased from 2 s to 5 s; retries the tab click once at ~1.5 s before giving up; error message now includes which tab was actually active for easier debugging.
+
+### Changes
+- Userscript: replaced the manual Capture button with auto-capture on modal open — when a stats modal opens the script automatically switches to Total and queues the capture.
+- Userscript: toast notification ("Captured [name]. Undo") replaces in-button feedback for auto mode; Undo removes that specific capture from the queue.
+- Userscript: deduplication by normalized avatar URL — re-opening the same bot's modal in the same session is silently skipped with a "Already captured — skipped" toast.
+- Userscript: "Auto: ON/OFF" toggle added to the floating HUD (default ON); when OFF, the original manual Capture button reappears in the modal header.
+
+---
+
 ## 2026-05-16 (Phase 7)
 
 ### Additions

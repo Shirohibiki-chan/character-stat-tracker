@@ -535,7 +535,7 @@ function injectStyles() {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      z-index: 999999;
+      z-index: 2147483647;
       font-family: system-ui, sans-serif;
       font-size: 12px;
     }
@@ -659,7 +659,7 @@ function injectStyles() {
       position: fixed;
       bottom: 68px;
       right: 20px;
-      z-index: 999999;
+      z-index: 2147483647;
       display: flex;
       flex-direction: column;
       gap: 6px;

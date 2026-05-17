@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-05-16
+
+### Fixes
+- Import: avatar was not saved when creating a new bot from a userscript capture. The `avatarUrl` field was used for matching existing bots but was never passed into `createBot()`, leaving `bot.avatar` null after import. Fixed by threading `avatarUrl` through to the bot record.
+- Userscript (v1.5.1): "Captured X. Undo" toasts moved to the bottom-left corner (pill stays bottom-right). Eliminates overlap when the pill expands upward and removes the z-index ordering dependency between the two injected elements.
+
+---
+
 ## 2026-05-16 (Phase 7, v1.5)
 
 ### Fixes

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.5.0
+// @version      1.5.1
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -207,13 +207,13 @@ function ensureToastContainer() {
   toastContainerEl.id = 'charsnap-toasts'
   toastContainerEl.style.cssText = [
     'position: fixed !important',
-    'bottom: 68px !important',
-    'right: 20px !important',
+    'bottom: 20px !important',
+    'left: 20px !important',
     'z-index: 2147483647 !important',
     'display: flex',
     'flex-direction: column',
     'gap: 6px',
-    'align-items: flex-end',
+    'align-items: flex-start',
   ].join(';')
   document.documentElement.appendChild(toastContainerEl)
   toastContainerEl.addEventListener('click', e => {
@@ -678,7 +678,7 @@ function injectStyles() {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      align-items: flex-end;
+      align-items: flex-start;
     }
     .charsnap-toast {
       background: #1c1917;

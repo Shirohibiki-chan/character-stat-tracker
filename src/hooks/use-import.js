@@ -48,7 +48,7 @@ export function useImport() {
       })
       if (item.assignedBotId === '__new__') {
         const name = item.capture.name || item.newName.trim() || 'Unnamed bot'
-        addBot(createBot({ name, snapshots: [snap] }))
+        addBot(createBot({ name, avatar: item.capture.avatarUrl || null, snapshots: [snap] }))
       } else {
         addSnapshot(item.assignedBotId, snap)
       }

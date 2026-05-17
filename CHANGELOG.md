@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-05-17 (Userscript v1.10 — Creator Analytics exclusion)
+
+### Fixes
+- Userscript: auto-capture no longer fires on the Creator Analytics modal. Previously, opening it hijacked navigation to the Total tab and queued a bogus capture because it shares structure with bot stats modals (Total tab, Copy stats button, same stat layout). Now excluded by modal title. Additional false-positive modals of this type can be added to `NON_BOT_STATS_MODAL_TITLES` in the script.
+
+---
+
+## 2026-05-17 (Userscript v1.9 — stats modal gate)
+
+### Fixes
+- Userscript: auto-capture no longer fires on unrelated modals (character cards, share dialogs, confirmation popups, etc.). Capture now only attempts when the dialog contains a "Copy stats" button — i.e., an actual bot stats modal. Note: the creator overall stats modal also has a "Copy stats" button and will still trigger capture; a dedicated fix for that case is tracked separately.
+
+---
+
 ## 2026-05-17 (Polish — mobile layout)
 
 ### Fixes

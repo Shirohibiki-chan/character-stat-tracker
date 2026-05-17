@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.8
+// @version      1.10
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -591,7 +591,17 @@ function updateHUD() {
 
 // ── Modal observer ────────────────────────────────────────────────────────────
 
+const NON_BOT_STATS_MODAL_TITLES = ['Creator Analytics']
+
+function isStatsModal(dialog) {
+  if (!dialog.querySelector('button[title="Copy stats"]')) return false
+  const h2Text = dialog.querySelector('h2')?.textContent?.trim() ?? ''
+  if (NON_BOT_STATS_MODAL_TITLES.includes(h2Text)) return false
+  return true
+}
+
 function onDialogOpen(dialog) {
+  if (!isStatsModal(dialog)) return
   if (getAutoCapture()) {
     performAutoCapture(dialog)
   } else {

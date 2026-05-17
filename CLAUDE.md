@@ -29,9 +29,13 @@ If a feature proposal seems to require "let's just call the CharSnap endpoint di
 
 See `docs/plan.md`. Work phases in order. Do not build ahead.
 
-## Changelog
+## Tracking Docs
 
-Update `CHANGELOG.md` (repo root) when completing each phase or polish pass. Add a new dated section at the top with Additions / Fixes / Adjustments / Renames subheaders as appropriate. Plain-language, user-visible entries — not internal refactor notes. The changelog is the source the in-app lander will eventually render.
+When shipping a change, update the tracking doc that owns the relevant item to reflect resolution. These updates are part of completing the change — show them in the plan before executing.
+
+- `docs/plan.md` — mark completed phase items done. If new in-scope work is discovered, add it under the appropriate phase or a "Queued" section near the bottom.
+- `docs/handoff.md` — mark resolved polish items as shipped (note the version or date). Add newly discovered issues to the appropriate section. Userscript work specifically tracks fixes under section 5 — when a userscript version ships, list what it resolved.
+- `CHANGELOG.md` — required for all user-visible changes. Add a new dated section at the top with Additions / Fixes / Adjustments / Renames subheaders as appropriate. Plain-language, user-visible entries — not internal refactor notes. The changelog is the source the in-app lander will eventually render. Include the userscript version bump when shipping userscript work.
 
 ## Commands
 

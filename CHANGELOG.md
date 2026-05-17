@@ -10,6 +10,14 @@
 
 ---
 
+## 2026-05-17 (Userscript v1.8 — pill recovery)
+
+### Fixes
+- Userscript: added Ctrl+Shift+Alt+R (Cmd+Shift+Alt+R on Mac) keyboard shortcut to snap the pill back to its default bottom-right position — recovery path if the pill is ever hidden behind other floating elements on the page.
+- Userscript: tightened on-load position clamp — the saved pill position is now restored only if the pill would be fully visible; otherwise it falls back to the default bottom-right.
+
+---
+
 ## 2026-05-17 (Polish — metric ordering + bug fixes)
 
 ### Adjustments

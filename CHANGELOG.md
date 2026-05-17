@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-05-17 (Polish — mobile layout)
+
+### Fixes
+- Table: "Updated" and "Tags" columns are now hidden on narrow screens; the bot name, stat columns, and action buttons remain. The table is usable on a 375px phone without horizontal scrolling.
+- Charts (Ranking, Gains, History, Tags): Y-axis name labels reduced from 150 px to 100 px wide; right margin reduced to match. Bar charts no longer consume most of a phone screen's width on labels alone.
+- Header: "CharSnap stats" title now scales down on small screens (`text-3xl` on mobile, `text-5xl` on desktop). Left/right page padding reduced from 24 px to 16 px on mobile.
+- Modals (Add Bot, Add Snapshot, Edit Bot, Data & Backup): added `max-h-[90vh] overflow-y-auto` so tall forms stay within the viewport on short screens (e.g., landscape phones).
+
+---
+
 ## 2026-05-17 (Polish — metric ordering + bug fixes)
 
 ### Adjustments

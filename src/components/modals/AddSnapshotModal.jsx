@@ -27,7 +27,7 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
   return (
     <Modal onClose={onClose} isDirty={isDirty}>
       <div
-        className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-sm shadow-2xl"
+        className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-sm shadow-2xl max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800">

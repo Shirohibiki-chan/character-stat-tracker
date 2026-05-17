@@ -55,11 +55,11 @@ export default function App() {
         style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")" }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-10">
         <header className="flex items-end justify-between mb-10 pb-6 border-b border-stone-800 flex-wrap gap-4">
           <div>
             <div className="text-[11px] tracking-[0.25em] text-amber-300/70 uppercase mb-2">Creator dashboard</div>
-            <h1 className="font-display text-5xl font-medium leading-none">
+            <h1 className="font-display text-3xl sm:text-5xl font-medium leading-none">
               CharSnap <span className="italic text-amber-300/90">stats</span>
             </h1>
             <p className="text-stone-400 text-sm mt-3">

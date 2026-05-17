@@ -37,7 +37,7 @@ export default function BackupModal({ onClose }) {
 
   return (
     <Modal onClose={onClose}>
-      <div className="w-full max-w-md bg-stone-950 border border-stone-800 rounded-xl shadow-2xl" onClick={e => e.stopPropagation()}>
+      <div className="w-full max-w-md bg-stone-950 border border-stone-800 rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800">
           <h2 className="font-medium text-stone-100">Data &amp; Backup</h2>
           <button onClick={onClose} className="text-stone-500 hover:text-stone-300 transition">

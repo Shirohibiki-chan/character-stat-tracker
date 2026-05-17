@@ -44,13 +44,13 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                 />
               ))}
               <SortHeader
-                className="text-right"
+                className="text-right hidden md:table-cell"
                 label="Updated"
                 active={sortBy === 'updated'}
                 dir={sortDir}
                 onClick={() => toggleSort('updated')}
               />
-              <th className="text-left py-3 px-3 text-[11px] uppercase tracking-wider text-stone-500 font-medium">
+              <th className="text-left py-3 px-3 text-[11px] uppercase tracking-wider text-stone-500 font-medium hidden md:table-cell">
                 Tags
               </th>
               <th className="py-3 px-3 w-28" />
@@ -109,10 +109,10 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                     </td>
                   )
                 })}
-                <td className="py-3 px-3 text-right text-xs text-stone-500 num whitespace-nowrap">
+                <td className="py-3 px-3 text-right text-xs text-stone-500 num whitespace-nowrap hidden md:table-cell">
                   {fmtRelative(bot.lastCapturedAt)}
                 </td>
-                <td className="py-3 px-3">
+                <td className="py-3 px-3 hidden md:table-cell">
                   <div className="flex flex-wrap gap-1">
                     {(bot.tags || []).map(t => (
                       <span key={t} className="text-[10px] px-1.5 py-0.5 bg-stone-800/80 text-stone-400 rounded">

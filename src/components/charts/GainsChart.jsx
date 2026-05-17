@@ -115,7 +115,7 @@ export default function GainsChart({ bots, onViewBot }) {
       <div className="p-5">
         <div style={{ height: chartHeight }}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} layout="vertical" margin={{ top: 5, right: 80, left: 0, bottom: 5 }}>
+            <BarChart data={data} layout="vertical" margin={{ top: 5, right: 55, left: 0, bottom: 5 }}>
               <CartesianGrid horizontal={false} stroke="#292524" />
               <XAxis
                 type="number"
@@ -129,7 +129,7 @@ export default function GainsChart({ bots, onViewBot }) {
                 type="category"
                 dataKey="name"
                 stroke="#a8a29e"
-                width={150}
+                width={100}
                 style={{ fontSize: 12, fontFamily: 'Geist, system-ui, sans-serif' }}
                 axisLine={false}
                 tickLine={false}

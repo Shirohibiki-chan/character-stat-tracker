@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.5.1
+// @version      1.6
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -84,7 +84,8 @@ function isDuplicateInQueue(avatarUrl) {
 
 // ── Auto-capture setting ──────────────────────────────────────────────────────
 
-const AUTO_KEY = 'charsnap_auto_capture'
+const AUTO_KEY     = 'charsnap_auto_capture'
+const PILL_POS_KEY = 'charsnap_pill_pos'
 
 function getAutoCapture() {
   return GM_getValue(AUTO_KEY, '1') !== '0'
@@ -352,6 +353,115 @@ function injectCaptureButton(dialog) {
   })
 }
 
+// ── Pill position persistence ─────────────────────────────────────────────────
+
+function loadPillPos() {
+  try { return JSON.parse(GM_getValue(PILL_POS_KEY, null)) } catch { return null }
+}
+
+function savePillPos(top, left) {
+  GM_setValue(PILL_POS_KEY, JSON.stringify({ top, left }))
+}
+
+function applyPillPos() {
+  const stored = loadPillPos()
+  if (stored) {
+    hudEl.style.removeProperty('bottom')
+    hudEl.style.removeProperty('right')
+    hudEl.style.setProperty('top',  stored.top  + 'px', 'important')
+    hudEl.style.setProperty('left', stored.left + 'px', 'important')
+  } else {
+    hudEl.style.removeProperty('top')
+    hudEl.style.removeProperty('left')
+    hudEl.style.setProperty('bottom', '20px', 'important')
+    hudEl.style.setProperty('right',  '20px', 'important')
+  }
+}
+
+// ── Drag ──────────────────────────────────────────────────────────────────────
+//
+// Threshold-based: pointer must move >4 px before drag starts, so a normal
+// click never accidentally begins a drag. Buttons are excluded from initiating
+// a drag — pressing Export/Clear/etc. never moves the widget.
+
+const DRAG_THRESHOLD_PX = 4
+
+function clampPos(top, left) {
+  const W = window.innerWidth
+  const H = window.innerHeight
+  const rect = hudEl.getBoundingClientRect()
+  const w = rect.width  || 220
+  const h = rect.height || 40
+  const MIN = 10 // minimum px that must remain inside the viewport
+  return {
+    top:  Math.max(-(h - MIN), Math.min(H - MIN, top)),
+    left: Math.max(-(w - MIN), Math.min(W - MIN, left)),
+  }
+}
+
+function attachDrag() {
+  hudEl.addEventListener('pointerdown', e => {
+    if (e.button !== 0) return
+
+    const pointerId   = e.pointerId
+    const startPos    = { x: e.clientX, y: e.clientY }
+    const startTarget = e.target
+    let dragging   = false
+    let dragOffset = { x: 0, y: 0 }
+
+    function onMove(ev) {
+      if (ev.pointerId !== pointerId) return
+      const dx = ev.clientX - startPos.x
+      const dy = ev.clientY - startPos.y
+
+      if (!dragging) {
+        if (Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return
+        if (startTarget?.closest('button, a')) { cleanup(); return }
+        // Enter drag mode — switch element to top/left coords
+        dragging = true
+        const rect = hudEl.getBoundingClientRect()
+        hudEl.style.removeProperty('bottom')
+        hudEl.style.removeProperty('right')
+        hudEl.style.setProperty('top',  rect.top  + 'px', 'important')
+        hudEl.style.setProperty('left', rect.left + 'px', 'important')
+        // Offset is relative to original pointerdown so element doesn't jump
+        dragOffset = { x: startPos.x - rect.left, y: startPos.y - rect.top }
+        hudEl.setPointerCapture(pointerId)
+        document.documentElement.style.setProperty('cursor',      'grabbing', 'important')
+        document.documentElement.style.setProperty('user-select', 'none',     'important')
+      }
+
+      const { top, left } = clampPos(ev.clientY - dragOffset.y, ev.clientX - dragOffset.x)
+      hudEl.style.setProperty('top',  top  + 'px', 'important')
+      hudEl.style.setProperty('left', left + 'px', 'important')
+    }
+
+    function onUp(ev) {
+      if (ev.pointerId !== pointerId) return
+      if (dragging) {
+        const rect = hudEl.getBoundingClientRect()
+        savePillPos(rect.top, rect.left)
+        // Suppress the click that fires immediately after pointerup
+        hudEl.addEventListener('click', ev => ev.stopPropagation(), { once: true, capture: true })
+      }
+      cleanup()
+    }
+
+    function cleanup() {
+      dragging = false
+      hudEl.removeEventListener('pointermove',   onMove)
+      hudEl.removeEventListener('pointerup',     onUp)
+      hudEl.removeEventListener('pointercancel', onUp)
+      document.documentElement.style.removeProperty('cursor')
+      document.documentElement.style.removeProperty('user-select')
+    }
+
+    hudEl.addEventListener('pointermove',   onMove)
+    hudEl.addEventListener('pointerup',     onUp)
+    hudEl.addEventListener('pointercancel', onUp)
+  })
+}
+
 // ── Floating HUD ──────────────────────────────────────────────────────────────
 
 let hudEl = null
@@ -364,8 +474,6 @@ function renderHUD() {
   // Inline !important styles escape any stacking context CharSnap's body may create.
   hudEl.style.cssText = [
     'position: fixed !important',
-    'bottom: 20px !important',
-    'right: 20px !important',
     'z-index: 2147483647 !important',
     'isolation: isolate !important',
     'pointer-events: auto !important',
@@ -379,6 +487,8 @@ function renderHUD() {
   new MutationObserver(() => {
     if (!hudEl.isConnected) document.documentElement.appendChild(hudEl)
   }).observe(document.documentElement, { childList: true })
+  applyPillPos()
+  attachDrag()
   updateHUD()
 }
 
@@ -423,6 +533,7 @@ function updateHUD() {
             Clear
           </button>
         </div>
+        <button class="cs-hud-action cs-hud-action--muted" id="cs-reset-pos">Reset position</button>
       </div>
     </div>
   `
@@ -462,6 +573,11 @@ function updateHUD() {
     `
     body.querySelector('#cs-clear-yes').addEventListener('click', () => { clearQueue(); updateHUD() })
     body.querySelector('#cs-clear-no').addEventListener('click', updateHUD)
+  })
+
+  hudEl.querySelector('#cs-reset-pos')?.addEventListener('click', () => {
+    GM_setValue(PILL_POS_KEY, null)
+    applyPillPos()
   })
 }
 
@@ -558,6 +674,11 @@ function injectStyles() {
     }
 
     /* ── HUD ── */
+
+    /* Drag cursor — buttons override with pointer */
+    #charsnap-hud { cursor: grab; }
+    #charsnap-hud button,
+    #charsnap-hud a { cursor: pointer; }
 
     /* Collapsed pill */
     .cs-hud-pill {
@@ -672,6 +793,13 @@ function injectStyles() {
     .cs-hud-action--danger-confirm:hover { background: rgba(251, 113, 133, 0.25); }
     .cs-hud-msg { color: #d6d3d1; font-size: 12px; margin: 0; }
     .cs-hud-sub { color: #a8a29e; font-size: 11px; margin: 0; }
+    .cs-hud-action--muted {
+      color: #57534e;
+      font-size: 10px;
+      border-color: transparent;
+      background: transparent;
+    }
+    .cs-hud-action--muted:hover:not(:disabled) { background: #1f1d1c; color: #78716c; border-color: #292524; }
 
     /* ── Toasts ── */
     #charsnap-toasts {

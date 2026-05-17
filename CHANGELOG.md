@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-05-16 (Phase 7, v1.6)
+
+### Changes
+- Userscript: floating HUD pill is now draggable. Click-and-drag from any non-button area to reposition it anywhere on screen. Cursor shows grab/grabbing feedback. Position is saved via GM_setValue and restored on page reload. Dragging is threshold-based (4 px of movement) so a normal click never accidentally starts a drag. The widget is constrained to the viewport so it can't be lost off-screen. A "Reset position" button in the expanded panel snaps it back to the default bottom-right corner.
+
+---
+
 ## 2026-05-16
 
 ### Fixes

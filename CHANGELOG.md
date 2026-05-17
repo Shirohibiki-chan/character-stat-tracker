@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-05-16 (Phase 7, v1.4)
+
+### Changes
+- Userscript: floating HUD redesigned as a collapsible widget. Collapsed state is a small pill (📊 N captures queued) pinned to the bottom-right corner; clicking it opens an expanded panel. Panel shows the Auto ON/OFF toggle, an Export queue button (copies JSON to clipboard), and a Clear button. After Export, the panel prompts "Clear the queue now?" with Yes/Keep so you can clean up in one flow. When the queue is empty the pill shows "📊 0 captures" in a muted style so the widget stays discoverable without being intrusive.
+
+---
+
 ## 2026-05-16 (Phase 7, v1.3)
 
 ### Fixes

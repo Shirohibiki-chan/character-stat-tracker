@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.3.0
+// @version      1.4.0
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -345,6 +345,7 @@ function injectCaptureButton(dialog) {
 // ── Floating HUD ──────────────────────────────────────────────────────────────
 
 let hudEl = null
+let hudExpanded = false
 
 function renderHUD() {
   if (hudEl) return
@@ -354,54 +355,86 @@ function renderHUD() {
   updateHUD()
 }
 
+function hudLabel(count) {
+  if (count === 0) return '📊 0 captures'
+  return `📊 ${count} capture${count !== 1 ? 's' : ''} queued`
+}
+
 function updateHUD() {
   if (!hudEl) return
   const count = getQueue().length
   const auto  = getAutoCapture()
 
-  hudEl.innerHTML = `
-    <div class="charsnap-hud-inner">
-      <button class="charsnap-hud-btn charsnap-hud-btn--toggle ${auto ? 'charsnap-hud-btn--toggle-on' : ''}" id="cs-auto-btn">
-        Auto: ${auto ? 'ON' : 'OFF'}
+  if (!hudExpanded) {
+    hudEl.innerHTML = `
+      <button class="cs-hud-pill${count === 0 ? ' cs-hud-pill--empty' : ''}" id="cs-hud-open">
+        ${hudLabel(count)}
       </button>
-      <span class="charsnap-hud-sep"></span>
-      <span class="charsnap-hud-label">
-        <span class="charsnap-hud-badge">${count}</span>
-        queued
-      </span>
-      <div class="charsnap-hud-actions">
-        <button class="charsnap-hud-btn charsnap-hud-btn--primary" id="cs-copy-btn" ${count === 0 ? 'disabled' : ''}>
-          Copy queue
+    `
+    hudEl.querySelector('#cs-hud-open').addEventListener('click', () => {
+      hudExpanded = true
+      updateHUD()
+    })
+    return
+  }
+
+  hudEl.innerHTML = `
+    <div class="cs-hud-panel">
+      <div class="cs-hud-header">
+        <span class="cs-hud-title">${hudLabel(count)}</span>
+        <button class="cs-hud-close" id="cs-hud-close" title="Close">×</button>
+      </div>
+      <div class="cs-hud-body" id="cs-hud-body">
+        <button class="cs-hud-auto${auto ? ' cs-hud-auto--on' : ''}" id="cs-auto-btn">
+          Auto: ${auto ? 'ON' : 'OFF'}
         </button>
-        <button class="charsnap-hud-btn charsnap-hud-btn--danger" id="cs-clear-btn" ${count === 0 ? 'disabled' : ''}>
-          Clear
-        </button>
+        <div class="cs-hud-actions">
+          <button class="cs-hud-action cs-hud-action--primary" id="cs-export-btn"${count === 0 ? ' disabled' : ''}>
+            Export queue
+          </button>
+          <button class="cs-hud-action cs-hud-action--danger" id="cs-clear-btn"${count === 0 ? ' disabled' : ''}>
+            Clear
+          </button>
+        </div>
       </div>
     </div>
   `
 
-  hudEl.querySelector('#cs-auto-btn')?.addEventListener('click', () => setAutoCapture(!auto))
+  hudEl.querySelector('#cs-hud-close').addEventListener('click', () => {
+    hudExpanded = false
+    updateHUD()
+  })
 
-  hudEl.querySelector('#cs-copy-btn')?.addEventListener('click', () => {
+  hudEl.querySelector('#cs-auto-btn').addEventListener('click', () => setAutoCapture(!auto))
+
+  hudEl.querySelector('#cs-export-btn')?.addEventListener('click', () => {
     const q = getQueue()
     if (!q.length) return
     GM_setClipboard(JSON.stringify({ captures: q }, null, 2), 'text')
-    hudEl.querySelector('#cs-copy-btn').textContent = '✓ Copied!'
-    setTimeout(updateHUD, 1500)
+    const body = hudEl.querySelector('#cs-hud-body')
+    body.innerHTML = `
+      <p class="cs-hud-msg">Queue copied to clipboard.</p>
+      <p class="cs-hud-sub">Clear the queue now?</p>
+      <div class="cs-hud-actions">
+        <button class="cs-hud-action cs-hud-action--danger-confirm" id="cs-clear-yes">Yes, clear</button>
+        <button class="cs-hud-action" id="cs-clear-no">Keep</button>
+      </div>
+    `
+    body.querySelector('#cs-clear-yes').addEventListener('click', () => { clearQueue(); updateHUD() })
+    body.querySelector('#cs-clear-no').addEventListener('click', updateHUD)
   })
 
   hudEl.querySelector('#cs-clear-btn')?.addEventListener('click', () => {
-    hudEl.innerHTML = `
-      <div class="charsnap-hud-inner">
-        <span class="charsnap-hud-label charsnap-hud-label--warn">Clear all ${count}?</span>
-        <div class="charsnap-hud-actions">
-          <button class="charsnap-hud-btn charsnap-hud-btn--danger-confirm" id="cs-clear-yes-btn">Yes, clear</button>
-          <button class="charsnap-hud-btn" id="cs-clear-no-btn">Keep</button>
-        </div>
+    const body = hudEl.querySelector('#cs-hud-body')
+    body.innerHTML = `
+      <p class="cs-hud-msg">Clear all ${count} capture${count !== 1 ? 's' : ''}?</p>
+      <div class="cs-hud-actions">
+        <button class="cs-hud-action cs-hud-action--danger-confirm" id="cs-clear-yes">Yes, clear</button>
+        <button class="cs-hud-action" id="cs-clear-no">Cancel</button>
       </div>
     `
-    hudEl.querySelector('#cs-clear-yes-btn')?.addEventListener('click', () => { clearQueue(); updateHUD() })
-    hudEl.querySelector('#cs-clear-no-btn')?.addEventListener('click', updateHUD)
+    body.querySelector('#cs-clear-yes').addEventListener('click', () => { clearQueue(); updateHUD() })
+    body.querySelector('#cs-clear-no').addEventListener('click', updateHUD)
   })
 }
 
@@ -506,41 +539,92 @@ function injectStyles() {
       font-family: system-ui, sans-serif;
       font-size: 12px;
     }
-    .charsnap-hud-inner {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #1c1917;
-      border: 1px solid #44403c;
-      border-radius: 10px;
-      padding: 8px 12px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-    }
-    .charsnap-hud-sep { width: 1px; height: 16px; background: #44403c; flex-shrink: 0; }
-    .charsnap-hud-label {
-      color: #a8a29e;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-    }
-    .charsnap-hud-label--warn { color: #fb7185; }
-    .charsnap-hud-badge {
+
+    /* Collapsed pill */
+    .cs-hud-pill {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      min-width: 20px;
-      height: 20px;
-      padding: 0 5px;
-      background: rgba(251, 191, 36, 0.15);
-      color: #fbbf24;
+      padding: 6px 14px;
+      background: #1c1917;
+      border: 1px solid #44403c;
       border-radius: 999px;
-      font-weight: 600;
-      font-size: 11px;
+      color: #fbbf24;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
     }
-    .charsnap-hud-actions { display: flex; gap: 4px; }
-    .charsnap-hud-btn {
-      padding: 4px 10px;
+    .cs-hud-pill:hover { background: #292524; border-color: #57534e; }
+    .cs-hud-pill--empty { color: #57534e; border-color: #292524; }
+    .cs-hud-pill--empty:hover { background: #1f1d1c; border-color: #3c3837; color: #78716c; }
+
+    /* Expanded panel */
+    .cs-hud-panel {
+      background: #1c1917;
+      border: 1px solid #44403c;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+      min-width: 210px;
+      overflow: hidden;
+    }
+    .cs-hud-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px 8px;
+      border-bottom: 1px solid #292524;
+    }
+    .cs-hud-title {
+      color: #fbbf24;
+      font-weight: 500;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .cs-hud-close {
+      color: #78716c;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 0 0 0 10px;
+      transition: color 0.15s;
+    }
+    .cs-hud-close:hover { color: #d6d3d1; }
+    .cs-hud-body {
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .cs-hud-auto {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: #292524;
+      border: 1px solid #44403c;
+      color: #a8a29e;
+      transition: background 0.15s;
+      width: fit-content;
+    }
+    .cs-hud-auto:hover { background: #3c3837; }
+    .cs-hud-auto--on {
+      background: rgba(52, 211, 153, 0.1);
+      color: #34d399;
+      border-color: rgba(52, 211, 153, 0.3);
+    }
+    .cs-hud-auto--on:hover { background: rgba(52, 211, 153, 0.18) !important; }
+    .cs-hud-actions { display: flex; gap: 6px; }
+    .cs-hud-action {
+      flex: 1;
+      padding: 5px 10px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 500;
@@ -551,34 +635,24 @@ function injectStyles() {
       transition: background 0.15s;
       white-space: nowrap;
     }
-    .charsnap-hud-btn:hover:not(:disabled) { background: #3c3837; }
-    .charsnap-hud-btn:disabled { opacity: 0.4; cursor: default; }
-    .charsnap-hud-btn--toggle {
-      color: #a8a29e;
-      font-size: 10px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-    .charsnap-hud-btn--toggle-on {
-      background: rgba(52, 211, 153, 0.1);
-      color: #34d399;
-      border-color: rgba(52, 211, 153, 0.3);
-    }
-    .charsnap-hud-btn--toggle-on:hover { background: rgba(52, 211, 153, 0.18) !important; }
-    .charsnap-hud-btn--primary {
+    .cs-hud-action:hover:not(:disabled) { background: #3c3837; }
+    .cs-hud-action:disabled { opacity: 0.35; cursor: default; }
+    .cs-hud-action--primary {
       background: rgba(251, 191, 36, 0.12);
       color: #fbbf24;
       border-color: rgba(251, 191, 36, 0.3);
     }
-    .charsnap-hud-btn--primary:hover:not(:disabled) { background: rgba(251, 191, 36, 0.22); }
-    .charsnap-hud-btn--danger { color: #fb7185; border-color: rgba(251, 113, 133, 0.3); }
-    .charsnap-hud-btn--danger:hover:not(:disabled) { background: rgba(251, 113, 133, 0.12); }
-    .charsnap-hud-btn--danger-confirm {
+    .cs-hud-action--primary:hover:not(:disabled) { background: rgba(251, 191, 36, 0.22); }
+    .cs-hud-action--danger { color: #fb7185; border-color: rgba(251, 113, 133, 0.3); }
+    .cs-hud-action--danger:hover:not(:disabled) { background: rgba(251, 113, 133, 0.12); }
+    .cs-hud-action--danger-confirm {
       background: rgba(251, 113, 133, 0.15);
       color: #fb7185;
       border-color: rgba(251, 113, 133, 0.3);
     }
-    .charsnap-hud-btn--danger-confirm:hover { background: rgba(251, 113, 133, 0.25); }
+    .cs-hud-action--danger-confirm:hover { background: rgba(251, 113, 133, 0.25); }
+    .cs-hud-msg { color: #d6d3d1; font-size: 12px; margin: 0; }
+    .cs-hud-sub { color: #a8a29e; font-size: 11px; margin: 0; }
 
     /* ── Toasts ── */
     #charsnap-toasts {

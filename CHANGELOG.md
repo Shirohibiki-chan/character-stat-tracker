@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-05-16 (Phase 7, v1.3)
+
+### Fixes
+- Userscript: auto-switch now tries two techniques before giving up. Primary: full PointerEvent chain (pointerdown → pointerup → click). Fallback at ~1.5 s: keyboard activation (focus + Enter keydown) — Radix tabs are keyboard-accessible by design, so this often succeeds when pointer dispatch is ignored. The "Click the Total tab" hint is now deferred to ~3 s (after both techniques have had time to run) rather than appearing immediately at 1.5 s.
+
+---
+
 ## 2026-05-16 (Phase 7, v1.2)
 
 ### Fixes

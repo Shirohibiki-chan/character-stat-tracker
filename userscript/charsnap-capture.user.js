@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.2.0
+// @version      1.3.0
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -116,6 +116,15 @@ function dispatchPointerClick(el) {
   el.dispatchEvent(new PointerEvent('pointerdown', opts))
   el.dispatchEvent(new PointerEvent('pointerup',   opts))
   el.dispatchEvent(new MouseEvent('click',         opts))
+}
+
+// Radix tabs are keyboard-accessible; focus + Enter triggers the tab handler
+// even when PointerEvent dispatch is ignored.
+function dispatchKeyboardActivate(el) {
+  el.focus()
+  const opts = { key: 'Enter', code: 'Enter', bubbles: true, cancelable: true }
+  el.dispatchEvent(new KeyboardEvent('keydown', opts))
+  el.dispatchEvent(new KeyboardEvent('keyup',   opts))
 }
 
 // ── Tab helpers ───────────────────────────────────────────────────────────────
@@ -271,12 +280,19 @@ function performAutoCapture(dialog) {
   })
   activeTabWatcher = observer
 
-  // If the programmatic switch hasn't fired after 1.5 s, prompt the user
+  // Attempt 2: keyboard activation at ~1.5 s if pointer chain didn't land
+  setTimeout(() => {
+    if (fired || !document.body.contains(dialog) || !totalTab) return
+    if (getActiveTabName(dialog) === 'Total') return
+    dispatchKeyboardActivate(totalTab)
+  }, 1500)
+
+  // Prompt only after both techniques have had time to work (~3 s total)
   setTimeout(() => {
     if (!fired && document.body.contains(dialog) && getActiveTabName(dialog) !== 'Total') {
       showToast('Click the <b>Total</b> tab to capture.', 8000)
     }
-  }, 1500)
+  }, 3000)
 }
 
 // ── Manual Capture button (Auto OFF mode) ─────────────────────────────────────

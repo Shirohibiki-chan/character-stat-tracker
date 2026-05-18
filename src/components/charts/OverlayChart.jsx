@@ -4,7 +4,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
 import { METRICS } from '../../constants/metrics.js'
-import { CHART_COLORS } from '../../constants/chart-colors.js'
+import { getAura } from '../../constants/auras.js'
 import { fmt } from '../../constants/format.js'
 
 function buildData(bots, metric, relative) {
@@ -39,14 +39,14 @@ function buildData(bots, metric, relative) {
 
   return {
     data,
-    eligibleBots: eligible.map(({ bot }, i) => ({
+    eligibleBots: eligible.map(({ bot }) => ({
       ...bot,
-      color: CHART_COLORS[i % CHART_COLORS.length],
+      color: getAura(bot.id),
     })),
   }
 }
 
-function OverlayTooltip({ active, payload, label, eligibleBots, relative }) {
+function OverlayTooltip({ active, payload, label, relative }) {
   if (!active || !payload?.length) return null
 
   const date = new Date(label).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -55,18 +55,18 @@ function OverlayTooltip({ active, payload, label, eligibleBots, relative }) {
     .sort((a, b) => (b.value ?? 0) - (a.value ?? 0))
 
   return (
-    <div className="bg-stone-950 border border-stone-700 rounded px-3 py-2 shadow-xl max-w-[220px]">
-      <div className="text-stone-500 text-[10px] mb-1.5">{date}</div>
+    <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl max-w-[220px]">
+      <div className="text-text-muted text-[10px] mb-1.5">{date}</div>
       {present.slice(0, 12).map(p => (
         <div key={p.dataKey} className="flex justify-between gap-4 text-xs">
-          <span className="text-stone-400 truncate">{p.name}</span>
+          <span className="text-text-tertiary truncate">{p.name}</span>
           <span className="num shrink-0" style={{ color: p.stroke }}>
             {relative && p.value > 0 ? '+' : ''}{fmt(p.value)}
           </span>
         </div>
       ))}
       {present.length > 12 && (
-        <div className="text-stone-600 text-[10px] mt-1">+{present.length - 12} more</div>
+        <div className="text-text-muted text-[10px] mt-1">+{present.length - 12} more</div>
       )}
     </div>
   )
@@ -85,46 +85,46 @@ export default function OverlayChart({ bots, onViewBot }) {
 
   if (eligibleBots.length === 0) {
     return (
-      <section className="border border-stone-800 rounded-lg bg-stone-950/50 flex items-center justify-center py-20">
-        <p className="text-stone-500 text-sm text-center max-w-xs">
+      <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
+        <p className="text-text-muted text-sm text-center max-w-xs">
           No bots have Total-scope snapshots to plot.<br />
-          <span className="text-stone-600 text-xs">Add snapshots from the CharSnap "Total" tab.</span>
+          <span className="text-text-muted/70 text-xs">Add snapshots from the CharSnap "Total" tab.</span>
         </p>
       </section>
     )
   }
 
   return (
-    <section className="border border-stone-800 rounded-lg bg-stone-950/50">
-      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-stone-800">
-        <div className="flex items-center gap-2 text-sm text-stone-300">
-          <TrendingUp size={16} className="text-amber-300/70" />
+    <section className="border border-border rounded-lg bg-surface">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
+        <div className="flex items-center gap-2 text-sm text-text-secondary">
+          <TrendingUp size={16} className="text-accent opacity-60" />
           {eligibleBots.length} bot{eligibleBots.length !== 1 ? 's' : ''} · {metricObj?.label}
-          {relative && <span className="text-stone-500 text-xs ml-1">(growth from first snapshot)</span>}
+          {relative && <span className="text-text-muted text-xs ml-1">(growth from first snapshot)</span>}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex gap-1 p-0.5 bg-stone-900 rounded">
+          <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
             {METRICS.map(m => (
               <button
                 key={m.key}
                 onClick={() => setMetric(m.key)}
-                className={`px-2.5 py-1 text-xs rounded transition ${metric === m.key ? 'bg-stone-800 text-stone-100' : 'text-stone-500 hover:text-stone-300'}`}
+                className={`px-2.5 py-1 text-xs rounded transition ${metric === m.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
                 style={metric === m.key ? { boxShadow: `inset 0 0 0 1px ${m.color}40` } : {}}
               >
                 {m.label}
               </button>
             ))}
           </div>
-          <div className="flex gap-1 p-0.5 bg-stone-900 rounded">
+          <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
             <button
               onClick={() => setRelative(false)}
-              className={`px-2.5 py-1 text-xs rounded transition ${!relative ? 'bg-stone-800 text-stone-100' : 'text-stone-500 hover:text-stone-300'}`}
+              className={`px-2.5 py-1 text-xs rounded transition ${!relative ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
             >
               Total
             </button>
             <button
               onClick={() => setRelative(true)}
-              className={`px-2.5 py-1 text-xs rounded transition ${relative ? 'bg-stone-800 text-stone-100' : 'text-stone-500 hover:text-stone-300'}`}
+              className={`px-2.5 py-1 text-xs rounded transition ${relative ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
             >
               Growth
             </button>
@@ -135,24 +135,24 @@ export default function OverlayChart({ bots, onViewBot }) {
         <div style={{ height: 360 }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-              <CartesianGrid stroke="#292524" strokeDasharray="3 3" />
+              <CartesianGrid stroke="var(--color-border-subtle)" strokeDasharray="3 3" />
               <XAxis
                 dataKey="date"
                 type="number"
                 domain={['dataMin', 'dataMax']}
                 tickFormatter={ts => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                stroke="#78716c"
-                style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
-                axisLine={{ stroke: '#44403c' }}
-                tickLine={{ stroke: '#44403c' }}
+                stroke="var(--color-text-muted)"
+                style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                axisLine={{ stroke: 'var(--color-border)' }}
+                tickLine={{ stroke: 'var(--color-border)' }}
                 scale="time"
               />
               <YAxis
                 tickFormatter={fmt}
-                stroke="#78716c"
-                style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
-                axisLine={{ stroke: '#44403c' }}
-                tickLine={{ stroke: '#44403c' }}
+                stroke="var(--color-text-muted)"
+                style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                axisLine={{ stroke: 'var(--color-border)' }}
+                tickLine={{ stroke: 'var(--color-border)' }}
                 width={52}
               />
               <Tooltip
@@ -181,7 +181,7 @@ export default function OverlayChart({ bots, onViewBot }) {
             <button
               key={bot.id}
               onClick={() => onViewBot?.(bot.id)}
-              className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-200 transition min-w-0"
+              className="flex items-center gap-1.5 text-xs text-text-tertiary hover:text-text-primary transition min-w-0"
               title={bot.name}
             >
               <div className="w-4 h-[2px] rounded-full shrink-0" style={{ backgroundColor: bot.color }} />

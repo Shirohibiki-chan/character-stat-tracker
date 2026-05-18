@@ -91,7 +91,7 @@ All resolved as of 2026-05-16–17:
 1. **Favicon and page `<title>`** — small, unblocking
 2. **Userscript `@updateURL` / `@downloadURL`** — one-line metadata addition
 3. **Theme follow-up** — 5 additional themes (Light, Yume Kawaii, Ocean, Dark Academia, Synthwave); requires theme-switcher UI; deferred
-4. **Design sandbox** — `public/dev/sandbox.html` available for picking stat-card typography and color before implementing the visual refresh.
+4. **Design sandbox** — `public/dev/sandbox.html` available for picking stat-card typography, color, gradients, table tints, spacing, and wordmark font before implementing the visual refresh.
 
 ## Process Notes
 

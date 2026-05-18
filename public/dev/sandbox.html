@@ -22,17 +22,17 @@ body {
   padding: 24px 20px;
 }
 
-/* ── Controls ─────────────────────────────────────────────────── */
+/* ── Control panels ───────────────────────────────────────────── */
 .controls {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 20px;
-  padding: 18px 20px;
+  padding: 14px 20px;
   background: #111520;
   border: 1px solid #1f2538;
   border-radius: 10px;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
 }
 
 .control-group {
@@ -49,6 +49,19 @@ body {
   font-weight: 600;
 }
 
+.section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #4ba8c4;
+  font-weight: 700;
+  align-self: center;
+  white-space: nowrap;
+  padding-right: 4px;
+  border-right: 1px solid #1f2538;
+  margin-right: 4px;
+}
+
 select {
   background: #1a2030;
   border: 1px solid #2a3448;
@@ -62,12 +75,7 @@ select {
 }
 
 select:focus { border-color: #4ba8c4; }
-
-.size-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+select:disabled { opacity: 0.38; cursor: not-allowed; }
 
 input[type="range"] {
   width: 130px;
@@ -79,6 +87,18 @@ input[type="range"] {
   padding: 0;
 }
 
+input[type="range"]:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.readout {
+  font-size: 11px;
+  color: #4ba8c4;
+  font-weight: 700;
+  min-width: 34px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* kept for the original size slider row */
+.size-row { display: flex; align-items: center; gap: 8px; }
 .size-readout {
   font-size: 11px;
   color: #4ba8c4;
@@ -86,6 +106,8 @@ input[type="range"] {
   min-width: 30px;
   font-variant-numeric: tabular-nums;
 }
+
+.slider-row { display: flex; align-items: center; gap: 8px; }
 
 .colors-row {
   display: flex;
@@ -100,9 +122,7 @@ input[type="range"] {
   gap: 5px;
 }
 
-.color-swatch .control-label {
-  font-size: 9px;
-}
+.color-swatch .control-label { font-size: 9px; }
 
 input[type="color"] {
   width: 38px;
@@ -157,6 +177,78 @@ button:hover { opacity: 0.82; }
 
 .copy-confirm.show { opacity: 1; }
 
+/* ── Gradient section ─────────────────────────────────────────── */
+.mirror-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #8090a8;
+  cursor: pointer;
+  align-self: center;
+  white-space: nowrap;
+}
+
+.mirror-toggle input[type="checkbox"] {
+  accent-color: #4ba8c4;
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+}
+
+.gradient-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gradient-card-group .mini-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #6e7a8a;
+  font-weight: 700;
+}
+
+.gradient-card-group select { min-width: 180px; }
+
+/* ── Wordmark preview ─────────────────────────────────────────── */
+.wordmark-preview {
+  margin-bottom: 16px;
+  padding: 20px 24px;
+  background: #141826;
+  border: 1px solid #1f2538;
+  border-radius: 8px;
+}
+
+.wordmark-eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #4ba8c4;
+  font-weight: 700;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+#wordmark-text {
+  font-size: 40px;
+  color: #e0e6f0;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+#wordmark-text em {
+  font-style: italic;
+  color: #4ba8c4;
+}
+
+.wordmark-sub {
+  font-size: 13px;
+  color: #6e7a8a;
+  margin-top: 10px;
+}
+
 /* ── Card grid ────────────────────────────────────────────────── */
 .card-grid {
   display: grid;
@@ -172,7 +264,7 @@ button:hover { opacity: 0.82; }
 
 /* ── Stat card ────────────────────────────────────────────────── */
 .stat-card {
-  background: #141826;
+  background-color: #141826;
   border: 1px solid #1f2538;
   border-radius: 8px;
   padding: 18px 12px 16px;
@@ -199,7 +291,6 @@ button:hover { opacity: 0.82; }
   line-height: 1;
   margin-bottom: 8px;
   font-feature-settings: 'tnum';
-  /* font-family / font-weight / font-size set by JS */
 }
 
 .stat-delta {
@@ -209,15 +300,89 @@ button:hover { opacity: 0.82; }
 
 .delta-pos { color: #5ba87f; }
 .delta-neg { color: #d97373; }
+
+/* ── Table preview ────────────────────────────────────────────── */
+.sample-table-wrap {
+  margin-top: 16px;
+  border: 1px solid #1f2538;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #141826;
+}
+
+.sample-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.sample-table th {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  color: #6e7a8a;
+  border-bottom: 1px solid #1f2538;
+}
+
+.sample-table td {
+  padding: 10px 12px;
+  color: #c8d4e0;
+  border-bottom: 1px solid rgba(31, 37, 56, 0.5);
+}
+
+.sample-table tbody tr:last-child td { border-bottom: none; }
+.sample-table tbody tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+th.col-num, td.col-num {
+  text-align: center;
+  color: #6e7a8a;
+  min-width: 32px;
+  font-size: 11px;
+}
+
+th.col-msgs, td.col-msgs,
+th.col-thds, td.col-thds,
+th.col-favs, td.col-favs {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+td.col-upd, th.col-upd {
+  color: #6e7a8a;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.bot-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bot-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #04101a;
+  flex-shrink: 0;
+}
 </style>
 </head>
 <body>
 
-<!-- ── Control panel ─────────────────────────────────────────── -->
+<!-- ── Panel 1: Typography + Colors + Actions ─────────────────── -->
 <div class="controls">
 
   <div class="control-group">
-    <span class="control-label">Font</span>
+    <span class="control-label">Number font</span>
     <select id="ctrl-font">
       <option value="Inter">Inter</option>
       <option value="Figtree">Figtree</option>
@@ -241,7 +406,7 @@ button:hover { opacity: 0.82; }
 
   <div class="control-group">
     <span class="control-label">Weight</span>
-    <select id="ctrl-weight">
+    <select id="ctrl-weight" style="min-width:90px">
       <option value="400">400</option>
       <option value="500">500</option>
       <option value="600">600</option>
@@ -252,7 +417,7 @@ button:hover { opacity: 0.82; }
   </div>
 
   <div class="control-group">
-    <span class="control-label">Size — <span id="size-readout">34px</span></span>
+    <span class="control-label">Size — <span id="size-readout" class="readout">34px</span></span>
     <div class="size-row">
       <input type="range" id="ctrl-size" min="24" max="56" value="34" step="1">
     </div>
@@ -288,8 +453,198 @@ button:hover { opacity: 0.82; }
 
 </div>
 
+<!-- ── Panel 2: Typography depth ──────────────────────────────── -->
+<div class="controls">
+
+  <span class="section-label">Typography depth</span>
+
+  <div class="control-group">
+    <span class="control-label">Letter-spacing — <span id="letter-spacing-readout" class="readout">-0.5px</span></span>
+    <input type="range" id="ctrl-letter-spacing" min="-2" max="2" value="-0.5" step="0.1">
+  </div>
+
+  <div class="control-group">
+    <span class="control-label">Label weight</span>
+    <select id="ctrl-label-weight" style="min-width:90px">
+      <option value="400">400</option>
+      <option value="500">500</option>
+      <option value="600">600</option>
+      <option value="700">700</option>
+    </select>
+  </div>
+
+  <div class="control-group">
+    <span class="control-label">Subline weight</span>
+    <select id="ctrl-subline-weight" style="min-width:90px">
+      <option value="400">400</option>
+      <option value="500">500</option>
+      <option value="600">600</option>
+      <option value="700">700</option>
+    </select>
+  </div>
+
+</div>
+
+<!-- ── Panel 3: Spacing ───────────────────────────────────────── -->
+<div class="controls">
+
+  <span class="section-label">Spacing</span>
+
+  <div class="control-group">
+    <span class="control-label">Card padding — <span id="card-padding-readout" class="readout">18px</span></span>
+    <input type="range" id="ctrl-card-padding" min="8" max="32" value="18" step="1">
+  </div>
+
+  <div class="control-group">
+    <span class="control-label">Card gap — <span id="card-gap-readout" class="readout">12px</span></span>
+    <input type="range" id="ctrl-card-gap" min="4" max="24" value="12" step="1">
+  </div>
+
+  <div class="control-group">
+    <span class="control-label">Border radius — <span id="card-radius-readout" class="readout">8px</span></span>
+    <input type="range" id="ctrl-card-radius" min="0" max="20" value="8" step="1">
+  </div>
+
+</div>
+
+<!-- ── Panel 4: Gradients ─────────────────────────────────────── -->
+<div class="controls">
+
+  <span class="section-label">Gradients</span>
+
+  <label class="mirror-toggle" title="Changes to card 1 (Bots) gradient apply to all cards">
+    <input type="checkbox" id="ctrl-gradient-mirror"> Mirror all to card 1
+  </label>
+
+  <div class="gradient-card-group">
+    <span class="mini-label">Bots</span>
+    <select id="ctrl-grad-type-bots">
+      <option value="radial-ellipse-bottom">Radial — ellipse bottom</option>
+      <option value="radial-circle-center">Radial — circle center</option>
+      <option value="linear-top-to-bottom">Linear — top → bottom</option>
+      <option value="linear-bottom-to-top">Linear — bottom → top</option>
+      <option value="solid-tint">Solid tint</option>
+      <option value="none">None</option>
+    </select>
+    <div class="slider-row">
+      <input type="range" id="ctrl-grad-opacity-bots" min="0" max="60" value="22" step="1">
+      <span class="readout" id="grad-opacity-bots-readout">22%</span>
+    </div>
+  </div>
+
+  <div class="gradient-card-group">
+    <span class="mini-label">Messages</span>
+    <select id="ctrl-grad-type-messages">
+      <option value="radial-ellipse-bottom">Radial — ellipse bottom</option>
+      <option value="radial-circle-center">Radial — circle center</option>
+      <option value="linear-top-to-bottom">Linear — top → bottom</option>
+      <option value="linear-bottom-to-top">Linear — bottom → top</option>
+      <option value="solid-tint">Solid tint</option>
+      <option value="none">None</option>
+    </select>
+    <div class="slider-row">
+      <input type="range" id="ctrl-grad-opacity-messages" min="0" max="60" value="22" step="1">
+      <span class="readout" id="grad-opacity-messages-readout">22%</span>
+    </div>
+  </div>
+
+  <div class="gradient-card-group">
+    <span class="mini-label">Threads</span>
+    <select id="ctrl-grad-type-threads">
+      <option value="radial-ellipse-bottom">Radial — ellipse bottom</option>
+      <option value="radial-circle-center">Radial — circle center</option>
+      <option value="linear-top-to-bottom">Linear — top → bottom</option>
+      <option value="linear-bottom-to-top">Linear — bottom → top</option>
+      <option value="solid-tint">Solid tint</option>
+      <option value="none">None</option>
+    </select>
+    <div class="slider-row">
+      <input type="range" id="ctrl-grad-opacity-threads" min="0" max="60" value="22" step="1">
+      <span class="readout" id="grad-opacity-threads-readout">22%</span>
+    </div>
+  </div>
+
+  <div class="gradient-card-group">
+    <span class="mini-label">Favorites</span>
+    <select id="ctrl-grad-type-favorites">
+      <option value="radial-ellipse-bottom">Radial — ellipse bottom</option>
+      <option value="radial-circle-center">Radial — circle center</option>
+      <option value="linear-top-to-bottom">Linear — top → bottom</option>
+      <option value="linear-bottom-to-top">Linear — bottom → top</option>
+      <option value="solid-tint">Solid tint</option>
+      <option value="none">None</option>
+    </select>
+    <div class="slider-row">
+      <input type="range" id="ctrl-grad-opacity-favorites" min="0" max="60" value="22" step="1">
+      <span class="readout" id="grad-opacity-favorites-readout">22%</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Panel 5: Table tints + Wordmark ───────────────────────── -->
+<div class="controls" style="margin-bottom: 24px;">
+
+  <span class="section-label">Table tints</span>
+
+  <div class="control-group">
+    <span class="control-label">Header tint — <span id="header-tint-readout" class="readout">14%</span></span>
+    <input type="range" id="ctrl-header-tint" min="0" max="30" value="14" step="1">
+  </div>
+
+  <div class="control-group">
+    <span class="control-label">Row tint — <span id="row-tint-readout" class="readout">10%</span></span>
+    <input type="range" id="ctrl-row-tint" min="0" max="30" value="10" step="1">
+  </div>
+
+  <span class="section-label" style="margin-left: 8px;">Wordmark</span>
+
+  <div class="control-group">
+    <span class="control-label">Font</span>
+    <select id="ctrl-wordmark-font">
+      <option value="Inter">Inter</option>
+      <option value="Figtree">Figtree</option>
+      <option value="Outfit">Outfit</option>
+      <option value="Manrope">Manrope</option>
+      <option value="Space Grotesk">Space Grotesk</option>
+      <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
+      <option value="DM Sans">DM Sans</option>
+      <option value="Lexend">Lexend</option>
+      <option value="Sora">Sora</option>
+      <option value="Poppins">Poppins</option>
+      <option value="JetBrains Mono">JetBrains Mono</option>
+      <option value="IBM Plex Mono">IBM Plex Mono</option>
+      <option value="Playfair Display">Playfair Display</option>
+      <option value="DM Serif Display">DM Serif Display</option>
+      <option value="Bebas Neue">Bebas Neue</option>
+      <option value="Unbounded">Unbounded</option>
+      <option value="Syne">Syne</option>
+    </select>
+  </div>
+
+  <div class="control-group">
+    <span class="control-label">Weight</span>
+    <select id="ctrl-wordmark-weight" style="min-width:90px">
+      <option value="400">400</option>
+      <option value="500">500</option>
+      <option value="600">600</option>
+      <option value="700">700</option>
+    </select>
+  </div>
+
+</div>
+
 <!-- ── Preview ───────────────────────────────────────────────── -->
-<div class="card-grid">
+
+<!-- Wordmark preview -->
+<div class="wordmark-preview">
+  <div class="wordmark-eyebrow">Creator dashboard</div>
+  <div id="wordmark-text">CharSnap <em>stats</em></div>
+  <div class="wordmark-sub">60 bots tracked</div>
+</div>
+
+<!-- Stat cards -->
+<div class="card-grid" id="card-grid">
 
   <div class="stat-card" data-card="bots">
     <div class="stat-label">Total Bots</div>
@@ -321,20 +676,135 @@ button:hover { opacity: 0.82; }
 
 </div>
 
-<script>
-const STORAGE_KEY = 'charsnap-sandbox-v1';
+<!-- Table preview -->
+<div class="sample-table-wrap">
+  <table class="sample-table">
+    <thead>
+      <tr>
+        <th class="col-num">#</th>
+        <th class="col-bot">Bot</th>
+        <th class="col-msgs">Msgs</th>
+        <th class="col-thds">Threads</th>
+        <th class="col-favs">Favs</th>
+        <th class="col-upd">Updated</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-num">1</td>
+        <td class="col-bot">
+          <div class="bot-name-cell">
+            <span class="bot-avatar" style="background:#7dd3fc">G</span>
+            Gepard Landau
+          </div>
+        </td>
+        <td class="col-msgs">3.0M</td>
+        <td class="col-thds">9.1K</td>
+        <td class="col-favs">1.4K</td>
+        <td class="col-upd">12h ago</td>
+      </tr>
+      <tr>
+        <td class="col-num">2</td>
+        <td class="col-bot">
+          <div class="bot-name-cell">
+            <span class="bot-avatar" style="background:#a78bfa">B</span>
+            Blade
+          </div>
+        </td>
+        <td class="col-msgs">3.0M</td>
+        <td class="col-thds">9.1K</td>
+        <td class="col-favs">1.3K</td>
+        <td class="col-upd">12h ago</td>
+      </tr>
+      <tr>
+        <td class="col-num">3</td>
+        <td class="col-bot">
+          <div class="bot-name-cell">
+            <span class="bot-avatar" style="background:#f472b6">S</span>
+            Sampo Koski
+          </div>
+        </td>
+        <td class="col-msgs">2.9M</td>
+        <td class="col-thds">9.0K</td>
+        <td class="col-favs">1.4K</td>
+        <td class="col-upd">12h ago</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-const DEFAULTS = {
-  font:           'Inter',
-  weight:         '800',
-  size:           '34',
-  colorBots:      '#4ba8c4',
-  colorMessages:  '#5ba87f',
-  colorThreads:   '#9d8fd4',
-  colorFavorites: '#d48aa0',
+<script>
+var STORAGE_KEY = 'charsnap-sandbox-v1';
+
+var DEFAULTS = {
+  // Typography
+  font:              'Inter',
+  weight:            '800',
+  size:              '34',
+  numLetterSpacing:  '-0.5',
+  labelWeight:       '500',
+  sublineWeight:     '600',
+  // Colors
+  colorBots:         '#4ba8c4',
+  colorMessages:     '#5ba87f',
+  colorThreads:      '#9d8fd4',
+  colorFavorites:    '#d48aa0',
+  // Gradients
+  gradMirror:             false,
+  gradTypeBots:           'radial-ellipse-bottom',
+  gradOpacityBots:        '22',
+  gradTypeMessages:       'radial-ellipse-bottom',
+  gradOpacityMessages:    '22',
+  gradTypeThreads:        'radial-ellipse-bottom',
+  gradOpacityThreads:     '22',
+  gradTypeFavorites:      'radial-ellipse-bottom',
+  gradOpacityFavorites:   '22',
+  // Spacing
+  cardPadding:  '18',
+  cardGap:      '12',
+  cardRadius:   '8',
+  // Table tints
+  headerTintOpacity: '14',
+  rowTintOpacity:    '10',
+  // Wordmark
+  wordmarkFont:   'Inter',
+  wordmarkWeight: '600',
 };
 
-const ctrl = {
+// ── Helpers ──────────────────────────────────────────────────────
+
+function hexToRgb(hex) {
+  return [
+    parseInt(hex.slice(1,3), 16),
+    parseInt(hex.slice(3,5), 16),
+    parseInt(hex.slice(5,7), 16),
+  ];
+}
+
+function makeGradient(type, opacity, hex) {
+  if (type === 'none') return 'none';
+  var rgb = hexToRgb(hex);
+  var a   = (parseFloat(opacity) / 100).toFixed(3);
+  var col = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a + ')';
+  var tr  = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',0)';
+  if (type === 'radial-ellipse-bottom') return 'radial-gradient(ellipse at 50% 120%, ' + col + ' 0%, ' + tr + ' 70%)';
+  if (type === 'radial-circle-center')  return 'radial-gradient(circle at 50% 50%, '   + col + ' 0%, ' + tr + ' 70%)';
+  if (type === 'linear-top-to-bottom')  return 'linear-gradient(to bottom, ' + col + ' 0%, ' + tr + ' 100%)';
+  if (type === 'linear-bottom-to-top')  return 'linear-gradient(to top, '    + col + ' 0%, ' + tr + ' 100%)';
+  if (type === 'solid-tint')            return col;
+  return 'none';
+}
+
+function makeTint(hex, opacity) {
+  var rgb = hexToRgb(hex);
+  var a = (parseFloat(opacity) / 100).toFixed(3);
+  return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a + ')';
+}
+
+// ── Control element references ───────────────────────────────────
+
+var ctrl = {
+  // Panel 1 — existing
   font:           document.getElementById('ctrl-font'),
   weight:         document.getElementById('ctrl-weight'),
   size:           document.getElementById('ctrl-size'),
@@ -346,52 +816,210 @@ const ctrl = {
   exportBtn:      document.getElementById('btn-export'),
   resetBtn:       document.getElementById('btn-reset'),
   copyConfirm:    document.getElementById('copy-confirm'),
+  // Panel 2 — typography depth
+  numLetterSpacing:       document.getElementById('ctrl-letter-spacing'),
+  letterSpacingReadout:   document.getElementById('letter-spacing-readout'),
+  labelWeight:            document.getElementById('ctrl-label-weight'),
+  sublineWeight:          document.getElementById('ctrl-subline-weight'),
+  // Panel 3 — spacing
+  cardPadding:        document.getElementById('ctrl-card-padding'),
+  cardPaddingReadout: document.getElementById('card-padding-readout'),
+  cardGap:            document.getElementById('ctrl-card-gap'),
+  cardGapReadout:     document.getElementById('card-gap-readout'),
+  cardRadius:         document.getElementById('ctrl-card-radius'),
+  cardRadiusReadout:  document.getElementById('card-radius-readout'),
+  // Panel 4 — gradients
+  gradMirror:                   document.getElementById('ctrl-gradient-mirror'),
+  gradTypeBots:                 document.getElementById('ctrl-grad-type-bots'),
+  gradOpacityBots:              document.getElementById('ctrl-grad-opacity-bots'),
+  gradOpacityBotsReadout:       document.getElementById('grad-opacity-bots-readout'),
+  gradTypeMessages:             document.getElementById('ctrl-grad-type-messages'),
+  gradOpacityMessages:          document.getElementById('ctrl-grad-opacity-messages'),
+  gradOpacityMessagesReadout:   document.getElementById('grad-opacity-messages-readout'),
+  gradTypeThreads:              document.getElementById('ctrl-grad-type-threads'),
+  gradOpacityThreads:           document.getElementById('ctrl-grad-opacity-threads'),
+  gradOpacityThreadsReadout:    document.getElementById('grad-opacity-threads-readout'),
+  gradTypeFavorites:            document.getElementById('ctrl-grad-type-favorites'),
+  gradOpacityFavorites:         document.getElementById('ctrl-grad-opacity-favorites'),
+  gradOpacityFavoritesReadout:  document.getElementById('grad-opacity-favorites-readout'),
+  // Panel 5 — table tints + wordmark
+  headerTintOpacity: document.getElementById('ctrl-header-tint'),
+  headerTintReadout: document.getElementById('header-tint-readout'),
+  rowTintOpacity:    document.getElementById('ctrl-row-tint'),
+  rowTintReadout:    document.getElementById('row-tint-readout'),
+  wordmarkFont:      document.getElementById('ctrl-wordmark-font'),
+  wordmarkWeight:    document.getElementById('ctrl-wordmark-weight'),
 };
+
+// ── Read current state from controls ────────────────────────────
 
 function getState() {
   return {
-    font:           ctrl.font.value,
-    weight:         ctrl.weight.value,
-    size:           ctrl.size.value,
-    colorBots:      ctrl.colorBots.value,
-    colorMessages:  ctrl.colorMessages.value,
-    colorThreads:   ctrl.colorThreads.value,
-    colorFavorites: ctrl.colorFavorites.value,
+    font:              ctrl.font.value,
+    weight:            ctrl.weight.value,
+    size:              ctrl.size.value,
+    numLetterSpacing:  ctrl.numLetterSpacing.value,
+    labelWeight:       ctrl.labelWeight.value,
+    sublineWeight:     ctrl.sublineWeight.value,
+    colorBots:         ctrl.colorBots.value,
+    colorMessages:     ctrl.colorMessages.value,
+    colorThreads:      ctrl.colorThreads.value,
+    colorFavorites:    ctrl.colorFavorites.value,
+    gradMirror:        ctrl.gradMirror.checked,
+    gradTypeBots:      ctrl.gradTypeBots.value,
+    gradOpacityBots:   ctrl.gradOpacityBots.value,
+    gradTypeMessages:  ctrl.gradTypeMessages.value,
+    gradOpacityMessages: ctrl.gradOpacityMessages.value,
+    gradTypeThreads:   ctrl.gradTypeThreads.value,
+    gradOpacityThreads: ctrl.gradOpacityThreads.value,
+    gradTypeFavorites: ctrl.gradTypeFavorites.value,
+    gradOpacityFavorites: ctrl.gradOpacityFavorites.value,
+    cardPadding:       ctrl.cardPadding.value,
+    cardGap:           ctrl.cardGap.value,
+    cardRadius:        ctrl.cardRadius.value,
+    headerTintOpacity: ctrl.headerTintOpacity.value,
+    rowTintOpacity:    ctrl.rowTintOpacity.value,
+    wordmarkFont:      ctrl.wordmarkFont.value,
+    wordmarkWeight:    ctrl.wordmarkWeight.value,
   };
 }
 
-function applyState(state) {
-  ctrl.sizeReadout.textContent = state.size + 'px';
+// ── Apply state to the preview ───────────────────────────────────
 
-  document.querySelectorAll('.stat-number').forEach(el => {
-    el.style.fontFamily  = "'" + state.font + "', system-ui, sans-serif";
-    el.style.fontWeight  = state.weight;
-    el.style.fontSize    = state.size + 'px';
+function applyState(s) {
+
+  // ── Readouts ──
+  ctrl.sizeReadout.textContent         = s.size + 'px';
+  ctrl.letterSpacingReadout.textContent= s.numLetterSpacing + 'px';
+  ctrl.cardPaddingReadout.textContent  = s.cardPadding + 'px';
+  ctrl.cardGapReadout.textContent      = s.cardGap + 'px';
+  ctrl.cardRadiusReadout.textContent   = s.cardRadius + 'px';
+  ctrl.headerTintReadout.textContent   = s.headerTintOpacity + '%';
+  ctrl.rowTintReadout.textContent      = s.rowTintOpacity + '%';
+  ctrl.gradOpacityBotsReadout.textContent     = s.gradOpacityBots + '%';
+  ctrl.gradOpacityMessagesReadout.textContent = s.gradOpacityMessages + '%';
+  ctrl.gradOpacityThreadsReadout.textContent  = s.gradOpacityThreads + '%';
+  ctrl.gradOpacityFavoritesReadout.textContent= s.gradOpacityFavorites + '%';
+
+  // ── Numbers: font / weight / size / letter-spacing ──
+  document.querySelectorAll('.stat-number').forEach(function(el) {
+    el.style.fontFamily    = "'" + s.font + "', system-ui, sans-serif";
+    el.style.fontWeight    = s.weight;
+    el.style.fontSize      = s.size + 'px';
+    el.style.letterSpacing = s.numLetterSpacing + 'px';
   });
 
-  const colorMap = {
-    bots:      state.colorBots,
-    messages:  state.colorMessages,
-    threads:   state.colorThreads,
-    favorites: state.colorFavorites,
-  };
+  // ── Labels and sublines ──
+  document.querySelectorAll('.stat-label').forEach(function(el) {
+    el.style.fontWeight = s.labelWeight;
+  });
+  document.querySelectorAll('.stat-delta').forEach(function(el) {
+    el.style.fontWeight = s.sublineWeight;
+  });
 
-  Object.entries(colorMap).forEach(function([card, color]) {
+  // ── Accent colors: number + icon ──
+  var colorMap = { bots: s.colorBots, messages: s.colorMessages, threads: s.colorThreads, favorites: s.colorFavorites };
+  Object.keys(colorMap).forEach(function(card) {
+    var color = colorMap[card];
     document.querySelectorAll('[data-card="' + card + '"] .stat-number, [data-card="' + card + '"] .stat-icon').forEach(function(el) {
       el.style.color = color;
     });
   });
+
+  // ── Gradients: set as background-image so background-color base stays ──
+  var gradDefs = [
+    { id: 'bots',      type: s.gradTypeBots,      op: s.gradOpacityBots,      color: s.colorBots },
+    { id: 'messages',  type: s.gradTypeMessages,   op: s.gradOpacityMessages,  color: s.colorMessages },
+    { id: 'threads',   type: s.gradTypeThreads,    op: s.gradOpacityThreads,   color: s.colorThreads },
+    { id: 'favorites', type: s.gradTypeFavorites,  op: s.gradOpacityFavorites, color: s.colorFavorites },
+  ];
+  gradDefs.forEach(function(g) {
+    var card = document.querySelector('[data-card="' + g.id + '"]');
+    if (!card) return;
+    var bg = makeGradient(g.type, g.op, g.color);
+    card.style.backgroundImage = (bg === 'none') ? 'none' : bg;
+  });
+
+  // Mirror toggle: disable/grey non-bots gradient controls when mirroring
+  ['messages', 'threads', 'favorites'].forEach(function(k) {
+    var cap = k.charAt(0).toUpperCase() + k.slice(1);
+    var dis = s.gradMirror;
+    ctrl['gradType' + cap].disabled    = dis;
+    ctrl['gradOpacity' + cap].disabled = dis;
+  });
+
+  // ── Spacing ──
+  var grid = document.getElementById('card-grid');
+  if (grid) grid.style.gap = s.cardGap + 'px';
+
+  document.querySelectorAll('.stat-card').forEach(function(el) {
+    el.style.padding      = s.cardPadding + 'px 12px';
+    el.style.borderRadius = s.cardRadius + 'px';
+  });
+
+  // ── Table tints ──
+  var hOp = s.headerTintOpacity;
+  var rOp = s.rowTintOpacity;
+
+  // Header: background tint + accent text color
+  document.querySelectorAll('th.col-msgs').forEach(function(el) {
+    el.style.background = makeTint(s.colorMessages, hOp);
+    el.style.color = s.colorMessages;
+  });
+  document.querySelectorAll('th.col-thds').forEach(function(el) {
+    el.style.background = makeTint(s.colorThreads, hOp);
+    el.style.color = s.colorThreads;
+  });
+  document.querySelectorAll('th.col-favs').forEach(function(el) {
+    el.style.background = makeTint(s.colorFavorites, hOp);
+    el.style.color = s.colorFavorites;
+  });
+
+  // Data cell tints
+  document.querySelectorAll('td.col-msgs').forEach(function(el) { el.style.background = makeTint(s.colorMessages, rOp); });
+  document.querySelectorAll('td.col-thds').forEach(function(el) { el.style.background = makeTint(s.colorThreads,  rOp); });
+  document.querySelectorAll('td.col-favs').forEach(function(el) { el.style.background = makeTint(s.colorFavorites,rOp); });
+
+  // ── Wordmark ──
+  var wm = document.getElementById('wordmark-text');
+  if (wm) {
+    wm.style.fontFamily = "'" + s.wordmarkFont + "', serif";
+    wm.style.fontWeight = s.wordmarkWeight;
+  }
 }
 
-function restoreControls(state) {
-  ctrl.font.value           = state.font;
-  ctrl.weight.value         = state.weight;
-  ctrl.size.value           = state.size;
-  ctrl.colorBots.value      = state.colorBots;
-  ctrl.colorMessages.value  = state.colorMessages;
-  ctrl.colorThreads.value   = state.colorThreads;
-  ctrl.colorFavorites.value = state.colorFavorites;
+// ── Restore controls from a state object ────────────────────────
+
+function restoreControls(s) {
+  ctrl.font.value            = s.font;
+  ctrl.weight.value          = s.weight;
+  ctrl.size.value            = s.size;
+  ctrl.numLetterSpacing.value= s.numLetterSpacing;
+  ctrl.labelWeight.value     = s.labelWeight;
+  ctrl.sublineWeight.value   = s.sublineWeight;
+  ctrl.colorBots.value       = s.colorBots;
+  ctrl.colorMessages.value   = s.colorMessages;
+  ctrl.colorThreads.value    = s.colorThreads;
+  ctrl.colorFavorites.value  = s.colorFavorites;
+  ctrl.gradMirror.checked    = s.gradMirror;
+  ctrl.gradTypeBots.value          = s.gradTypeBots;
+  ctrl.gradOpacityBots.value       = s.gradOpacityBots;
+  ctrl.gradTypeMessages.value      = s.gradTypeMessages;
+  ctrl.gradOpacityMessages.value   = s.gradOpacityMessages;
+  ctrl.gradTypeThreads.value       = s.gradTypeThreads;
+  ctrl.gradOpacityThreads.value    = s.gradOpacityThreads;
+  ctrl.gradTypeFavorites.value     = s.gradTypeFavorites;
+  ctrl.gradOpacityFavorites.value  = s.gradOpacityFavorites;
+  ctrl.cardPadding.value     = s.cardPadding;
+  ctrl.cardGap.value         = s.cardGap;
+  ctrl.cardRadius.value      = s.cardRadius;
+  ctrl.headerTintOpacity.value = s.headerTintOpacity;
+  ctrl.rowTintOpacity.value    = s.rowTintOpacity;
+  ctrl.wordmarkFont.value    = s.wordmarkFont;
+  ctrl.wordmarkWeight.value  = s.wordmarkWeight;
 }
+
+// ── Load from localStorage, falling back to defaults ────────────
 
 function loadSaved() {
   try {
@@ -400,35 +1028,91 @@ function loadSaved() {
   } catch(e) { return Object.assign({}, DEFAULTS); }
 }
 
+// ── onChange: mirror gradient if needed, apply, debounce save ────
+
 var saveTimer;
-function onAnyChange() {
+function onAnyChange(e) {
+  // If mirror is on and card-1 gradient changed, sync the other three
+  if (ctrl.gradMirror.checked && e && (e.target === ctrl.gradTypeBots || e.target === ctrl.gradOpacityBots)) {
+    ctrl.gradTypeMessages.value     = ctrl.gradTypeBots.value;
+    ctrl.gradOpacityMessages.value  = ctrl.gradOpacityBots.value;
+    ctrl.gradTypeThreads.value      = ctrl.gradTypeBots.value;
+    ctrl.gradOpacityThreads.value   = ctrl.gradOpacityBots.value;
+    ctrl.gradTypeFavorites.value    = ctrl.gradTypeBots.value;
+    ctrl.gradOpacityFavorites.value = ctrl.gradOpacityBots.value;
+  }
+
   var state = getState();
   applyState(state);
+
   clearTimeout(saveTimer);
   saveTimer = setTimeout(function() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e2) {}
   }, 300);
 }
 
-[ctrl.font, ctrl.weight, ctrl.size, ctrl.colorBots, ctrl.colorMessages, ctrl.colorThreads, ctrl.colorFavorites]
-  .forEach(function(el) { el.addEventListener('input', onAnyChange); });
+// Wire every control to onAnyChange
+[
+  ctrl.font, ctrl.weight, ctrl.size, ctrl.numLetterSpacing,
+  ctrl.labelWeight, ctrl.sublineWeight,
+  ctrl.colorBots, ctrl.colorMessages, ctrl.colorThreads, ctrl.colorFavorites,
+  ctrl.gradMirror,
+  ctrl.gradTypeBots, ctrl.gradOpacityBots,
+  ctrl.gradTypeMessages, ctrl.gradOpacityMessages,
+  ctrl.gradTypeThreads, ctrl.gradOpacityThreads,
+  ctrl.gradTypeFavorites, ctrl.gradOpacityFavorites,
+  ctrl.cardPadding, ctrl.cardGap, ctrl.cardRadius,
+  ctrl.headerTintOpacity, ctrl.rowTintOpacity,
+  ctrl.wordmarkFont, ctrl.wordmarkWeight,
+].forEach(function(el) {
+  if (el) el.addEventListener('input', onAnyChange);
+});
+
+// ── Export CSS ────────────────────────────────────────────────────
 
 ctrl.exportBtn.addEventListener('click', function() {
   var s = getState();
-  var css = ':root {\n'
-    + '  --stat-font-family: ' + s.font + ';\n'
-    + '  --stat-font-weight: ' + s.weight + ';\n'
-    + '  --stat-font-size: '   + s.size + 'px;\n'
-    + '  --accent-bots: '      + s.colorBots + ';\n'
-    + '  --accent-messages: '  + s.colorMessages + ';\n'
-    + '  --accent-threads: '   + s.colorThreads + ';\n'
-    + '  --accent-favorites: ' + s.colorFavorites + ';\n'
-    + '}';
-  navigator.clipboard.writeText(css).then(function() {
+  var lines = [':root {',
+    '  /* Typography */',
+    '  --stat-font-family: ' + s.font + ';',
+    '  --stat-font-weight: ' + s.weight + ';',
+    '  --stat-font-size: '   + s.size + 'px;',
+    '  --stat-letter-spacing: ' + s.numLetterSpacing + 'px;',
+    '  --stat-label-weight: '   + s.labelWeight + ';',
+    '  --stat-subline-weight: ' + s.sublineWeight + ';',
+    '  /* Wordmark */',
+    '  --wordmark-font: '   + s.wordmarkFont + ';',
+    '  --wordmark-weight: ' + s.wordmarkWeight + ';',
+    '  /* Accent colors */',
+    '  --accent-bots: '      + s.colorBots + ';',
+    '  --accent-messages: '  + s.colorMessages + ';',
+    '  --accent-threads: '   + s.colorThreads + ';',
+    '  --accent-favorites: ' + s.colorFavorites + ';',
+    '  /* Gradients */',
+    '  --gradient-bots-type: '            + s.gradTypeBots + ';',
+    '  --gradient-bots-opacity: '         + s.gradOpacityBots + '%;',
+    '  --gradient-messages-type: '        + s.gradTypeMessages + ';',
+    '  --gradient-messages-opacity: '     + s.gradOpacityMessages + '%;',
+    '  --gradient-threads-type: '         + s.gradTypeThreads + ';',
+    '  --gradient-threads-opacity: '      + s.gradOpacityThreads + '%;',
+    '  --gradient-favorites-type: '       + s.gradTypeFavorites + ';',
+    '  --gradient-favorites-opacity: '    + s.gradOpacityFavorites + '%;',
+    '  /* Table tints */',
+    '  --table-header-tint-opacity: '     + s.headerTintOpacity + '%;',
+    '  --table-row-tint-opacity: '        + s.rowTintOpacity + '%;',
+    '  /* Spacing */',
+    '  --card-padding: '      + s.cardPadding + 'px;',
+    '  --card-gap: '          + s.cardGap + 'px;',
+    '  --card-border-radius: '+ s.cardRadius + 'px;',
+    '}',
+  ];
+  navigator.clipboard.writeText(lines.join('\n')).then(function() {
     ctrl.copyConfirm.classList.add('show');
     setTimeout(function() { ctrl.copyConfirm.classList.remove('show'); }, 2000);
   });
 });
+
+// ── Reset ─────────────────────────────────────────────────────────
 
 ctrl.resetBtn.addEventListener('click', function() {
   if (!confirm('Reset all controls to defaults?')) return;
@@ -436,7 +1120,8 @@ ctrl.resetBtn.addEventListener('click', function() {
   location.reload();
 });
 
-// Init on load
+// ── Init ──────────────────────────────────────────────────────────
+
 var initial = loadSaved();
 restoreControls(initial);
 applyState(initial);

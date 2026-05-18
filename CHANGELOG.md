@@ -4,6 +4,7 @@
 
 ### Additions
 - Added `public/dev/sandbox.html` — minimal design tool for typography and accent color iteration. Not user-facing.
+- Expanded design sandbox with gradient, table tint, spacing, typography depth, and wordmark controls.
 
 ---
 

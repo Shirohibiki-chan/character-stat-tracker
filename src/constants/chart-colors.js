@@ -1,22 +1,9 @@
+// 5-aura cycle — keep in sync with --color-aura-1..5 in index.css
+// Use getAura() from auras.js for bot-specific color assignment.
 export const CHART_COLORS = [
-  '#c084fc',
-  '#4ade80',
-  '#f472b6',
-  '#60a5fa',
-  '#fb923c',
-  '#34d399',
-  '#fbbf24',
-  '#22d3ee',
-  '#f87171',
-  '#a3e635',
-  '#2dd4bf',
-  '#818cf8',
-  '#e879f9',
-  '#86efac',
   '#7dd3fc',
-  '#fca5a5',
-  '#d8b4fe',
-  '#6ee7b7',
-  '#fde68a',
   '#a78bfa',
+  '#f472b6',
+  '#34d399',
+  '#fb923c',
 ]

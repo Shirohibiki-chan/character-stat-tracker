@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Additions
+- Added `public/dev/sandbox.html` — minimal design tool for typography and accent color iteration. Not user-facing.
+
+---
+
 ## 2026-05-17 (Dark theme)
 
 ### Changes

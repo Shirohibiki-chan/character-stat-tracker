@@ -7,7 +7,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Playfair+Display:wght@400;500;600;700;800&family=DM+Serif+Display&family=Bebas+Neue&family=Unbounded:wght@400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Albert+Sans:wght@400;500;600;700;800&family=Public+Sans:wght@400;500;600;700;800&family=Karla:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700;800&family=Jost:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700;800&family=Rubik:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700;800&family=Unbounded:wght@400;500;600;700;800&family=Syne:wght@400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700;800&family=Familjen+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Space+Mono:wght@400;700&family=Roboto+Mono:wght@400;500;700&family=Fira+Code:wght@400;500;700&family=DM+Mono:wght@400;500;700&family=Playfair+Display:wght@400;500;600;700;800&family=DM+Serif+Display&family=Cormorant:wght@400;500;600;700;800&family=Libre+Baskerville:wght@400;700&family=Crimson+Pro:wght@400;500;600;700;800&family=Fraunces:wght@400;500;600;700;800&family=Eczar:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700;800&family=EB+Garamond:wght@400;500;600;700;800&family=Bebas+Neue&family=Anton&family=Oswald:wght@400;500;600;700&family=Righteous&family=Russo+One&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont/dist/tabler-icons.min.css" rel="stylesheet">
 
 <style>
@@ -374,6 +374,64 @@ td.col-upd, th.col-upd {
   color: #04101a;
   flex-shrink: 0;
 }
+
+/* ── Text input (preset name) ─────────────────────────────────── */
+input[type="text"] {
+  background: #1a2030;
+  border: 1px solid #2a3448;
+  border-radius: 6px;
+  color: #c8d4e0;
+  font-size: 13px;
+  padding: 7px 10px;
+  outline: none;
+  min-width: 160px;
+}
+input[type="text"]:focus { border-color: #4ba8c4; }
+input[type="text"]::placeholder { color: #45515e; }
+
+/* ── Secondary button ─────────────────────────────────────────── */
+.btn-secondary {
+  background: #1e2538;
+  color: #8090a8;
+  border: 1px solid #2a3448;
+  white-space: nowrap;
+}
+.btn-secondary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ── Preset panel rows ────────────────────────────────────────── */
+.preset-row { display: flex; align-items: center; gap: 8px; }
+
+/* ── Before/after toggle ─────────────────────────────────────── */
+.before-after-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.ba-toggle {
+  display: inline-flex;
+  background: #111520;
+  border: 1px solid #1f2538;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.ba-btn {
+  padding: 5px 16px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: transparent;
+  color: #6e7a8a;
+  border: none;
+  cursor: pointer;
+  transition: color 0.12s, background 0.12s;
+}
+.ba-btn:hover { color: #c8d4e0; opacity: 1; }
+.ba-btn.active { background: #1a2a3a; color: #4ba8c4; }
 </style>
 </head>
 <body>
@@ -384,23 +442,68 @@ td.col-upd, th.col-upd {
   <div class="control-group">
     <span class="control-label">Number font</span>
     <select id="ctrl-font">
-      <option value="Inter">Inter</option>
-      <option value="Figtree">Figtree</option>
-      <option value="Outfit">Outfit</option>
-      <option value="Manrope">Manrope</option>
-      <option value="Space Grotesk">Space Grotesk</option>
-      <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
-      <option value="DM Sans">DM Sans</option>
-      <option value="Lexend">Lexend</option>
-      <option value="Sora">Sora</option>
-      <option value="Poppins">Poppins</option>
-      <option value="JetBrains Mono">JetBrains Mono</option>
-      <option value="IBM Plex Mono">IBM Plex Mono</option>
-      <option value="Playfair Display">Playfair Display</option>
-      <option value="DM Serif Display">DM Serif Display</option>
-      <option value="Bebas Neue">Bebas Neue</option>
-      <option value="Unbounded">Unbounded</option>
-      <option value="Syne">Syne</option>
+      <optgroup label="Modern Sans">
+        <option value="Inter">Inter</option>
+        <option value="Figtree">Figtree</option>
+        <option value="Outfit">Outfit</option>
+        <option value="Manrope">Manrope</option>
+        <option value="Space Grotesk">Space Grotesk</option>
+        <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
+        <option value="DM Sans">DM Sans</option>
+        <option value="Lexend">Lexend</option>
+        <option value="Sora">Sora</option>
+        <option value="Albert Sans">Albert Sans</option>
+        <option value="Public Sans">Public Sans</option>
+        <option value="Karla">Karla</option>
+        <option value="Work Sans">Work Sans</option>
+        <option value="Hanken Grotesk">Hanken Grotesk</option>
+      </optgroup>
+      <optgroup label="Geometric">
+        <option value="Poppins">Poppins</option>
+        <option value="Montserrat">Montserrat</option>
+        <option value="Nunito">Nunito</option>
+        <option value="Quicksand">Quicksand</option>
+        <option value="Jost">Jost</option>
+      </optgroup>
+      <optgroup label="Humanist">
+        <option value="Source Sans 3">Source Sans 3</option>
+        <option value="Rubik">Rubik</option>
+        <option value="Mulish">Mulish</option>
+        <option value="IBM Plex Sans">IBM Plex Sans</option>
+      </optgroup>
+      <optgroup label="Distinctive">
+        <option value="Unbounded">Unbounded</option>
+        <option value="Syne">Syne</option>
+        <option value="Bricolage Grotesque">Bricolage Grotesque</option>
+        <option value="Onest">Onest</option>
+        <option value="Familjen Grotesk">Familjen Grotesk</option>
+      </optgroup>
+      <optgroup label="Display">
+        <option value="Bebas Neue">Bebas Neue</option>
+        <option value="Anton">Anton</option>
+        <option value="Oswald">Oswald</option>
+        <option value="Righteous">Righteous</option>
+        <option value="Russo One">Russo One</option>
+      </optgroup>
+      <optgroup label="Serif">
+        <option value="Playfair Display">Playfair Display</option>
+        <option value="DM Serif Display">DM Serif Display</option>
+        <option value="Cormorant">Cormorant</option>
+        <option value="Libre Baskerville">Libre Baskerville</option>
+        <option value="Crimson Pro">Crimson Pro</option>
+        <option value="Fraunces">Fraunces</option>
+        <option value="Eczar">Eczar</option>
+        <option value="Lora">Lora</option>
+        <option value="EB Garamond">EB Garamond</option>
+      </optgroup>
+      <optgroup label="Mono">
+        <option value="JetBrains Mono">JetBrains Mono</option>
+        <option value="IBM Plex Mono">IBM Plex Mono</option>
+        <option value="Space Mono">Space Mono</option>
+        <option value="Roboto Mono">Roboto Mono</option>
+        <option value="Fira Code">Fira Code</option>
+        <option value="DM Mono">DM Mono</option>
+      </optgroup>
     </select>
   </div>
 
@@ -602,23 +705,68 @@ td.col-upd, th.col-upd {
   <div class="control-group">
     <span class="control-label">Font</span>
     <select id="ctrl-wordmark-font">
-      <option value="Inter">Inter</option>
-      <option value="Figtree">Figtree</option>
-      <option value="Outfit">Outfit</option>
-      <option value="Manrope">Manrope</option>
-      <option value="Space Grotesk">Space Grotesk</option>
-      <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
-      <option value="DM Sans">DM Sans</option>
-      <option value="Lexend">Lexend</option>
-      <option value="Sora">Sora</option>
-      <option value="Poppins">Poppins</option>
-      <option value="JetBrains Mono">JetBrains Mono</option>
-      <option value="IBM Plex Mono">IBM Plex Mono</option>
-      <option value="Playfair Display">Playfair Display</option>
-      <option value="DM Serif Display">DM Serif Display</option>
-      <option value="Bebas Neue">Bebas Neue</option>
-      <option value="Unbounded">Unbounded</option>
-      <option value="Syne">Syne</option>
+      <optgroup label="Modern Sans">
+        <option value="Inter">Inter</option>
+        <option value="Figtree">Figtree</option>
+        <option value="Outfit">Outfit</option>
+        <option value="Manrope">Manrope</option>
+        <option value="Space Grotesk">Space Grotesk</option>
+        <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
+        <option value="DM Sans">DM Sans</option>
+        <option value="Lexend">Lexend</option>
+        <option value="Sora">Sora</option>
+        <option value="Albert Sans">Albert Sans</option>
+        <option value="Public Sans">Public Sans</option>
+        <option value="Karla">Karla</option>
+        <option value="Work Sans">Work Sans</option>
+        <option value="Hanken Grotesk">Hanken Grotesk</option>
+      </optgroup>
+      <optgroup label="Geometric">
+        <option value="Poppins">Poppins</option>
+        <option value="Montserrat">Montserrat</option>
+        <option value="Nunito">Nunito</option>
+        <option value="Quicksand">Quicksand</option>
+        <option value="Jost">Jost</option>
+      </optgroup>
+      <optgroup label="Humanist">
+        <option value="Source Sans 3">Source Sans 3</option>
+        <option value="Rubik">Rubik</option>
+        <option value="Mulish">Mulish</option>
+        <option value="IBM Plex Sans">IBM Plex Sans</option>
+      </optgroup>
+      <optgroup label="Distinctive">
+        <option value="Unbounded">Unbounded</option>
+        <option value="Syne">Syne</option>
+        <option value="Bricolage Grotesque">Bricolage Grotesque</option>
+        <option value="Onest">Onest</option>
+        <option value="Familjen Grotesk">Familjen Grotesk</option>
+      </optgroup>
+      <optgroup label="Display">
+        <option value="Bebas Neue">Bebas Neue</option>
+        <option value="Anton">Anton</option>
+        <option value="Oswald">Oswald</option>
+        <option value="Righteous">Righteous</option>
+        <option value="Russo One">Russo One</option>
+      </optgroup>
+      <optgroup label="Serif">
+        <option value="Playfair Display">Playfair Display</option>
+        <option value="DM Serif Display">DM Serif Display</option>
+        <option value="Cormorant">Cormorant</option>
+        <option value="Libre Baskerville">Libre Baskerville</option>
+        <option value="Crimson Pro">Crimson Pro</option>
+        <option value="Fraunces">Fraunces</option>
+        <option value="Eczar">Eczar</option>
+        <option value="Lora">Lora</option>
+        <option value="EB Garamond">EB Garamond</option>
+      </optgroup>
+      <optgroup label="Mono">
+        <option value="JetBrains Mono">JetBrains Mono</option>
+        <option value="IBM Plex Mono">IBM Plex Mono</option>
+        <option value="Space Mono">Space Mono</option>
+        <option value="Roboto Mono">Roboto Mono</option>
+        <option value="Fira Code">Fira Code</option>
+        <option value="DM Mono">DM Mono</option>
+      </optgroup>
     </select>
   </div>
 
@@ -634,7 +782,35 @@ td.col-upd, th.col-upd {
 
 </div>
 
+<!-- ── Panel 6: Presets ──────────────────────────────────────── -->
+<div class="controls" style="margin-bottom: 24px;">
+  <span class="section-label">Presets</span>
+  <div class="control-group">
+    <span class="control-label">Load preset</span>
+    <div class="preset-row">
+      <select id="preset-select" style="min-width:200px"><option value="">— select preset —</option></select>
+      <button class="btn-secondary" id="btn-delete-preset" disabled>Delete</button>
+    </div>
+  </div>
+  <div class="control-group">
+    <span class="control-label">Save as</span>
+    <div class="preset-row">
+      <input type="text" id="preset-name-input" placeholder="Preset name…">
+      <button class="btn-secondary" id="btn-save-preset">Save</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Preview ───────────────────────────────────────────────── -->
+
+<!-- Before / After toggle -->
+<div class="before-after-bar">
+  <span style="font-size:11px;color:#6e7a8a;text-transform:uppercase;letter-spacing:1.2px;font-weight:600;">Preview</span>
+  <div class="ba-toggle">
+    <button class="ba-btn active" id="ba-sandbox">Sandbox</button>
+    <button class="ba-btn" id="ba-baseline">Baseline</button>
+  </div>
+</div>
 
 <!-- Wordmark preview -->
 <div class="wordmark-preview">
@@ -1125,6 +1301,168 @@ ctrl.resetBtn.addEventListener('click', function() {
 var initial = loadSaved();
 restoreControls(initial);
 applyState(initial);
+</script>
+
+<script>
+(function() {
+  'use strict';
+
+  var PRESETS_KEY = 'charsnap-sandbox-presets';
+
+  // Apply only preview DOM — no readout spans, no gradient disable/enable
+  function applyPreviewOnly(s) {
+    document.querySelectorAll('.stat-number').forEach(function(el) {
+      el.style.fontFamily    = "'" + s.font + "', system-ui, sans-serif";
+      el.style.fontWeight    = s.weight;
+      el.style.fontSize      = s.size + 'px';
+      el.style.letterSpacing = s.numLetterSpacing + 'px';
+    });
+    document.querySelectorAll('.stat-label').forEach(function(el) { el.style.fontWeight = s.labelWeight; });
+    document.querySelectorAll('.stat-delta').forEach(function(el) { el.style.fontWeight = s.sublineWeight; });
+
+    var colorMap = { bots: s.colorBots, messages: s.colorMessages, threads: s.colorThreads, favorites: s.colorFavorites };
+    Object.keys(colorMap).forEach(function(card) {
+      document.querySelectorAll('[data-card="' + card + '"] .stat-number, [data-card="' + card + '"] .stat-icon').forEach(function(el) {
+        el.style.color = colorMap[card];
+      });
+    });
+
+    [
+      { id: 'bots',      type: s.gradTypeBots,      op: s.gradOpacityBots,      color: s.colorBots },
+      { id: 'messages',  type: s.gradTypeMessages,   op: s.gradOpacityMessages,  color: s.colorMessages },
+      { id: 'threads',   type: s.gradTypeThreads,    op: s.gradOpacityThreads,   color: s.colorThreads },
+      { id: 'favorites', type: s.gradTypeFavorites,  op: s.gradOpacityFavorites, color: s.colorFavorites },
+    ].forEach(function(g) {
+      var card = document.querySelector('[data-card="' + g.id + '"]');
+      if (!card) return;
+      var bg = makeGradient(g.type, g.op, g.color);
+      card.style.backgroundImage = (bg === 'none') ? 'none' : bg;
+    });
+
+    var grid = document.getElementById('card-grid');
+    if (grid) grid.style.gap = s.cardGap + 'px';
+    document.querySelectorAll('.stat-card').forEach(function(el) {
+      el.style.padding      = s.cardPadding + 'px 12px';
+      el.style.borderRadius = s.cardRadius + 'px';
+    });
+
+    var hOp = s.headerTintOpacity, rOp = s.rowTintOpacity;
+    document.querySelectorAll('th.col-msgs').forEach(function(el) { el.style.background = makeTint(s.colorMessages, hOp); el.style.color = s.colorMessages; });
+    document.querySelectorAll('th.col-thds').forEach(function(el) { el.style.background = makeTint(s.colorThreads,  hOp); el.style.color = s.colorThreads; });
+    document.querySelectorAll('th.col-favs').forEach(function(el) { el.style.background = makeTint(s.colorFavorites,hOp); el.style.color = s.colorFavorites; });
+    document.querySelectorAll('td.col-msgs').forEach(function(el) { el.style.background = makeTint(s.colorMessages, rOp); });
+    document.querySelectorAll('td.col-thds').forEach(function(el) { el.style.background = makeTint(s.colorThreads,  rOp); });
+    document.querySelectorAll('td.col-favs').forEach(function(el) { el.style.background = makeTint(s.colorFavorites,rOp); });
+
+    var wm = document.getElementById('wordmark-text');
+    if (wm) { wm.style.fontFamily = "'" + s.wordmarkFont + "', serif"; wm.style.fontWeight = s.wordmarkWeight; }
+  }
+
+  // ── Before / After toggle ──────────────────────────────────────
+  var baMode = 'sandbox';
+
+  document.getElementById('ba-sandbox').addEventListener('click', function() {
+    if (baMode === 'sandbox') return;
+    baMode = 'sandbox';
+    this.classList.add('active');
+    document.getElementById('ba-baseline').classList.remove('active');
+    applyState(getState());
+  });
+
+  document.getElementById('ba-baseline').addEventListener('click', function() {
+    if (baMode === 'baseline') return;
+    baMode = 'baseline';
+    this.classList.add('active');
+    document.getElementById('ba-sandbox').classList.remove('active');
+    applyPreviewOnly(DEFAULTS);
+  });
+
+  // Auto-return when user touches any control while in baseline mode
+  document.addEventListener('input', function(e) {
+    if (baMode !== 'baseline') return;
+    var el = e.target;
+    while (el && el !== document.body) {
+      if (el.classList && el.classList.contains('controls')) {
+        baMode = 'sandbox';
+        document.getElementById('ba-sandbox').classList.add('active');
+        document.getElementById('ba-baseline').classList.remove('active');
+        break;
+      }
+      el = el.parentElement;
+    }
+  }, true);
+
+  // ── Preset system ──────────────────────────────────────────────
+  function loadPresets() {
+    try { var raw = localStorage.getItem(PRESETS_KEY); return raw ? JSON.parse(raw) : {}; }
+    catch(e) { return {}; }
+  }
+
+  function savePresets(obj) {
+    try { localStorage.setItem(PRESETS_KEY, JSON.stringify(obj)); } catch(e) {}
+  }
+
+  function populatePresetSelect() {
+    var sel = document.getElementById('preset-select');
+    var current = sel.value;
+    sel.innerHTML = '<option value="">— select preset —</option>';
+    Object.keys(loadPresets()).sort().forEach(function(name) {
+      var opt = document.createElement('option');
+      opt.value = name; opt.textContent = name;
+      sel.appendChild(opt);
+    });
+    sel.value = current;
+    document.getElementById('btn-delete-preset').disabled = !sel.value;
+  }
+
+  document.getElementById('preset-select').addEventListener('change', function() {
+    document.getElementById('btn-delete-preset').disabled = !this.value;
+    if (!this.value) return;
+    var s = Object.assign({}, DEFAULTS, loadPresets()[this.value]);
+    restoreControls(s);
+    applyState(s);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(getState())); } catch(e) {}
+  });
+
+  document.getElementById('btn-save-preset').addEventListener('click', function() {
+    var nameInput = document.getElementById('preset-name-input');
+    var name = nameInput.value.trim();
+    if (!name) { nameInput.focus(); return; }
+    var presets = loadPresets();
+    presets[name] = getState();
+    savePresets(presets);
+    populatePresetSelect();
+    document.getElementById('preset-select').value = name;
+    document.getElementById('btn-delete-preset').disabled = false;
+    nameInput.value = '';
+  });
+
+  document.getElementById('btn-delete-preset').addEventListener('click', function() {
+    var sel = document.getElementById('preset-select');
+    if (!sel.value || !confirm('Delete preset "' + sel.value + '"?')) return;
+    var presets = loadPresets();
+    delete presets[sel.value];
+    savePresets(presets);
+    populatePresetSelect();
+  });
+
+  // ── Reset override — preserve presets, new confirm text ───────
+  document.getElementById('btn-reset').addEventListener('click', function(e) {
+    e.stopImmediatePropagation();
+    if (!confirm('Clear all sandbox values and reload?\n\nSaved presets will NOT be deleted.')) return;
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e2) {}
+    location.reload();
+  }, true);
+
+  // ── Init ──────────────────────────────────────────────────────
+  var presets = loadPresets();
+  if (Object.keys(presets).length === 0) {
+    presets['Initial state'] = getState();
+    savePresets(presets);
+  }
+  populatePresetSelect();
+
+})();
 </script>
 
 </body>

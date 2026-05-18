@@ -1,138 +1,117 @@
-# Plan
-
-Work phases top-down. Do not start a phase until the previous one is complete and usable.
-
-Each phase is a meaningful milestone — at the end of any phase, the app should be in a coherent, working state. Phases are sized to be reviewable as user-facing changes, not just internal refactors.
+# CharSnap — Implementation Plan
 
 ---
 
-## Phase 0: Project Setup
+## Project Overview
 
-**Goal:** a runnable empty Vite + React app deployable to GitHub Pages.
+CharSnap Stats Tracker is a personal dashboard for CharSnap bot creators. It runs entirely in the browser — no backend, no account — all data lives in IndexedDB. A companion Tampermonkey userscript captures stats from manually-opened CharSnap stat modals and exports them as JSON for paste-import. The tracker provides snapshot history, overlay charts, gain views, and other visualizations that CharSnap's own UI doesn't support.
 
-- [x] Initialize Vite + React project (`npm create vite@latest`)
-- [x] Install core dependencies: `recharts`, `lucide-react`. Pick & install state library if going with Zustand
-- [x] Wire up Tailwind CSS (reference artifact uses it heavily)
-- [x] Configure `vite.config.js` for GitHub Pages base path (read `GITHUB_REPOSITORY` env var)
-- [x] Set up `.github/workflows/main.yml` to deploy on push to main
-- [x] Create folder structure: `src/{constants,services,state,hooks,components}` + `docs/`
-- [x] Add `CHANGELOG.md` at repo root with initial entry
-- [x] Confirm: `npm run dev` shows a styled empty page; GitHub Pages deploy works on push
+Work phases top-down. Do not start a phase until the previous one is complete and usable. Each phase is a meaningful milestone — at the end of any phase, the app should be in a coherent, working state. Phases are sized to be reviewable as user-facing changes, not just internal refactors.
 
-**Exit criteria:** branded empty app live at `https://<user>.github.io/<repo>/`.
+---
 
-## Phase 1: Data Layer
+## Future Features
 
-**Goal:** data flows through the strict layer architecture, persists to IndexedDB, survives reload.
+**Light theme**
 
-- [x] Define bot & snapshot schemas in `src/constants/schema.js` (see `data-model.md`)
-- [x] Define metric definitions in `src/constants/metrics.js` (chats / messages / favorites, colors, icons)
-- [x] Implement `storage-service.js` — the ONLY file that touches IndexedDB. Single object store, get/set whole `{bots}` blob
-- [x] Implement state store (Zustand or React equivalent — pick now, stay consistent)
-- [x] Implement `autosave.js` service — debounced writes, NOT a hook, debounce timer survives re-renders
-- [x] Implement `use-bots.js` hook as the access point components use
-- [x] Implement avatar URL normalization helper (see `data-model.md`)
+A light-mode counterpart to the shipped dark theme. Needs token value overrides in `index.css` under `[data-theme="light"]`, a theme-switcher UI in Settings, and a light-mode aura palette (see below). Parked because the dark theme shipped first; the CSS token architecture already supports this as a follow-on.
 
-**Exit criteria:** can write a bot through dev tools / temporary UI, reload browser, confirm it persists. No real UI yet beyond a "you have N bots" indicator that proves the pipeline works.
+---
 
-## Phase 2: Manual Entry + Basic Dashboard
+**Yume Kawaii theme**
 
-**Goal:** user can add bots manually, add snapshots, see them in a list with totals and sorting.
+Pastel/kawaii aesthetic token overrides. Same implementation shape as Light theme — token overrides in `index.css`, theme-switcher UI in Settings, and potentially per-theme texture/background treatments. Parked pending theme-switcher UI.
 
-- [x] "Add bot" modal (name, tags, optional initial snapshot with shorthand like `52k` / `1.2m`)
-- [x] Bot list table with name, avatar, latest stats, last-captured timestamp, snapshot count
-- [x] Delete bot (with confirmation)
-- [x] Edit bot meta (name, tags) inline or via detail view
-- [x] Add manual snapshot to existing bot (date picker, three number fields, scope select)
-- [x] Search bots by name/tag
-- [x] Filter by tag (clickable tag pills)
-- [x] Sort by name / chats / messages / favorites / last-captured (ascending or descending)
-- [x] Aggregate stat cards (total bots, summed chats / messages / favorites) over the filtered set
-- [x] Empty state when no bots exist
+---
 
-**Reference:** the artifact's table, AddBotModal, stat cards, search/filter/sort already exist as a behavioral spec. Don't port code; do match UX.
+**Ocean theme**
 
-**Exit criteria:** can add 10 fake bots, sort/filter/search them, edit and delete, reload, everything persists.
+Blue/teal aesthetic token overrides. Same shape as other additional themes. Parked pending theme-switcher UI.
 
-## Phase 3: Paste-Box Import
+---
 
-**Goal:** user can paste CharSnap's copy-button output and have it parsed into a snapshot.
+**Dark Academia theme**
 
-- [x] Import modal with paste textarea
-- [x] Parser for CharSnap copy-button format (see `charsnap-state.md` — **verify current format with the user before locking in the parser; it has changed since the reference artifact**)
-- [x] Parser for batch JSON format (forward-compatible for the future userscript)
-- [x] Auto-match captures to existing bots by name + normalized avatar URL
-- [x] Disambiguation UI when name matches multiple bots (the "eight Sampos" problem — see `domain-glossary.md`)
-- [x] "Create new bot" option in the disambiguation UI
-- [x] Preview screen before apply — show what will happen for each capture (update X, create new, ambiguous → pick)
-- [x] Scope warning if captures aren't from the Total tab (the growth chart needs Total)
+Muted warm-dark aesthetic token overrides. Same shape as other additional themes. Parked pending theme-switcher UI.
 
-**Exit criteria:** user pastes real CharSnap output, parser recognizes it, captures land as snapshots on the right bots without duplication.
+---
 
-## Phase 4: Per-Bot Detail + Growth Charts
+**Synthwave theme**
 
-**Goal:** user clicks a bot row, sees that bot's full history with a line chart.
+Neon/retrowave aesthetic token overrides. May benefit from per-theme texture or background treatments. Parked pending theme-switcher UI.
 
-- [x] Bot detail modal/view (open from row click or row "view" button)
-- [x] List all snapshots chronologically with delete-individual capability
-- [x] Line chart of all three metrics over time, filtered to Total-scope snapshots
-- [x] Use dual-axis since messages dwarf chats and favorites in scale
-- [x] Delta-since-last-snapshot for each metric (e.g., "+12K since Nov 14")
-- [x] Add snapshot directly from detail view
-- [x] Edit bot meta from detail view
-- [x] Delete bot from detail view
+---
 
-**Exit criteria:** for any bot with 2+ snapshots, growth-over-time chart renders correctly with no scope-mixing artifacts.
+**Light-mode aura palette**
 
-## Phase 5: Multi-Bot Visualizations
+Per-bot aura colors tuned for light backgrounds. The current aura set was designed for the dark theme and will need a separate palette pass once Light theme exists. Depends on Light theme being built first.
 
-**Goal:** the views CharSnap doesn't provide — the actual reason the tracker exists.
+---
 
-- [x] **Izumael-style overlay chart**: all bots' cumulative growth (chats or messages) on one chart, one line per bot, legend, hover highlight. This is THE flagship view.
-- [x] **Top Characters history view**: reconstruct "who topped the leaderboard on day X" by ranking snapshot deltas. Day picker, ranked list, clickable to bot detail.
-- [x] **Daily/weekly/monthly gain views**: derived from Total snapshots via deltas — bypasses CharSnap's reset-window timing issues
-- [x] **Tag-based aggregates**: e.g., "event bots combined growth" — sum across tagged bots
-- [x] **Configurable ranking chart** (already in reference artifact): top N by any metric, configurable N
-- [x] Switch between chart types via tab/dropdown in main dashboard
+## Queued Adjustments
 
-**Exit criteria:** the dashboard offers something useful CharSnap doesn't. Specifically: the overlay chart works and looks good with 20+ bots.
+*(None currently queued.)*
 
-## Phase 6: Polish + Share-Readiness
+---
 
-**Goal:** another creator could pick this up and use it without explanation.
+## Known Bugs
 
-- [x] Empty state for first-time users (paste your first stats hint)
-- [x] Onboarding tooltip for the import box
-- [x] About page / lander rendering `CHANGELOG.md` entries
-- [x] README with screenshots of the dashboard, growth chart, overlay chart
-- [x] Export/import full data (JSON) for backup or transferring between browsers
-- [x] Reset button (with confirm-twice)
-- [x] Mobile-decent layout (works on phone, even if optimized for desktop)
-- [x] Favicon and page title
-- [x] Dark theme — cool-slate palette, CSS token system, Quicksand/Inter fonts, aura colors (2026-05-17)
+*(None documented in plan.md.)*
 
-**Exit criteria:** sharable URL with a clean first-load experience.
+---
 
-## Phase 7: Userscript
+## Phases 0–7 — Completed
 
-**Complete.** Shipped 2026-05-16 (v1.0–v1.4), with ongoing polish through v1.8 (2026-05-17). Constraints honored:
+### Phase 0 — Project Setup
+- Initialized Vite + React project; installed Recharts, lucide-react, Zustand, Tailwind CSS
+- Configured `vite.config.js` GitHub Pages base path via `GITHUB_REPOSITORY` env var
+- Set up `.github/workflows/main.yml` deploy on push to main
+- Created folder structure: `src/{constants,services,state,hooks,components}` + `docs/`
+- Added `CHANGELOG.md` at repo root
 
-- Reads DOM of a manually-opened stats modal — does NOT auto-open modals
-- Refuses to capture if not on the Total tab (warns user, doesn't queue bad data)
-- Captures one bot at a time (no auto-walk across the creator's catalog)
-- Outputs to clipboard as JSON for paste-import into the main app (since artifact and userscript don't share storage scope)
+### Phase 1 — Data Layer
+- Defined bot & snapshot schemas in `src/constants/schema.js`
+- Defined metric definitions in `src/constants/metrics.js` (chats / messages / favorites, colors, icons)
+- Implemented `storage-service.js` — sole IndexedDB access point
+- Implemented Zustand state store and `autosave.js` debounced write service (non-hook, timer survives re-renders)
+- Implemented `use-bots.js` access hook and avatar URL normalization helper
+
+### Phase 2 — Manual Entry + Basic Dashboard
+- Add/edit/delete bots; manual snapshot entry (date picker, three number fields, scope select)
+- Bot list table with name, avatar, latest stats, last-captured timestamp, snapshot count
+- Search by name/tag, filter by tag pill, sort by any metric ascending/descending
+- Aggregate stat cards over filtered set; empty state when no bots exist
+
+### Phase 3 — Paste-Box Import
+- Import modal with paste textarea; parsers for CharSnap copy-button format and batch JSON format
+- Auto-match captures to bots by name + normalized avatar URL
+- Disambiguation UI for ambiguous matches (the "eight Sampos" problem); "Create new bot" option
+- Preview screen before apply; scope warning for non-Total-tab captures
+
+### Phase 4 — Per-Bot Detail + Growth Charts
+- Bot detail view (open from row click or "view" button); full snapshot list with per-snapshot delete
+- Line chart of three metrics over time (Total-scope only), dual-axis for scale
+- Delta-since-last-snapshot per metric; add snapshot / edit meta / delete bot from detail view
+
+### Phase 5 — Multi-Bot Visualizations
+- Izumael-style overlay chart (flagship): all bots' cumulative growth on one chart, one line per bot, legend, hover highlight
+- Top Characters history view: replay past leaderboards by ranking snapshot deltas; day picker, ranked list, clickable to detail
+- Daily/weekly/monthly/all-time gain views derived from Total snapshots
+- Tag-based aggregate view: sum metrics across all bots sharing a tag
+- Configurable ranking chart: top N bots by any metric; tab/dropdown view switching
+
+### Phase 6 — Polish + Share-Readiness
+- First-time user empty state; onboarding tooltip for the import box
+- About page rendering `CHANGELOG.md` entries; README with screenshots
+- JSON backup/import (full data export and restore); reset button with double-confirm
+- Mobile-decent layout; favicon and page title
+- Dark theme: cool-slate palette, CSS token system (`[data-theme]` architecture), Quicksand/Inter fonts, aura colors (shipped 2026-05-17)
+
+### Phase 7 — Userscript
+Shipped 2026-05-16 (v1.0–v1.4), polished through v1.8 (2026-05-17). Lives in `userscript/charsnap-capture.user.js`.
+- Reads DOM of manually-opened stats modals; does not auto-open modals
+- Refuses to capture if not on the Total tab; warns user rather than queuing bad data
+- Captures one bot at a time; outputs JSON to clipboard for paste-import into the main app
+- Floating HUD: queue count, Copy queue button, two-step Clear confirm
+- Does not share storage with the main app (different origins); clipboard → paste-import is the handoff
 - Personal use only until cleared with CharSnap team for wider distribution
-
-Lives in `userscript/charsnap-capture.user.js` alongside the main app.
-
-## Theme follow-up (queued)
-
-Dark theme shipped 2026-05-17 with a CSS token architecture that supports additional themes via `[data-theme="..."]` selector overrides. Five themes remain:
-
-- Light
-- Yume Kawaii
-- Ocean
-- Dark Academia
-- Synthwave
-
-Each theme needs: token value overrides in `index.css`, a theme-switcher UI in Settings, and potentially per-theme texture/background treatments. Light-mode aura palette is also deferred.

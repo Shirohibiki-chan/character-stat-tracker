@@ -111,6 +111,7 @@ Each phase is a meaningful milestone — at the end of any phase, the app should
 - [x] Reset button (with confirm-twice)
 - [x] Mobile-decent layout (works on phone, even if optimized for desktop)
 - [x] Favicon and page title
+- [x] Dark theme — cool-slate palette, CSS token system, Quicksand/Inter fonts, aura colors (2026-05-17)
 
 **Exit criteria:** sharable URL with a clean first-load experience.
 
@@ -125,3 +126,15 @@ Each phase is a meaningful milestone — at the end of any phase, the app should
 - Personal use only until cleared with CharSnap team for wider distribution
 
 Lives in `userscript/charsnap-capture.user.js` alongside the main app.
+
+## Theme follow-up (queued)
+
+Dark theme shipped 2026-05-17 with a CSS token architecture that supports additional themes via `[data-theme="..."]` selector overrides. Five themes remain:
+
+- Light
+- Yume Kawaii
+- Ocean
+- Dark Academia
+- Synthwave
+
+Each theme needs: token value overrides in `index.css`, a theme-switcher UI in Settings, and potentially per-theme texture/background treatments. Light-mode aura palette is also deferred.

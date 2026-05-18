@@ -4,19 +4,24 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
 import { METRICS } from '../../constants/metrics.js'
+import { getAura } from '../../constants/auras.js'
 import { fmt, fmtFull, fmtDate, parseNum } from '../../constants/format.js'
 import { createSnapshot, SCOPES } from '../../constants/schema.js'
 import Modal from './Modal.jsx'
+
+function avatarGlow(color) {
+  return `0 0 0 1.5px ${color}, 0 0 10px 1px ${color}8c, 0 0 18px 2px ${color}38`
+}
 
 function ChartTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
   const d = payload[0].payload
   return (
-    <div className="bg-stone-950 border border-stone-700 rounded px-3 py-2 shadow-xl">
-      <div className="text-xs text-stone-400 mb-1">{d.dateLabel}</div>
+    <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
+      <div className="text-xs text-text-muted mb-1">{d.dateLabel}</div>
       {METRICS.map(m => (
         <div key={m.key} className="flex justify-between gap-6 text-xs">
-          <span className="text-stone-500">{m.label}</span>
+          <span className="text-text-muted">{m.label}</span>
           <span className="num" style={{ color: m.color }}>{fmtFull(d[m.key])}</span>
         </div>
       ))}
@@ -37,6 +42,8 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
   })
 
   const isDirty = addingSnap && !!(newSnap.chats || newSnap.messages || newSnap.favorites)
+
+  const aura = getAura(bot.id)
 
   const sortedSnaps = useMemo(
     () => [...(bot.snapshots || [])].sort((a, b) => new Date(a.date) - new Date(b.date)),
@@ -88,24 +95,28 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
   return (
     <Modal onClose={onClose} isDirty={isDirty}>
       <div
-        className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl"
+        className="bg-bg border border-border rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl"
         onClick={e => e.stopPropagation()}
       >
 
         {/* Header */}
-        <div className="flex items-center gap-4 px-6 py-5 border-b border-stone-800 shrink-0">
-          <button onClick={onClose} className="p-1 text-stone-500 hover:text-stone-200 transition">
+        <div className="flex items-center gap-4 px-6 py-5 border-b border-border shrink-0">
+          <button onClick={onClose} className="p-1 text-text-muted hover:text-text-primary transition">
             <ChevronLeft size={20} />
           </button>
           {bot.avatar ? (
             <img
               src={bot.avatar}
               alt=""
-              className="w-14 h-14 rounded-full object-cover bg-stone-800 shrink-0"
+              className="w-14 h-14 rounded-full object-cover shrink-0"
+              style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
               onError={e => { e.target.style.display = 'none' }}
             />
           ) : (
-            <div className="w-14 h-14 rounded-full bg-stone-800 flex items-center justify-center text-stone-500 font-display text-2xl shrink-0">
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center text-text-secondary font-display text-2xl shrink-0"
+              style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
+            >
               {bot.name?.[0]?.toUpperCase() || '?'}
             </div>
           )}
@@ -115,13 +126,13 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                 <input
                   value={metaName}
                   onChange={e => setMetaName(e.target.value)}
-                  className="bg-stone-900 border border-stone-700 rounded px-2 py-1 text-lg font-display focus:outline-none focus:border-amber-300/40"
+                  className="bg-surface-alt border border-border rounded px-2 py-1 text-lg font-display text-text-primary focus:outline-none focus:border-accent/50"
                 />
                 <input
                   value={metaTags}
                   onChange={e => setMetaTags(e.target.value)}
                   placeholder="tags, comma-separated"
-                  className="bg-stone-900 border border-stone-700 rounded px-2 py-1 text-xs focus:outline-none focus:border-amber-300/40"
+                  className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
                 />
               </div>
             ) : (
@@ -129,7 +140,17 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                 <h2 className="font-display text-2xl truncate">{bot.name}</h2>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {(bot.tags || []).map(t => (
-                    <span key={t} className="text-[10px] px-1.5 py-0.5 bg-stone-800/80 text-stone-400 rounded">{t}</span>
+                    <span
+                      key={t}
+                      className="text-[10px] px-[7px] py-[2px] rounded-[3px] font-bold uppercase tracking-[0.1em]"
+                      style={{
+                        background: 'var(--color-accent-faint)',
+                        border: '1px solid var(--color-accent-faint-border)',
+                        color: 'var(--color-accent-faint-text)',
+                      }}
+                    >
+                      {t}
+                    </span>
                   ))}
                 </div>
               </>
@@ -138,15 +159,15 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
           <div className="flex gap-1 shrink-0">
             {editingMeta ? (
               <>
-                <button onClick={saveMeta} className="p-2 text-emerald-400 hover:bg-stone-800 rounded transition">
+                <button onClick={saveMeta} className="p-2 text-emerald-400 hover:bg-surface-alt rounded transition">
                   <Check size={16} />
                 </button>
-                <button onClick={cancelMeta} className="p-2 text-stone-500 hover:bg-stone-800 rounded transition">
+                <button onClick={cancelMeta} className="p-2 text-text-muted hover:bg-surface-alt rounded transition">
                   <X size={16} />
                 </button>
               </>
             ) : (
-              <button onClick={() => setEditingMeta(true)} className="p-2 text-stone-400 hover:text-amber-300 hover:bg-stone-800 rounded transition">
+              <button onClick={() => setEditingMeta(true)} className="p-2 text-text-tertiary hover:text-accent-light hover:bg-surface-alt rounded transition">
                 <Pencil size={14} />
               </button>
             )}
@@ -163,12 +184,24 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                 const val = latest[m.key]
                 const delta = prev != null ? val - prev[m.key] : null
                 return (
-                  <div key={m.key} className="border border-stone-800 rounded-lg p-4 bg-stone-950/40">
+                  <div
+                    key={m.key}
+                    className="rounded-lg p-4"
+                    style={{
+                      background: m.card.bg,
+                      border: `1px solid ${m.card.border}`,
+                    }}
+                  >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] tracking-[0.2em] uppercase text-stone-500">{m.label}</span>
+                      <span
+                        className="text-[10px] tracking-[0.22em] uppercase font-bold"
+                        style={{ color: m.card.label }}
+                      >
+                        {m.label}
+                      </span>
                     </div>
-                    <div className="num text-3xl font-medium" style={{ color: m.color }}>{fmt(val)}</div>
-                    <div className="text-[10px] text-stone-600 num mt-0.5">{fmtFull(val)}</div>
+                    <div className="num text-3xl font-bold" style={{ color: m.card.number }}>{fmt(val)}</div>
+                    <div className="text-[10px] num mt-0.5" style={{ color: m.card.label }}>{fmtFull(val)}</div>
                     {delta !== null && delta !== 0 && (
                       <div className={`text-xs mt-1 num ${delta > 0 ? 'text-emerald-400/80' : 'text-red-400/80'}`}>
                         {delta > 0 ? '+' : ''}{fmt(delta)} since {fmtDate(prev.date)}
@@ -179,42 +212,42 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
               })}
             </div>
           ) : (
-            <p className="text-center py-8 text-stone-500 text-sm mb-6">
+            <p className="text-center py-8 text-text-muted text-sm mb-6">
               No snapshots yet. Add one below or paste from CharSnap.
             </p>
           )}
 
           {/* Growth chart */}
           {chartSnaps.length >= 2 && (
-            <div className="mb-6 border border-stone-800 rounded-lg p-4 bg-stone-950/40">
-              <div className="flex items-center gap-2 text-sm text-stone-300 mb-3">
-                <TrendingUp size={16} className="text-amber-300/70" />
+            <div className="mb-6 border border-border rounded-lg p-4 bg-surface">
+              <div className="flex items-center gap-2 text-sm text-text-secondary mb-3">
+                <TrendingUp size={16} className="text-accent opacity-60" />
                 Growth over time
               </div>
               <div style={{ height: 280 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartSnaps} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-                    <CartesianGrid stroke="#292524" />
+                    <CartesianGrid stroke="var(--color-border-subtle)" />
                     <XAxis
                       dataKey="date"
                       type="number"
                       domain={['dataMin', 'dataMax']}
                       tickFormatter={t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                      stroke="#78716c"
-                      style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                      stroke="var(--color-text-muted)"
+                      style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
                     />
                     <YAxis
                       yAxisId="left"
                       tickFormatter={fmt}
-                      stroke="#78716c"
-                      style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                      stroke="var(--color-text-muted)"
+                      style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
                     />
                     <YAxis
                       yAxisId="right"
                       orientation="right"
                       tickFormatter={fmt}
-                      stroke="#78716c"
-                      style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace' }}
+                      stroke="var(--color-text-muted)"
+                      style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
                     />
                     <Tooltip content={<ChartTooltip />} />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
@@ -233,71 +266,71 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                   </LineChart>
                 </ResponsiveContainer>
               </div>
-              <p className="text-[10px] text-stone-600 mt-2">
+              <p className="text-[10px] text-text-muted mt-2">
                 Threads &amp; favorites use left axis; messages use right axis (different scales).
               </p>
             </div>
           )}
 
           {/* Snapshot list */}
-          <div className="border border-stone-800 rounded-lg bg-stone-950/40">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-stone-800">
-              <div className="flex items-center gap-2 text-sm text-stone-300">
-                <Camera size={14} className="text-amber-300/70" />
+          <div className="border border-border rounded-lg bg-surface">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+              <div className="flex items-center gap-2 text-sm text-text-secondary">
+                <Camera size={14} className="text-accent opacity-60" />
                 Snapshots ({sortedSnaps.length})
               </div>
               <button
                 onClick={() => setAddingSnap(a => !a)}
-                className="text-xs px-2 py-1 border border-stone-700 hover:border-amber-300/40 rounded flex items-center gap-1.5 text-stone-400 hover:text-stone-200 transition"
+                className="text-xs px-2 py-1 border border-border hover:border-accent/40 rounded flex items-center gap-1.5 text-text-secondary hover:text-text-primary transition"
               >
                 <Plus size={12} /> Add manual snapshot
               </button>
             </div>
 
             {addingSnap && (
-              <div className="border-b border-stone-800 p-3 bg-amber-300/5">
+              <div className="border-b border-border p-3 bg-accent-faint">
                 <div className="grid grid-cols-12 gap-2 items-center">
                   <input
                     type="date"
                     value={newSnap.date}
                     onChange={e => setNewSnap(s => ({ ...s, date: e.target.value }))}
-                    className="col-span-3 bg-stone-900 border border-stone-700 rounded px-2 py-1 text-xs focus:outline-none focus:border-amber-300/40"
+                    className="col-span-3 bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
                   />
                   <input
                     placeholder="threads"
                     value={newSnap.chats}
                     onChange={e => setNewSnap(s => ({ ...s, chats: e.target.value }))}
-                    className="col-span-2 num bg-stone-900 border border-stone-700 rounded px-2 py-1 text-xs focus:outline-none focus:border-amber-300/40"
+                    className="col-span-2 num bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
                   />
                   <input
                     placeholder="messages"
                     value={newSnap.messages}
                     onChange={e => setNewSnap(s => ({ ...s, messages: e.target.value }))}
-                    className="col-span-3 num bg-stone-900 border border-stone-700 rounded px-2 py-1 text-xs focus:outline-none focus:border-amber-300/40"
+                    className="col-span-3 num bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
                   />
                   <input
                     placeholder="favs"
                     value={newSnap.favorites}
                     onChange={e => setNewSnap(s => ({ ...s, favorites: e.target.value }))}
-                    className="col-span-2 num bg-stone-900 border border-stone-700 rounded px-2 py-1 text-xs focus:outline-none focus:border-amber-300/40"
+                    className="col-span-2 num bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
                   />
                   <div className="col-span-2 flex gap-1 justify-end">
-                    <button onClick={submitSnap} className="p-1.5 text-emerald-400 hover:bg-stone-800 rounded transition">
+                    <button onClick={submitSnap} className="p-1.5 text-emerald-400 hover:bg-surface-alt rounded transition">
                       <Check size={14} />
                     </button>
-                    <button onClick={() => setAddingSnap(false)} className="p-1.5 text-stone-500 hover:bg-stone-800 rounded transition">
+                    <button onClick={() => setAddingSnap(false)} className="p-1.5 text-text-muted hover:bg-surface-alt rounded transition">
                       <X size={14} />
                     </button>
                   </div>
                 </div>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-[10px] text-stone-600">
-                    Shorthand like <code className="text-stone-400">52k</code> works.
+                  <span className="text-[10px] text-text-muted">
+                    Shorthand like <code className="text-text-secondary">52k</code> works.
                   </span>
                   <select
                     value={newSnap.scope}
                     onChange={e => setNewSnap(s => ({ ...s, scope: e.target.value }))}
-                    className="bg-stone-900 border border-stone-700 rounded px-2 py-1 text-xs text-stone-300 focus:outline-none focus:border-amber-300/40"
+                    className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus:border-accent/50"
                   >
                     {SCOPES.map(sc => <option key={sc} value={sc}>{sc}</option>)}
                   </select>
@@ -306,8 +339,8 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
             )}
 
             <table className="w-full text-sm">
-              <thead className="text-[10px] uppercase tracking-wider text-stone-500">
-                <tr className="border-b border-stone-800">
+              <thead className="text-[10px] uppercase tracking-[0.22em] font-bold text-text-muted">
+                <tr className="border-b border-border">
                   <th className="text-left py-2 px-4">Date</th>
                   <th className="text-right py-2 px-3">Threads</th>
                   <th className="text-right py-2 px-3">Messages</th>
@@ -318,16 +351,16 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
               </thead>
               <tbody>
                 {[...sortedSnaps].reverse().map(s => (
-                  <tr key={s.date} className="border-b border-stone-900 hover:bg-stone-900/40">
-                    <td className="py-2 px-4 text-xs text-stone-400">{fmtDate(s.date)}</td>
-                    <td className="py-2 px-3 text-right num text-sm">{fmt(s.chats)}</td>
-                    <td className="py-2 px-3 text-right num text-sm">{fmt(s.messages)}</td>
-                    <td className="py-2 px-3 text-right num text-sm">{fmt(s.favorites)}</td>
-                    <td className="py-2 px-3 text-right text-[10px] text-stone-600">{s.scope || ''}</td>
+                  <tr key={s.date} className="border-b border-border-subtle hover:bg-surface-alt/50">
+                    <td className="py-2 px-4 text-xs text-text-secondary">{fmtDate(s.date)}</td>
+                    <td className="py-2 px-3 text-right num text-sm text-text-value">{fmt(s.chats)}</td>
+                    <td className="py-2 px-3 text-right num text-sm text-text-value">{fmt(s.messages)}</td>
+                    <td className="py-2 px-3 text-right num text-sm text-text-value">{fmt(s.favorites)}</td>
+                    <td className="py-2 px-3 text-right text-[10px] text-text-muted">{s.scope || ''}</td>
                     <td className="py-2 px-3 text-right">
                       {confirmDeleteSnap === s.date ? (
                         <div className="flex items-center gap-1 justify-end">
-                          <span className="text-stone-400 text-[10px] whitespace-nowrap">Delete?</span>
+                          <span className="text-text-secondary text-[10px] whitespace-nowrap">Delete?</span>
                           <button
                             onClick={() => { onDeleteSnapshot(s.date); setConfirmDeleteSnap(null) }}
                             className="px-1.5 py-0.5 bg-red-500/20 text-red-300 rounded hover:bg-red-500/30 text-[10px] transition"
@@ -336,7 +369,7 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                           </button>
                           <button
                             onClick={() => setConfirmDeleteSnap(null)}
-                            className="px-1.5 py-0.5 text-stone-500 hover:text-stone-300 text-[10px] transition"
+                            className="px-1.5 py-0.5 text-text-muted hover:text-text-secondary text-[10px] transition"
                           >
                             No
                           </button>
@@ -344,7 +377,7 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                       ) : (
                         <button
                           onClick={() => setConfirmDeleteSnap(s.date)}
-                          className="p-1 text-stone-600 hover:text-red-400 transition"
+                          className="p-1 text-text-muted hover:text-red-400 transition"
                         >
                           <Trash2 size={12} />
                         </button>
@@ -354,7 +387,7 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                 ))}
                 {sortedSnaps.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="text-center py-6 text-stone-500 text-xs">No snapshots recorded yet.</td>
+                    <td colSpan={6} className="text-center py-6 text-text-muted text-xs">No snapshots recorded yet.</td>
                   </tr>
                 )}
               </tbody>
@@ -366,13 +399,13 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
             {!confirmDeleteBot ? (
               <button
                 onClick={() => setConfirmDeleteBot(true)}
-                className="text-xs text-stone-600 hover:text-red-400 transition flex items-center gap-1.5"
+                className="text-xs text-text-muted hover:text-red-400 transition flex items-center gap-1.5"
               >
                 <Trash2 size={12} /> Delete this bot and its history
               </button>
             ) : (
               <div className="flex items-center gap-2 text-xs">
-                <span className="text-stone-400">Delete &ldquo;{bot.name}&rdquo; and all snapshots?</span>
+                <span className="text-text-secondary">Delete &ldquo;{bot.name}&rdquo; and all snapshots?</span>
                 <button
                   onClick={onDelete}
                   className="px-2 py-1 bg-red-500/20 text-red-300 rounded hover:bg-red-500/30 transition"
@@ -381,7 +414,7 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                 </button>
                 <button
                   onClick={() => setConfirmDeleteBot(false)}
-                  className="px-2 py-1 text-stone-500 hover:text-stone-300 transition"
+                  className="px-2 py-1 text-text-muted hover:text-text-secondary transition"
                 >
                   Cancel
                 </button>

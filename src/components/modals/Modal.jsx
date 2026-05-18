@@ -34,11 +34,11 @@ export default function Modal({ onClose, isDirty = false, children }) {
           onClick={() => setConfirming(false)}
         >
           <div
-            className="bg-stone-950 border border-stone-800 rounded-xl p-6 shadow-2xl text-center w-full max-w-xs mx-4"
+            className="bg-bg border border-border rounded-xl p-6 shadow-2xl text-center w-full max-w-xs mx-4"
             onClick={e => e.stopPropagation()}
           >
-            <p className="text-sm text-stone-200 mb-1">Discard changes?</p>
-            <p className="text-xs text-stone-500 mb-5">Your unsaved changes will be lost.</p>
+            <p className="text-sm text-text-primary mb-1">Discard changes?</p>
+            <p className="text-xs text-text-muted mb-5">Your unsaved changes will be lost.</p>
             <div className="flex gap-2 justify-center">
               <button
                 onClick={onClose}
@@ -48,7 +48,7 @@ export default function Modal({ onClose, isDirty = false, children }) {
               </button>
               <button
                 onClick={() => setConfirming(false)}
-                className="px-4 py-2 text-xs uppercase tracking-wider text-stone-400 hover:text-stone-200 border border-stone-700 hover:border-stone-500 rounded transition"
+                className="px-4 py-2 text-xs uppercase tracking-wider text-text-secondary hover:text-text-primary border border-border rounded transition"
               >
                 Keep editing
               </button>

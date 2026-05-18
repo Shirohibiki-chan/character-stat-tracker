@@ -13,8 +13,8 @@ function renderChangelog(raw) {
     elements.push(
       <ul key={key++} className="space-y-1 mb-3">
         {listBuffer.map((item, i) => (
-          <li key={i} className="flex gap-2 text-sm text-stone-400">
-            <span className="text-amber-300/50 mt-0.5 shrink-0">—</span>
+          <li key={i} className="flex gap-2 text-sm text-text-secondary">
+            <span className="text-accent-faint-text mt-0.5 shrink-0">—</span>
             <span>{item}</span>
           </li>
         ))}
@@ -27,14 +27,14 @@ function renderChangelog(raw) {
     if (line.startsWith('### ')) {
       flushList()
       elements.push(
-        <div key={key++} className="text-[10px] uppercase tracking-widest text-stone-500 mt-4 mb-1.5">
+        <div key={key++} className="text-[10px] uppercase tracking-widest font-bold text-text-muted mt-4 mb-1.5">
           {line.slice(4)}
         </div>
       )
     } else if (line.startsWith('## ')) {
       flushList()
       elements.push(
-        <h3 key={key++} className="font-display text-lg font-medium text-stone-100 mt-6 mb-1 first:mt-0">
+        <h3 key={key++} className="font-display text-lg font-medium text-text-primary mt-6 mb-1 first:mt-0">
           {line.slice(3)}
         </h3>
       )
@@ -45,7 +45,7 @@ function renderChangelog(raw) {
       listBuffer.push(line.slice(2))
     } else if (line === '---') {
       flushList()
-      elements.push(<hr key={key++} className="border-stone-800 my-4" />)
+      elements.push(<hr key={key++} className="border-border my-4" />)
     }
     // blank lines: no-op
   }
@@ -56,14 +56,14 @@ function renderChangelog(raw) {
 export default function ChangelogModal({ onClose }) {
   return (
     <Modal onClose={onClose}>
-      <div className="w-full max-w-lg bg-stone-950 border border-stone-800 rounded-xl shadow-2xl flex flex-col max-h-[85vh]" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800 shrink-0">
-          <h2 className="font-medium text-stone-100">What's new</h2>
-          <button onClick={onClose} className="text-stone-500 hover:text-stone-300 transition">
+      <div className="w-full max-w-lg bg-bg border border-border rounded-xl shadow-2xl flex flex-col max-h-[85vh]" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
+          <h2 className="font-bold text-text-primary">What's new</h2>
+          <button onClick={onClose} className="text-text-muted hover:text-text-secondary transition">
             <X size={18} />
           </button>
         </div>
-        <div className="overflow-y-auto px-5 py-4">
+        <div className="overflow-y-auto px-5 py-4 scrollbar-thin">
           {renderChangelog(changelog)}
         </div>
       </div>

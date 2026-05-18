@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-05-17 (Dark theme)
+
+### Changes
+- Dashboard redesigned with a cool-slate dark base and sky accent (#0ea5e9). Warm stone and amber palette retired.
+- Stat cards are now centered with metric-tinted backgrounds: dark green for Messages, dark indigo for Threads, dark pink for Favorites.
+- Each bot gets a unique "aura" color (one of 5: sky, violet, pink, emerald, orange) determined by its ID. The aura appears as a soft glow ring on the bot's avatar in the table and detail view.
+- Overlay chart lines use per-bot aura colors instead of the previous 20-color cycle.
+- Table rows now alternate between two surface shades for easier scanning.
+- Tag chips redesigned: sky-tinted background, border, and text.
+- Buttons updated: Import is an outline button; Add Bot uses a sky gradient.
+- (Internal) Color system refactored to CSS-variable semantic tokens via Tailwind v4 `@theme`. Architecture supports future theme variants via `[data-theme="..."]` selector — five additional themes planned.
+- Typography: Quicksand replaces Geist for body and labels; Inter (tabular numerals) replaces JetBrains Mono.
+
+---
+
 ## 2026-05-17 (Userscript v1.10 — Creator Analytics exclusion)
 
 ### Fixes

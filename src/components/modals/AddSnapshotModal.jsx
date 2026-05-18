@@ -27,72 +27,73 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
   return (
     <Modal onClose={onClose} isDirty={isDirty}>
       <div
-        className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-sm shadow-2xl max-h-[90vh] overflow-y-auto"
+        className="bg-bg border border-border rounded-lg w-full max-w-sm shadow-2xl max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <div>
             <h2 className="font-display text-xl">Add snapshot</h2>
-            <p className="text-xs text-stone-500 mt-0.5">{bot.name}</p>
+            <p className="text-xs text-text-muted mt-0.5">{bot.name}</p>
           </div>
-          <button onClick={onClose} className="text-stone-500 hover:text-stone-200 transition">
+          <button onClick={onClose} className="text-text-muted hover:text-text-primary transition">
             <X size={18} />
           </button>
         </div>
         <div className="p-5 space-y-4">
           <div>
-            <label className="text-[10px] uppercase tracking-wider text-stone-500 block mb-1">Date</label>
+            <label className="text-[10px] uppercase tracking-[0.22em] font-bold text-text-muted block mb-1">Date</label>
             <input
               type="date"
               value={date}
               onChange={e => setDate(e.target.value)}
-              className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-300/40"
+              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent/50"
             />
           </div>
           <div>
-            <label className="text-[10px] uppercase tracking-wider text-stone-500 block mb-1">Stats</label>
+            <label className="text-[10px] uppercase tracking-[0.22em] font-bold text-text-muted block mb-1">Stats</label>
             <div className="grid grid-cols-3 gap-2 mb-2">
               <input
                 placeholder="threads"
                 value={chats}
                 onChange={e => setChats(e.target.value)}
                 autoFocus
-                className="num bg-stone-900 border border-stone-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-amber-300/40"
+                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus:border-accent/50"
               />
               <input
                 placeholder="messages"
                 value={messages}
                 onChange={e => setMessages(e.target.value)}
-                className="num bg-stone-900 border border-stone-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-amber-300/40"
+                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus:border-accent/50"
               />
               <input
                 placeholder="favorites"
                 value={favorites}
                 onChange={e => setFavorites(e.target.value)}
-                className="num bg-stone-900 border border-stone-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:border-amber-300/40"
+                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus:border-accent/50"
               />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-stone-600">
-                Shorthand like <code className="text-stone-400">52k</code> works.
+              <span className="text-[10px] text-text-muted">
+                Shorthand like <code className="text-text-secondary">52k</code> works.
               </span>
               <select
                 value={scope}
                 onChange={e => setScope(e.target.value)}
-                className="bg-stone-900 border border-stone-700 rounded px-2 py-1 text-xs text-stone-300 focus:outline-none focus:border-amber-300/40"
+                className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus:border-accent/50"
               >
                 {SCOPES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
           </div>
         </div>
-        <div className="px-5 py-4 border-t border-stone-800 flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-stone-400 hover:text-stone-200 transition">
+        <div className="px-5 py-4 border-t border-border flex justify-end gap-2">
+          <button onClick={onClose} className="px-4 py-2 text-sm text-text-secondary hover:text-text-primary transition">
             Cancel
           </button>
           <button
             onClick={submit}
-            className="px-4 py-2 text-sm bg-amber-300/90 text-stone-950 hover:bg-amber-300 rounded font-medium transition"
+            className="px-4 py-2 text-sm font-bold rounded transition"
+            style={{ background: 'linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark))', color: '#051018' }}
           >
             Save
           </button>

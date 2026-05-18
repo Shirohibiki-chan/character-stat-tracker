@@ -37,40 +37,40 @@ export default function BackupModal({ onClose }) {
 
   return (
     <Modal onClose={onClose}>
-      <div className="w-full max-w-md bg-stone-950 border border-stone-800 rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800">
-          <h2 className="font-medium text-stone-100">Data &amp; Backup</h2>
-          <button onClick={onClose} className="text-stone-500 hover:text-stone-300 transition">
+      <div className="w-full max-w-md bg-bg border border-border rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+          <h2 className="font-bold text-text-primary">Data &amp; Backup</h2>
+          <button onClick={onClose} className="text-text-muted hover:text-text-secondary transition">
             <X size={18} />
           </button>
         </div>
 
         <div className="p-5 space-y-5">
           {/* Export */}
-          <div className="border border-stone-800 rounded-lg p-4 space-y-2">
-            <div className="text-xs uppercase tracking-wider text-stone-500">Export</div>
-            <p className="text-sm text-stone-400">
+          <div className="border border-border rounded-lg p-4 space-y-2">
+            <div className="text-[10px] uppercase tracking-[0.22em] font-bold text-text-muted">Export</div>
+            <p className="text-sm text-text-secondary">
               Download all your bots and snapshot history as a JSON file.
             </p>
             <button
               onClick={exportBots}
-              className="flex items-center gap-2 px-3 py-2 text-xs uppercase tracking-wider bg-stone-800 hover:bg-stone-700 text-stone-200 rounded transition"
+              className="flex items-center gap-2 px-3 py-2 text-xs uppercase tracking-wider font-bold bg-surface-alt hover:bg-surface-edge text-text-secondary rounded transition"
             >
               <Download size={13} /> Download backup
             </button>
           </div>
 
           {/* Import */}
-          <div className="border border-stone-800 rounded-lg p-4 space-y-2">
-            <div className="text-xs uppercase tracking-wider text-stone-500">Import</div>
-            <p className="text-sm text-stone-400">
-              Restore from a backup file. This will <span className="text-amber-300/80">replace all current data</span>.
+          <div className="border border-border rounded-lg p-4 space-y-2">
+            <div className="text-[10px] uppercase tracking-[0.22em] font-bold text-text-muted">Import</div>
+            <p className="text-sm text-text-secondary">
+              Restore from a backup file. This will <span className="text-accent-light font-bold">replace all current data</span>.
             </p>
 
             {importState === 'idle' && (
               <button
                 onClick={() => fileRef.current?.click()}
-                className="flex items-center gap-2 px-3 py-2 text-xs uppercase tracking-wider bg-stone-800 hover:bg-stone-700 text-stone-200 rounded transition"
+                className="flex items-center gap-2 px-3 py-2 text-xs uppercase tracking-wider font-bold bg-surface-alt hover:bg-surface-edge text-text-secondary rounded transition"
               >
                 <Upload size={13} /> Choose backup file
               </button>
@@ -78,19 +78,20 @@ export default function BackupModal({ onClose }) {
 
             {importState === 'confirm' && (
               <div className="space-y-2">
-                <p className="text-xs text-stone-400">
-                  Replace all {botCount} current bots with data from <span className="text-stone-200">{importFile?.name}</span>?
+                <p className="text-xs text-text-secondary">
+                  Replace all {botCount} current bots with data from <span className="text-text-primary font-bold">{importFile?.name}</span>?
                 </p>
                 <div className="flex gap-2">
                   <button
                     onClick={confirmImport}
-                    className="px-3 py-1.5 text-xs bg-amber-300/90 text-stone-950 hover:bg-amber-300 rounded transition font-medium"
+                    className="px-3 py-1.5 text-xs font-bold rounded transition"
+                    style={{ background: 'linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark))', color: '#051018' }}
                   >
                     Yes, replace
                   </button>
                   <button
                     onClick={() => setImportState('idle')}
-                    className="px-3 py-1.5 text-xs text-stone-500 hover:text-stone-300 transition"
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-text-secondary transition"
                   >
                     Cancel
                   </button>
@@ -103,7 +104,7 @@ export default function BackupModal({ onClose }) {
                 <p className="text-xs text-red-400">{importError}</p>
                 <button
                   onClick={() => setImportState('idle')}
-                  className="text-xs text-stone-500 hover:text-stone-300 transition"
+                  className="text-xs text-text-muted hover:text-text-secondary transition"
                 >
                   Try again
                 </button>
@@ -121,8 +122,8 @@ export default function BackupModal({ onClose }) {
 
           {/* Reset */}
           <div className="border border-red-900/30 rounded-lg p-4 space-y-2">
-            <div className="text-xs uppercase tracking-wider text-red-400/70">Danger zone</div>
-            <p className="text-sm text-stone-400">
+            <div className="text-[10px] uppercase tracking-[0.22em] font-bold text-red-400/70">Danger zone</div>
+            <p className="text-sm text-text-secondary">
               Permanently delete all {botCount} bots and their snapshot history.
             </p>
 
@@ -149,7 +150,7 @@ export default function BackupModal({ onClose }) {
                   </button>
                   <button
                     onClick={() => setResetState('idle')}
-                    className="px-3 py-1.5 text-xs text-stone-500 hover:text-stone-300 transition"
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-text-secondary transition"
                   >
                     Cancel
                   </button>

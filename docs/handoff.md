@@ -33,31 +33,19 @@ Bots imported before the import-side avatar mapping fix landed (Phase 7 late) do
 
 ## 1. Aesthetic Unification
 
-**Status: Deferred.** The user reviewed this item and decided it requires rethinking the color system from scratch rather than a patch pass. Not in scope for current work.
+**Resolved 2026-05-17 — revised approach.** Rather than unifying to the warm stone/amber palette, the color system was replaced entirely with a cool-slate dark theme (sky accent `#0ea5e9`). Warm stone and amber are gone from all components.
 
-The reference palette and audit list are preserved here for when this resumes:
+**What shipped:**
+- CSS token architecture via Tailwind v4 `@theme` — 40+ semantic tokens (surfaces, borders, text, accent, per-metric, 5 auras)
+- Dark theme is the default at `:root`. Future themes scope via `[data-theme="..."]` overrides.
+- Quicksand (body) + Inter (numerals) via @fontsource replace Geist + JetBrains Mono
+- Per-bot aura glow rings on avatars; aura colors carry through to overlay chart lines
+- Metric-tinted stat cards (green/indigo/pink backgrounds)
 
-**Reference palette (from `BotDetailModal` — the "winning" look):**
-
-- Background: dark warm stone — `#0c0a09` base with subtle `radial-gradient(ellipse at top, #1c1410 0%, #0c0a09 45%, #070605 100%)`
-- Surfaces/cards: `stone-950/40` with `stone-800` borders, backdrop-blur
-- Primary accent: amber-300 (`#e8b858`)
-- Metric colors (warm, not cool):
-  - Chats: `#e8b858` (gold)
-  - Messages: `#c98b5f` (copper)
-  - Favorites: `#b85c5c` (brick red)
-- Typography: Fraunces (display), Geist (body), JetBrains Mono with tabular-nums (numbers)
-- Selection: amber-300 on stone-950
-- Subtle film-grain noise overlay at low opacity for texture
-
-**Screens to audit when this resumes:**
-
-- Multi-bot overlay chart (Phase 5) — currently feels cool/navy, should be warm dark
-- Top Characters history view
-- Daily/weekly/monthly gain views
-- Configurable ranking chart
-- Tag-aggregate views
-- The main dashboard's view switcher (tabs/dropdown between the above)
+**5 remaining themes (queued, not in scope for current work):**
+- Light, Yume Kawaii, Ocean, Dark Academia, Synthwave
+- Each needs: token value overrides, theme-switcher UI in Settings, possible per-theme texture treatment
+- Light-mode aura palette also deferred
 
 ## 2. Metric Ordering: Messages First
 
@@ -102,7 +90,7 @@ All resolved as of 2026-05-16–17:
 
 1. **Favicon and page `<title>`** — small, unblocking
 2. **Userscript `@updateURL` / `@downloadURL`** — one-line metadata addition
-3. **Aesthetic Unification** — deferred; user wants to rethink approach before touching
+3. **Theme follow-up** — 5 additional themes (Light, Yume Kawaii, Ocean, Dark Academia, Synthwave); requires theme-switcher UI; deferred
 
 ## Process Notes
 

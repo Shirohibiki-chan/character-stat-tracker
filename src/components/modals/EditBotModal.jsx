@@ -24,28 +24,28 @@ export default function EditBotModal({ bot, onClose, onSave }) {
   return (
     <Modal onClose={onClose} isDirty={isDirty}>
       <div
-        className="bg-stone-950 border border-stone-700 rounded-lg w-full max-w-sm shadow-2xl max-h-[90vh] overflow-y-auto"
+        className="bg-bg border border-border rounded-lg w-full max-w-sm shadow-2xl max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-stone-800">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <h2 className="font-display text-xl">Edit bot</h2>
-          <button onClick={onClose} className="text-stone-500 hover:text-stone-200 transition">
+          <button onClick={onClose} className="text-text-muted hover:text-text-primary transition">
             <X size={18} />
           </button>
         </div>
         <div className="p-5 space-y-4">
           <div>
-            <label className="text-[10px] uppercase tracking-wider text-stone-500 block mb-1">Name</label>
+            <label className="text-[10px] uppercase tracking-[0.22em] font-bold text-text-muted block mb-1">Name</label>
             <input
               autoFocus
               value={name}
               onChange={e => setName(e.target.value)}
               onKeyDown={onKeyDown}
-              className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-300/40"
+              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent/50"
             />
           </div>
           <div>
-            <label className="text-[10px] uppercase tracking-wider text-stone-500 block mb-1">
+            <label className="text-[10px] uppercase tracking-[0.22em] font-bold text-text-muted block mb-1">
               Tags (comma-separated)
             </label>
             <input
@@ -53,18 +53,19 @@ export default function EditBotModal({ bot, onClose, onSave }) {
               onChange={e => setTags(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder="e.g. event, collab"
-              className="w-full bg-stone-900 border border-stone-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-amber-300/40"
+              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent/50"
             />
           </div>
         </div>
-        <div className="px-5 py-4 border-t border-stone-800 flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-stone-400 hover:text-stone-200 transition">
+        <div className="px-5 py-4 border-t border-border flex justify-end gap-2">
+          <button onClick={onClose} className="px-4 py-2 text-sm text-text-secondary hover:text-text-primary transition">
             Cancel
           </button>
           <button
             onClick={submit}
             disabled={!name.trim()}
-            className="px-4 py-2 text-sm bg-amber-300/90 text-stone-950 hover:bg-amber-300 rounded font-medium disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="px-4 py-2 text-sm font-bold rounded disabled:opacity-50 disabled:cursor-not-allowed transition"
+            style={{ background: 'linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark))', color: '#051018' }}
           >
             Save
           </button>

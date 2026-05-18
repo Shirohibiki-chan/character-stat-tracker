@@ -1,8 +1,72 @@
 @import "tailwindcss";
 
+@theme {
+  /* Surfaces */
+  --color-bg:           #0d1218;
+  --color-surface:      #1a2030;
+  --color-surface-alt:  #1d2538;
+  --color-surface-edge: #2a3344;
+
+  /* Borders */
+  --color-border:        #3a4659;
+  --color-border-subtle: #232b3d;
+
+  /* Text */
+  --color-text-primary:   #e6edf3;
+  --color-text-value:     #d5dde9;
+  --color-text-secondary: #b8c1d0;
+  --color-text-tertiary:  #8b95a6;
+  --color-text-muted:     #6e7787;
+
+  /* Accent (sky) */
+  --color-accent:              #0ea5e9;
+  --color-accent-light:        #38bdf8;
+  --color-accent-dark:         #0284c7;
+  --color-accent-soft:         #3eb8e8;
+  --color-accent-faint:        rgba(14, 165, 233, 0.10);
+  --color-accent-faint-border: rgba(14, 165, 233, 0.22);
+  --color-accent-faint-text:   #5ec3f0;
+
+  /* Metric — Messages (emerald) */
+  --color-metric-messages:        #34d399;
+  --color-metric-messages-bg:     #19281f;
+  --color-metric-messages-border: rgba(52, 211, 153, 0.42);
+  --color-metric-messages-label:  #7eb89c;
+
+  /* Metric — Threads (indigo) */
+  --color-metric-threads:        #818cf8;
+  --color-metric-threads-bg:     #1f2138;
+  --color-metric-threads-border: rgba(129, 140, 248, 0.42);
+  --color-metric-threads-label:  #8e93c4;
+
+  /* Metric — Favorites (pink) */
+  --color-metric-favorites:        #fb7185;
+  --color-metric-favorites-bg:     #2b1b24;
+  --color-metric-favorites-border: rgba(251, 113, 133, 0.42);
+  --color-metric-favorites-label:  #c08594;
+
+  /* Aura palette — 5 colors, hash-by-id assignment via getAura() */
+  --color-aura-1: #7dd3fc;
+  --color-aura-2: #a78bfa;
+  --color-aura-3: #f472b6;
+  --color-aura-4: #34d399;
+  --color-aura-5: #fb923c;
+}
+
+/* Future themes scope their overrides here, e.g.:
+   [data-theme="kawaii"] { --color-bg: #fff0fa; --color-accent: #ff69b4; ... } */
+
+@layer base {
+  body {
+    font-family: 'Quicksand', system-ui, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+  }
+}
+
 @layer utilities {
   .num {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Inter', system-ui, sans-serif;
     font-feature-settings: 'tnum';
   }
   .font-display {
@@ -13,10 +77,10 @@
 
 .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
 .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-.scrollbar-thin::-webkit-scrollbar-thumb { background: #44403c; border-radius: 4px; }
-.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #57534e; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
 
-::selection { background: #e8b858; color: #0c0a09; }
-input::placeholder, textarea::placeholder { color: #78716c; }
+::selection { background: rgba(14, 165, 233, 0.20); color: var(--color-text-primary); }
+input::placeholder, textarea::placeholder { color: var(--color-text-muted); }
 
 .recharts-surface { outline: none; }

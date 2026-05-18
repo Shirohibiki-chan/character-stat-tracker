@@ -97,7 +97,6 @@ All resolved as of 2026-05-16–17:
 
 - Read `CLAUDE.md` first — architecture rules, layer order, naming conventions, don't-do's
 - Read `docs/charsnap-state.md` for CharSnap UI specifics if any userscript work comes up
-- **Do NOT read `docs/reference-artifact.jsx` wholesale** — it's ~800 lines. Use Grep to find specific patterns/components, then targeted `view` with offset+limit. This rule is in CLAUDE.md but worth restating.
 - Commit and push after each meaningful change so the GitHub Pages deploy fires automatically
 - Show plan before executing — user approves before code lands
 - User is non-technical — explain choices in plain language, not just code

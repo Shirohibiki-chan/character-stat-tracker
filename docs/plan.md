@@ -4,8 +4,6 @@ Work phases top-down. Do not start a phase until the previous one is complete an
 
 Each phase is a meaningful milestone — at the end of any phase, the app should be in a coherent, working state. Phases are sized to be reviewable as user-facing changes, not just internal refactors.
 
-**Reference artifact (`docs/reference-artifact.jsx`) — targeted reads only.** Never read the whole file. Grep for the specific function or component, then read only those lines with `offset` + `limit`. Patterns already extracted through Phase 3: table, modals, sort/filter/search, parser, avatar normalization, disambiguation. Remaining value for future phases: chart components (LineChart, overlay, ranking) and export/reset logic.
-
 ---
 
 ## Phase 0: Project Setup

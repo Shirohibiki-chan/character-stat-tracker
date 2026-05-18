@@ -99,10 +99,6 @@ Components live at `src/components/[layer]/File.jsx` — two levels deep from `s
 - `docs/domain-glossary.md` — CharSnap-specific terms (bot, snapshot, scope, eight-Sampos problem)
 - `docs/data-model.md` — bot/snapshot schemas, storage shape, avatar normalization rules
 - `docs/charsnap-state.md` — what we know about CharSnap's current UI (May 2026); update when CharSnap changes things
-- `docs/reference-artifact.jsx` — earlier single-file prototype; behavioral reference only, do not port verbatim.
-  - **Never read wholesale** (the file is ~800 lines and burns context fast). Always Grep for the specific function first, then read only those lines with `offset` + `limit`.
-  - **Already extracted** through Phase 3: table layout, modals, sort/filter/search, parser, avatar normalization, disambiguation. No need to revisit those sections.
-  - **Remaining value:** chart components (LineChart, overlay chart, ranking chart) and export/reset logic — relevant for Phases 4–5 only.
 
 ## Userscript
 

@@ -19,8 +19,8 @@
   --table-text-font: 'Poppins', sans-serif;
   --table-text-weight: 500;
   --table-nums-font: 'Manrope', sans-serif;
-  --table-nums-weight: 700;
-  --table-size: 13px;
+  --table-nums-weight: 800;
+  --table-size: 14px;
 
   /* Accent aliases (used in gradients and tint calculations) */
   --accent-bots: #4ba8c4;

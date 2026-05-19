@@ -76,7 +76,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
               return (
                 <tr
                   key={bot.id}
-                  className="border-b border-border-subtle hover:!bg-surface-alt/60 transition cursor-pointer"
+                  className="hover:!bg-surface-alt/60 transition cursor-pointer"
                   style={isEven ? { background: 'rgba(255, 255, 255, var(--table-banding-alpha))' } : undefined}
                   onClick={() => onViewBot(bot.id)}
                 >

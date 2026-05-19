@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-05-19 (Userscript v1.14 — faster tab switch)
+
+### Changes
+- **Tab switch speed:** when the stats modal opens on a non-Total tab, the script now retries with keyboard activation after 50 ms (was 1 500 ms) if the initial pointer-click attempt doesn't land. The "click Total manually" fallback prompt also fires earlier (1.5 s, was 3 s). In the worst case this cuts the pre-capture wait from ~1.5 s down to ~50 ms.
+- **Synthetic click fix:** the programmatic tab-click now includes `isPrimary` and `pointerId` fields that some Radix UI versions require to treat the event as a real pointer interaction rather than ignoring it.
+
+---
+
 ## 2026-05-19 (Userscript v1.13 — faster auto-capture)
 
 ### Changes

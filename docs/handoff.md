@@ -80,6 +80,12 @@ All resolved as of 2026-05-16–17:
 - **v1.9** (2026-05-17): `isStatsModal` gate in `onDialogOpen` — checks for `button[title="Copy stats"]` before doing anything; suppresses nuisance toasts on character cards, share dialogs, and other unrelated modals
 - **v1.10** (2026-05-17): `NON_BOT_STATS_MODAL_TITLES` blocklist added to `isStatsModal`; Creator Analytics modal excluded by h2 title — resolves bug 3
 
+### v1.14 (2026-05-19) — Faster tab switch
+
+- Keyboard-activation fallback reduced from 1 500 ms to 50 ms after initial pointer-click attempt.
+- "Click Total manually" prompt reduced from 3 000 ms to 1 500 ms.
+- `dispatchPointerClick` now passes `isPrimary: true, pointerId: 1` to satisfy Radix UI event validation.
+
 ### v1.13 (2026-05-19) — Faster auto-capture
 
 - Replaced two fixed 200 ms waits with a `waitForStats()` function that resolves the instant stat DOM elements are present and populated — using MutationObserver + immediate check + 2 s timeout fallback.

@@ -80,6 +80,12 @@ All resolved as of 2026-05-16–17:
 - **v1.9** (2026-05-17): `isStatsModal` gate in `onDialogOpen` — checks for `button[title="Copy stats"]` before doing anything; suppresses nuisance toasts on character cards, share dialogs, and other unrelated modals
 - **v1.10** (2026-05-17): `NON_BOT_STATS_MODAL_TITLES` blocklist added to `isStatsModal`; Creator Analytics modal excluded by h2 title — resolves bug 3
 
+### v1.13 (2026-05-19) — Faster auto-capture
+
+- Replaced two fixed 200 ms waits with a `waitForStats()` function that resolves the instant stat DOM elements are present and populated — using MutationObserver + immediate check + 2 s timeout fallback.
+- Applies to both auto-capture mode (no fixed delay after tab switch) and manual Capture button mode (no fixed delay after `waitForTotalTab` resolves).
+- Net result: capture toast appears as soon as the browser finishes rendering the Total tab's numbers, not 200 ms after.
+
 ### v1.12 (2026-05-19) — Toast anchor to HUD box
 
 - **Toast repositioning:** all userscript toasts now render inside the capture box, overlaying its bottom edge (~8 px margin). Toasts adapt to box width when resized.

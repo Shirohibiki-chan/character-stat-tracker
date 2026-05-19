@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-05-18 (Table tweaks)
+
+### Adjustments
+- Table stat numbers changed to amber-orange (`#e8a060`) — warmer and more distinctive than the previous warm off-white.
+- Default table sort is now Messages descending instead of Threads/Chats.
+
+---
+
 ## 2026-05-18 (Visual polish)
 
 ### Adjustments

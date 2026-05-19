@@ -27,7 +27,7 @@ function enrichBot(bot) {
 export function useDashboard(bots) {
   const [search, setSearch] = useState('')
   const [activeTag, setActiveTag] = useState(null)
-  const [sortBy, setSortBy] = useState('chats')
+  const [sortBy, setSortBy] = useState('messages')
   const [sortDir, setSortDir] = useState('desc')
 
   const enriched = useMemo(() => Object.values(bots).map(enrichBot), [bots])

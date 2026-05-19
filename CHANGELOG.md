@@ -4,6 +4,15 @@
 
 ---
 
+## 2026-05-19 (Grid view — hero banner cards)
+
+### Changes
+- **Grid view card redesign:** the grid view now shows each bot as a wide card with a full-width hero image banner at the top (~120 px tall, center-cropped from the bot's PFP), rather than the previous compact avatar-circle layout. The card body shows the bot name, up to 2 tag chips with a `+N` overflow popover, and a three-column stats block (Messages / Threads / Favorites) with full labels and per-metric color coding matching the list view (green / purple / pink).
+- **PFP edit affordance:** hovering over the hero banner reveals a camera icon in the bottom-right corner. Clicking it opens the bot's detail view where the PFP editor lives.
+- **Bulk-select overlay:** the multi-select checkbox appears on top of the hero banner (top-left corner) when select mode is active.
+
+---
+
 ## 2026-05-19 (Fix: consistent stat card appearance across browsers)
 
 ### Fixes

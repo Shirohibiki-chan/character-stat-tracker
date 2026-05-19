@@ -29,10 +29,10 @@
   --accent-favorites: #d48aa0;
 
   /* Gradients */
-  --gradient-bots:      linear-gradient(to bottom, color-mix(in srgb, var(--accent-bots)      22%, transparent), transparent);
-  --gradient-messages:  linear-gradient(to bottom, color-mix(in srgb, var(--accent-messages)  22%, transparent), transparent);
-  --gradient-threads:   linear-gradient(to bottom, color-mix(in srgb, var(--accent-threads)   22%, transparent), transparent);
-  --gradient-favorites: linear-gradient(to bottom, color-mix(in srgb, var(--accent-favorites) 22%, transparent), transparent);
+  --gradient-bots:      linear-gradient(to bottom, color-mix(in srgb, var(--accent-bots)      35%, transparent), transparent);
+  --gradient-messages:  linear-gradient(to bottom, color-mix(in srgb, var(--accent-messages)  35%, transparent), transparent);
+  --gradient-threads:   linear-gradient(to bottom, color-mix(in srgb, var(--accent-threads)   35%, transparent), transparent);
+  --gradient-favorites: linear-gradient(to bottom, color-mix(in srgb, var(--accent-favorites) 35%, transparent), transparent);
 
   /* Table tints & banding */
   --table-header-tint-opacity: 14%;
@@ -90,6 +90,12 @@
   --color-metric-favorites-bg:     #281520;
   --color-metric-favorites-border: rgba(212, 138, 160, 0.42);
   --color-metric-favorites-label:  #b87d90;
+
+  /* Metric — Bots */
+  --color-metric-bots:        #4ba8c4;
+  --color-metric-bots-bg:     #0d1c26;
+  --color-metric-bots-border: rgba(75, 168, 196, 0.42);
+  --color-metric-bots-label:  #4a8fa8;
 
   /* Aura palette — 5 colors, hash-by-id assignment via getAura() */
   --color-aura-1: #7dd3fc;

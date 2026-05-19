@@ -11,6 +11,7 @@ function enrichBot(bot) {
   const prev = snaps.length >= 2 ? snaps[snaps.length - 2] : null
   return {
     ...bot,
+    _snaps: snaps,
     latest,
     chats: latest?.chats ?? 0,
     messages: latest?.messages ?? 0,
@@ -62,14 +63,30 @@ export function useDashboard(bots) {
     })
   }, [filtered, sortBy, sortDir])
 
-  const totals = useMemo(() =>
-    filtered.reduce((acc, b) => ({
-      chats: acc.chats + (b.chats || 0),
-      messages: acc.messages + (b.messages || 0),
-      favorites: acc.favorites + (b.favorites || 0),
-    }), { chats: 0, messages: 0, favorites: 0 }),
-    [filtered]
-  )
+  const totals = useMemo(() => {
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+    return filtered.reduce((acc, b) => {
+      const snaps = b._snaps
+      const latest = snaps.length ? snaps[snaps.length - 1] : null
+      let baseline = null
+      if (snaps.length >= 2) {
+        for (let i = snaps.length - 2; i >= 0; i--) {
+          if (new Date(snaps[i].date).getTime() <= weekAgo) { baseline = snaps[i]; break }
+        }
+        if (!baseline) baseline = snaps[0]
+      }
+      const gain = (key) => latest && baseline ? (latest[key] ?? 0) - (baseline[key] ?? 0) : 0
+      return {
+        chats:          acc.chats     + (b.chats     || 0),
+        messages:       acc.messages  + (b.messages  || 0),
+        favorites:      acc.favorites + (b.favorites || 0),
+        deltaChats:     acc.deltaChats     + gain('chats'),
+        deltaMessages:  acc.deltaMessages  + gain('messages'),
+        deltaFavorites: acc.deltaFavorites + gain('favorites'),
+        newBots: acc.newBots + (snaps.length > 0 && new Date(snaps[0].date).getTime() > weekAgo ? 1 : 0),
+      }
+    }, { chats: 0, messages: 0, favorites: 0, deltaChats: 0, deltaMessages: 0, deltaFavorites: 0, newBots: 0 })
+  }, [filtered])
 
   function toggleSort(key) {
     if (sortBy === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc')

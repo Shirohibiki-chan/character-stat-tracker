@@ -135,7 +135,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                             fontFamily: 'var(--table-nums-font)',
                             fontWeight: 'var(--table-nums-weight)',
                             fontSize: 'var(--table-size)',
-                            color: m.accentVar,
+                            color: 'var(--color-accent-light)',
                           }}
                         >
                           {bot.latest ? fmt(bot[m.key]) : '—'}

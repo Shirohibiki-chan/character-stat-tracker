@@ -7,7 +7,7 @@ export const METRICS = [
     icon: 'MessagesSquare',
     accentVar: 'var(--accent-messages)',
     card: {
-      bg:       'var(--color-metric-messages-bg)',
+      bg:       'var(--color-surface)',
       border:   'var(--color-metric-messages-border)',
       label:    'var(--color-metric-messages-label)',
       number:   'var(--color-metric-messages)',
@@ -21,7 +21,7 @@ export const METRICS = [
     icon: 'MessageSquare',
     accentVar: 'var(--accent-threads)',
     card: {
-      bg:       'var(--color-metric-threads-bg)',
+      bg:       'var(--color-surface)',
       border:   'var(--color-metric-threads-border)',
       label:    'var(--color-metric-threads-label)',
       number:   'var(--color-metric-threads)',
@@ -35,7 +35,7 @@ export const METRICS = [
     icon: 'Heart',
     accentVar: 'var(--accent-favorites)',
     card: {
-      bg:       'var(--color-metric-favorites-bg)',
+      bg:       'var(--color-surface)',
       border:   'var(--color-metric-favorites-border)',
       label:    'var(--color-metric-favorites-label)',
       number:   'var(--color-metric-favorites)',
@@ -43,3 +43,11 @@ export const METRICS = [
     },
   },
 ]
+
+export const BOTS_CARD = {
+  bg:       'var(--color-surface)',
+  border:   'var(--color-metric-bots-border)',
+  label:    'var(--color-metric-bots-label)',
+  number:   'var(--color-metric-bots)',
+  gradient: 'var(--gradient-bots)',
+}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart, Settings2, Newspaper } from 'lucide-react'
 import { useBots } from './hooks/use-bots.js'
 import { useDashboard } from './hooks/use-dashboard.js'
-import { METRICS } from './constants/metrics.js'
+import { METRICS, BOTS_CARD } from './constants/metrics.js'
 import StatCard from './components/dashboard/StatCard.jsx'
 import EmptyState from './components/dashboard/EmptyState.jsx'
 import OnboardingBanner from './components/dashboard/OnboardingBanner.jsx'
@@ -68,7 +68,7 @@ export default function App() {
               className="leading-none"
               style={{ fontFamily: 'var(--wordmark-font)', fontWeight: 'var(--wordmark-weight)', fontSize: 'var(--wordmark-size)' }}
             >
-              CharSnap <span className="italic text-accent-light">stats</span>
+              CharSnap <span className="italic text-accent">stats</span>
             </h1>
             <p className="text-text-tertiary text-sm mt-3">
               {totalBotCount} {totalBotCount === 1 ? 'bot' : 'bots'} tracked
@@ -116,7 +116,7 @@ export default function App() {
 
             {/* Stat cards */}
             <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-              <StatCard label="Total bots" value={filteredCount} gradient="var(--gradient-bots)" />
+              <StatCard label="Total bots" value={filteredCount} card={BOTS_CARD} delta={totals.newBots} />
               {METRICS.map(m => (
                 <StatCard
                   key={m.key}
@@ -124,6 +124,7 @@ export default function App() {
                   value={totals[m.key]}
                   card={m.card}
                   icon={ICON_MAP[m.icon]}
+                  delta={totals[`delta${m.key.charAt(0).toUpperCase()}${m.key.slice(1)}`]}
                 />
               ))}
             </section>

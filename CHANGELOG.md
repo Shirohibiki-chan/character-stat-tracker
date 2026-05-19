@@ -7,6 +7,7 @@
 
 ### Removed
 - Deleted `docs/reference-artifact.jsx` — the original single-file prototype used as a behavioral reference during Phases 1–5. All relevant patterns have been extracted into the live codebase; the file is fully superseded by git history.
+- Design sandbox (`public/dev/sandbox.html`) moved to a separate repo for usage-budget isolation; no longer present in this codebase.
 
 ---
 

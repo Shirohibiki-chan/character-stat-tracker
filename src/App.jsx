@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart, Settings2, Newspaper } from 'lucide-react'
+import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart, Settings2, Newspaper, Bot } from 'lucide-react'
 import { useBots } from './hooks/use-bots.js'
 import { useDashboard } from './hooks/use-dashboard.js'
 import { METRICS, BOTS_CARD } from './constants/metrics.js'
@@ -116,7 +116,7 @@ export default function App() {
 
             {/* Stat cards */}
             <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-              <StatCard label="Total bots" value={filteredCount} card={BOTS_CARD} delta={totals.newBots} />
+              <StatCard label="Total bots" value={filteredCount} card={BOTS_CARD} icon={Bot} delta={totals.newBots} />
               {METRICS.map(m => (
                 <StatCard
                   key={m.key}

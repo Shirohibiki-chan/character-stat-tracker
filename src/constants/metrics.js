@@ -9,7 +9,7 @@ export const METRICS = [
     card: {
       bg:       'var(--color-surface)',
       border:   'var(--color-metric-messages-border)',
-      label:    'var(--color-metric-messages-label)',
+      label:    'var(--color-text-secondary)',
       number:   'var(--color-metric-messages)',
       gradient: 'var(--gradient-messages)',
     },
@@ -23,7 +23,7 @@ export const METRICS = [
     card: {
       bg:       'var(--color-surface)',
       border:   'var(--color-metric-threads-border)',
-      label:    'var(--color-metric-threads-label)',
+      label:    'var(--color-text-secondary)',
       number:   'var(--color-metric-threads)',
       gradient: 'var(--gradient-threads)',
     },
@@ -37,7 +37,7 @@ export const METRICS = [
     card: {
       bg:       'var(--color-surface)',
       border:   'var(--color-metric-favorites-border)',
-      label:    'var(--color-metric-favorites-label)',
+      label:    'var(--color-text-secondary)',
       number:   'var(--color-metric-favorites)',
       gradient: 'var(--gradient-favorites)',
     },
@@ -47,7 +47,7 @@ export const METRICS = [
 export const BOTS_CARD = {
   bg:       'var(--color-surface)',
   border:   'var(--color-metric-bots-border)',
-  label:    'var(--color-metric-bots-label)',
+  label:    'var(--color-text-secondary)',
   number:   'var(--color-metric-bots)',
   gradient: 'var(--gradient-bots)',
 }

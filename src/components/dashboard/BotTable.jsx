@@ -14,7 +14,7 @@ function SortHeader({ label, active, dir, onClick, className = '', style }) {
     <th className={`py-3 px-3 text-[11px] uppercase tracking-[0.22em] font-bold ${className}`} style={style}>
       <button
         onClick={onClick}
-        className={`inline-flex items-center gap-1 transition ${active ? 'text-accent-light' : 'text-text-tertiary hover:text-text-secondary'}`}
+        className={`inline-flex items-center gap-1 font-bold transition ${active ? 'text-accent-light' : 'text-text-secondary hover:text-text-primary'}`}
       >
         {label} <Icon size={11} />
       </button>
@@ -135,7 +135,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                             fontFamily: 'var(--table-nums-font)',
                             fontWeight: 'var(--table-nums-weight)',
                             fontSize: 'var(--table-size)',
-                            color: 'var(--color-accent-light)',
+                            color: 'var(--color-table-nums)',
                           }}
                         >
                           {bot.latest ? fmt(bot[m.key]) : '—'}

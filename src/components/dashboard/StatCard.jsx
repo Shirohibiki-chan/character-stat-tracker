@@ -1,4 +1,4 @@
-import { fmt, fmtFull } from '../../constants/format.js'
+import { fmt } from '../../constants/format.js'
 
 export default function StatCard({ label, value, card, icon: Icon, gradient, delta }) {
   const bg           = card?.bg       ?? 'var(--color-surface)'
@@ -8,7 +8,7 @@ export default function StatCard({ label, value, card, icon: Icon, gradient, del
   const cardGradient = card?.gradient ?? gradient ?? null
 
   const showDelta = delta != null && delta !== 0
-  const deltaColor = delta > 0 ? numberColor : '#f87171'
+  const deltaColor = delta > 0 ? 'var(--color-positive)' : 'var(--color-negative)'
 
   return (
     <div
@@ -50,16 +50,11 @@ export default function StatCard({ label, value, card, icon: Icon, gradient, del
         >
           {fmt(value)}
         </div>
-        {value >= 1000 && (
-          <div
-            className="num text-[10px] mt-1"
-            style={{ color: labelColor, fontWeight: 'var(--stat-subline-weight)' }}
-          >
-            {fmtFull(value)}
-          </div>
-        )}
         {showDelta && (
-          <div className="num text-[10px] mt-2" style={{ color: deltaColor }}>
+          <div
+            className="text-[11px] font-semibold mt-2"
+            style={{ fontFamily: 'var(--table-text-font)', color: deltaColor }}
+          >
             {delta > 0 ? '+' : ''}{fmt(delta)} this week
           </div>
         )}

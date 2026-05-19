@@ -97,6 +97,13 @@
   --color-metric-bots-border: rgba(75, 168, 196, 0.42);
   --color-metric-bots-label:  #4a8fa8;
 
+  /* Positive / negative states */
+  --color-positive: #4ade80;
+  --color-negative: #f87171;
+
+  /* Table numeric text */
+  --color-table-nums: #f0c040;
+
   /* Aura palette — 5 colors, hash-by-id assignment via getAura() */
   --color-aura-1: #7dd3fc;
   --color-aura-2: #a78bfa;

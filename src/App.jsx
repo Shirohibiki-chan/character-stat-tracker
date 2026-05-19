@@ -64,7 +64,10 @@ export default function App() {
             <div className="text-[11px] tracking-[0.25em] text-accent-faint-text uppercase mb-2 font-bold">
               Creator dashboard
             </div>
-            <h1 className="font-display text-3xl sm:text-5xl font-medium leading-none">
+            <h1
+              className="leading-none"
+              style={{ fontFamily: 'var(--wordmark-font)', fontWeight: 'var(--wordmark-weight)', fontSize: 'var(--wordmark-size)' }}
+            >
               CharSnap <span className="italic text-accent-light">stats</span>
             </h1>
             <p className="text-text-tertiary text-sm mt-3">
@@ -113,7 +116,7 @@ export default function App() {
 
             {/* Stat cards */}
             <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-              <StatCard label="Total bots" value={filteredCount} />
+              <StatCard label="Total bots" value={filteredCount} gradient="var(--gradient-bots)" />
               {METRICS.map(m => (
                 <StatCard
                   key={m.key}

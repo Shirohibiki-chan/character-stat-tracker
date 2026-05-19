@@ -86,6 +86,12 @@ All resolved as of 2026-05-16–17:
 
 ---
 
+## 6. Stat-Card / Dashboard Visual Refresh
+
+**Resolved 2026-05-18.** Applied locked design tokens from sandbox: Manrope/Lora/Outfit/Poppins typography, top-to-bottom gradient overlays on stat cards, column-accented table numbers (Manrope 700, per-column accent color), row banding composition fix through colored columns. Avatar glow preserved. Tokens live in `src/index.css` (`:root` for typography/gradients/tints, `@theme` for colors). Font faces loaded via Google Fonts in `index.html`.
+
+---
+
 ## What's Left
 
 1. **Favicon and page `<title>`** — small, unblocking

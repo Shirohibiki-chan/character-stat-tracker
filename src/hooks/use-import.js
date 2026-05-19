@@ -50,7 +50,11 @@ export function useImport() {
       } else {
         addSnapshot(item.assignedBotId, snap)
         if (item.capture.avatarUrl) {
-          updateBot(item.assignedBotId, { avatar: item.capture.avatarUrl })
+          const changes = {}
+          if (!bots[item.assignedBotId]?.avatarIsManual) {
+            changes.avatar = item.capture.avatarUrl
+          }
+          if (Object.keys(changes).length) updateBot(item.assignedBotId, changes)
         }
       }
     }

@@ -27,7 +27,28 @@ function computeTagAggregates(bots, metric) {
     .sort((a, b) => b._val - a._val)
 }
 
-export default function TagsChart({ bots }) {
+function ClickableTick({ x, y, value, onTagClick }) {
+  return (
+    <g
+      transform={`translate(${x},${y})`}
+      onClick={() => onTagClick?.(value)}
+      style={{ cursor: onTagClick ? 'pointer' : 'default' }}
+    >
+      <text
+        x={0}
+        y={0}
+        dy={4}
+        textAnchor="end"
+        fill="var(--color-text-secondary)"
+        style={{ fontSize: 12, fontFamily: 'Quicksand, system-ui, sans-serif' }}
+      >
+        {value}
+      </text>
+    </g>
+  )
+}
+
+export default function TagsChart({ bots, onTagClick }) {
   const [metric, setMetric] = useState('messages')
   const m = METRICS.find(mx => mx.key === metric)
 
@@ -87,10 +108,9 @@ export default function TagsChart({ bots }) {
                 dataKey="name"
                 stroke="var(--color-text-secondary)"
                 width={100}
-                style={{ fontSize: 12, fontFamily: 'Quicksand, system-ui, sans-serif' }}
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: 'var(--color-text-secondary)' }}
+                tick={props => <ClickableTick {...props} onTagClick={onTagClick} />}
               />
               <Tooltip
                 cursor={{ fill: 'rgba(255, 255, 255, 0.03)' }}
@@ -117,6 +137,8 @@ export default function TagsChart({ bots }) {
                 dataKey="_val"
                 fill={m?.color}
                 radius={[0, 3, 3, 0]}
+                onClick={onTagClick ? d => onTagClick(d.tag) : undefined}
+                className={onTagClick ? 'cursor-pointer' : undefined}
               >
                 <LabelList
                   dataKey="_val"

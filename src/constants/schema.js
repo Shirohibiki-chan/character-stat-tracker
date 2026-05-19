@@ -5,6 +5,7 @@ export function createBot(overrides = {}) {
     id: crypto.randomUUID(),
     name: '',
     avatar: null,
+    avatarIsManual: false,
     tags: [],
     snapshots: [],
     ...overrides,

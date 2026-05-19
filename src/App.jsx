@@ -1,12 +1,16 @@
-import { useState } from 'react'
-import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart, Settings2, Newspaper, Bot } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart, Settings2, Newspaper, Bot, LayoutList, LayoutGrid, X } from 'lucide-react'
 import { useBots } from './hooks/use-bots.js'
 import { useDashboard } from './hooks/use-dashboard.js'
+import { usePagination } from './hooks/use-pagination.js'
 import { METRICS, BOTS_CARD } from './constants/metrics.js'
 import StatCard from './components/dashboard/StatCard.jsx'
 import EmptyState from './components/dashboard/EmptyState.jsx'
 import OnboardingBanner from './components/dashboard/OnboardingBanner.jsx'
 import BotTable from './components/dashboard/BotTable.jsx'
+import BotGrid from './components/dashboard/BotGrid.jsx'
+import Pagination from './components/dashboard/Pagination.jsx'
+import BulkActionBar from './components/dashboard/BulkActionBar.jsx'
 import OverlayChart from './components/charts/OverlayChart.jsx'
 import RankingChart from './components/charts/RankingChart.jsx'
 import GainsChart from './components/charts/GainsChart.jsx'
@@ -19,6 +23,7 @@ import ImportModal from './components/modals/ImportModal.jsx'
 import BotDetailModal from './components/modals/BotDetailModal.jsx'
 import BackupModal from './components/modals/BackupModal.jsx'
 import ChangelogModal from './components/modals/ChangelogModal.jsx'
+import BulkTagModal from './components/modals/BulkTagModal.jsx'
 
 const ICON_MAP = { MessageSquare, MessagesSquare, Heart }
 
@@ -40,6 +45,8 @@ export default function App() {
     allTags, totals, sorted, filteredCount,
   } = useDashboard(bots)
 
+  const { page, setPage, pageSize, setPageSize, viewMode, setViewMode, totalPages, paginated } = usePagination(sorted)
+
   const [activeView, setActiveView] = useState('table')
   const [showImport, setShowImport] = useState(false)
   const [showBackup, setShowBackup] = useState(false)
@@ -49,10 +56,71 @@ export default function App() {
   const [editingBotId, setEditingBotId] = useState(null)
   const [addingSnapshotForId, setAddingSnapshotForId] = useState(null)
 
+  // Feature 3: bulk select mode
+  const [selectMode, setSelectMode] = useState(false)
+  const [selectedBotIds, setSelectedBotIds] = useState(new Set())
+  const [bulkTagMode, setBulkTagMode] = useState(null) // 'add' | 'remove' | null
+
   const totalBotCount = Object.keys(bots).length
   const detailBot = detailBotId ? bots[detailBotId] : null
   const editingBot = editingBotId ? bots[editingBotId] : null
   const snapshotBot = addingSnapshotForId ? bots[addingSnapshotForId] : null
+
+  // Feature 1: clicking a tag in TagsChart navigates to table and applies filter
+  function handleTagClick(tag) {
+    setActiveTag(tag)
+    setActiveView('table')
+  }
+
+  // Feature 3: bulk tag data
+  const selectedTagsForRemoval = useMemo(() => {
+    const s = new Set()
+    selectedBotIds.forEach(id => { (bots[id]?.tags || []).forEach(t => s.add(t)) })
+    return [...s].sort()
+  }, [selectedBotIds, bots])
+
+  function toggleSelectBot(id) {
+    setSelectedBotIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  function handleSelectAllVisible() {
+    setSelectedBotIds(prev => {
+      const next = new Set(prev)
+      paginated.forEach(b => next.add(b.id))
+      return next
+    })
+  }
+
+  function exitSelectMode() {
+    setSelectMode(false)
+    setSelectedBotIds(new Set())
+  }
+
+  function handleBulkAddTags(tags) {
+    const tagSet = new Set(tags.map(t => t.trim().toLowerCase()).filter(Boolean))
+    if (!tagSet.size) { setBulkTagMode(null); return }
+    selectedBotIds.forEach(id => {
+      const bot = bots[id]
+      if (!bot) return
+      updateBot(id, { tags: [...new Set([...(bot.tags || []), ...tagSet])] })
+    })
+    setBulkTagMode(null)
+  }
+
+  function handleBulkRemoveTags(tags) {
+    const tagSet = new Set(tags)
+    selectedBotIds.forEach(id => {
+      const bot = bots[id]
+      if (!bot) return
+      updateBot(id, { tags: (bot.tags || []).filter(t => !tagSet.has(t)) })
+    })
+    setBulkTagMode(null)
+  }
 
   return (
     <div className="min-h-screen bg-bg text-text-primary">
@@ -173,25 +241,125 @@ export default function App() {
                     <button
                       key={tag}
                       onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                      className={`text-xs px-2 py-1 rounded transition font-bold ${activeTag === tag ? 'bg-accent-faint text-accent-light border border-accent-faint-border' : 'text-text-muted hover:text-text-secondary border border-transparent'}`}
+                      className={`text-xs px-2 py-1 rounded transition font-bold flex items-center gap-1 ${activeTag === tag ? 'bg-accent-faint text-accent-light border border-accent-faint-border' : 'text-text-muted hover:text-text-secondary border border-transparent'}`}
                     >
                       {tag}
+                      {activeTag === tag && <X size={10} className="ml-0.5 -mr-0.5" />}
                     </button>
                   ))}
                 </div>
               )}
             </section>
 
-            {activeView === 'table'    && <BotTable sorted={sorted} sortBy={sortBy} sortDir={sortDir} toggleSort={toggleSort} onViewBot={setDetailBotId} onEditBot={setEditingBotId} onAddSnapshot={setAddingSnapshotForId} onDeleteBot={deleteBot} />}
+            {/* Active tag prominent chip (shown when navigated from Tags view) */}
+            {activeTag && activeView === 'table' && (
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[10px] text-text-muted uppercase tracking-widest">Filtering by tag:</span>
+                <span
+                  className="flex items-center gap-1.5 text-xs px-3 py-1 rounded-full font-bold"
+                  style={{
+                    background: 'var(--color-accent-faint)',
+                    border: '1px solid var(--color-accent-faint-border)',
+                    color: 'var(--color-accent-faint-text)',
+                  }}
+                >
+                  #{activeTag}
+                  <button
+                    onClick={() => setActiveTag(null)}
+                    className="hover:text-text-primary transition"
+                  >
+                    <X size={11} />
+                  </button>
+                </span>
+              </div>
+            )}
+
+            {/* Table/Grid list controls */}
+            {activeView === 'table' && (
+              <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
+                <span className="text-xs text-text-muted num">
+                  {sorted.length > pageSize
+                    ? `${(page - 1) * pageSize + 1}–${Math.min(page * pageSize, sorted.length)} of ${sorted.length} bots`
+                    : `${sorted.length} bot${sorted.length !== 1 ? 's' : ''}`}
+                </span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <select
+                    value={pageSize}
+                    onChange={e => setPageSize(Number(e.target.value))}
+                    className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus:border-accent/50"
+                  >
+                    <option value={25}>25 / page</option>
+                    <option value={50}>50 / page</option>
+                    <option value={100}>100 / page</option>
+                  </select>
+                  <div className="flex gap-0.5 p-0.5 bg-surface-alt rounded">
+                    <button
+                      onClick={() => setViewMode('list')}
+                      className={`p-1.5 rounded transition ${viewMode === 'list' ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                      title="List view"
+                    >
+                      <LayoutList size={14} />
+                    </button>
+                    <button
+                      onClick={() => setViewMode('grid')}
+                      className={`p-1.5 rounded transition ${viewMode === 'grid' ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                      title="Grid view"
+                    >
+                      <LayoutGrid size={14} />
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => { if (selectMode) exitSelectMode(); else setSelectMode(true) }}
+                    className={`px-2.5 py-1 text-xs rounded transition font-bold border ${
+                      selectMode
+                        ? 'bg-accent-faint text-accent-light border-accent-faint-border'
+                        : 'text-text-muted border-border hover:text-text-secondary'
+                    }`}
+                  >
+                    {selectMode ? 'Done' : 'Select'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Views */}
+            {activeView === 'table' && viewMode === 'list' && (
+              <BotTable
+                sorted={paginated}
+                sortBy={sortBy}
+                sortDir={sortDir}
+                toggleSort={toggleSort}
+                onViewBot={setDetailBotId}
+                onEditBot={setEditingBotId}
+                onAddSnapshot={setAddingSnapshotForId}
+                onDeleteBot={deleteBot}
+                selectMode={selectMode}
+                selectedIds={selectedBotIds}
+                onToggleSelect={toggleSelectBot}
+              />
+            )}
+            {activeView === 'table' && viewMode === 'grid' && (
+              <BotGrid
+                sorted={paginated}
+                onViewBot={setDetailBotId}
+                selectMode={selectMode}
+                selectedIds={selectedBotIds}
+                onToggleSelect={toggleSelectBot}
+              />
+            )}
+            {activeView === 'table' && (
+              <Pagination page={page} totalPages={totalPages} setPage={setPage} />
+            )}
             {activeView === 'timeline' && <OverlayChart bots={sorted} onViewBot={setDetailBotId} />}
             {activeView === 'ranking'  && <RankingChart bots={sorted} onViewBot={setDetailBotId} />}
             {activeView === 'gains'    && <GainsChart bots={sorted} onViewBot={setDetailBotId} />}
             {activeView === 'history'  && <HistoryChart bots={sorted} onViewBot={setDetailBotId} />}
-            {activeView === 'tags'     && <TagsChart bots={sorted} />}
+            {activeView === 'tags'     && <TagsChart bots={sorted} onTagClick={handleTagClick} />}
           </>
         )}
       </div>
 
+      {/* Modals */}
       {detailBot && (
         <BotDetailModal
           bot={detailBot}
@@ -208,6 +376,27 @@ export default function App() {
       {snapshotBot && <AddSnapshotModal bot={snapshotBot} onClose={() => setAddingSnapshotForId(null)} onAdd={(snapshot) => { addSnapshot(addingSnapshotForId, snapshot); setAddingSnapshotForId(null) }} />}
       {showBackup    && <BackupModal onClose={() => setShowBackup(false)} />}
       {showChangelog && <ChangelogModal onClose={() => setShowChangelog(false)} />}
+      {bulkTagMode && (
+        <BulkTagModal
+          mode={bulkTagMode}
+          existingTags={selectedTagsForRemoval}
+          allTags={allTags}
+          onConfirm={bulkTagMode === 'add' ? handleBulkAddTags : handleBulkRemoveTags}
+          onClose={() => setBulkTagMode(null)}
+        />
+      )}
+
+      {/* Bulk action bar — shown when select mode is active */}
+      {selectMode && (
+        <BulkActionBar
+          count={selectedBotIds.size}
+          visibleCount={paginated.length}
+          onSelectAllVisible={handleSelectAllVisible}
+          onAddTags={() => setBulkTagMode('add')}
+          onRemoveTags={() => setBulkTagMode('remove')}
+          onClear={exitSelectMode}
+        />
+      )}
     </div>
   )
 }

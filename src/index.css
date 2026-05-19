@@ -1,49 +1,95 @@
 @import "tailwindcss";
 
+/* ─── Design tokens (sandbox-locked 2026-05-18) ─── */
+:root {
+  /* Typography */
+  --stat-font-family: 'Manrope', sans-serif;
+  --stat-font-weight: 800;
+  --stat-font-size: 34px;
+  --stat-letter-spacing: -0.5px;
+  --stat-label-weight: 700;
+  --stat-subline-weight: 600;
+
+  --wordmark-font: 'Lora', serif;
+  --wordmark-weight: 600;
+  --wordmark-size: 40px;
+  --card-label-font: 'Outfit', sans-serif;
+  --label-size: 11px;
+
+  --table-text-font: 'Poppins', sans-serif;
+  --table-text-weight: 500;
+  --table-nums-font: 'Manrope', sans-serif;
+  --table-nums-weight: 700;
+  --table-size: 13px;
+
+  /* Accent aliases (used in gradients and tint calculations) */
+  --accent-bots: #4ba8c4;
+  --accent-messages: #5ba87f;
+  --accent-threads: #9d8fd4;
+  --accent-favorites: #d48aa0;
+
+  /* Gradients */
+  --gradient-bots:      linear-gradient(to bottom, color-mix(in srgb, var(--accent-bots)      22%, transparent), transparent);
+  --gradient-messages:  linear-gradient(to bottom, color-mix(in srgb, var(--accent-messages)  22%, transparent), transparent);
+  --gradient-threads:   linear-gradient(to bottom, color-mix(in srgb, var(--accent-threads)   22%, transparent), transparent);
+  --gradient-favorites: linear-gradient(to bottom, color-mix(in srgb, var(--accent-favorites) 22%, transparent), transparent);
+
+  /* Table tints & banding */
+  --table-header-tint-opacity: 14%;
+  --table-row-tint-opacity: 10%;
+  --table-banding-alpha: 0.030;
+  --table-hover-alpha: 0.060;
+
+  /* Spacing */
+  --card-padding: 18px;
+  --card-gap: 12px;
+  --card-border-radius: 8px;
+}
+
 @theme {
   /* Surfaces */
-  --color-bg:           #0d1218;
-  --color-surface:      #1a2030;
-  --color-surface-alt:  #1d2538;
-  --color-surface-edge: #2a3344;
+  --color-bg:           #0a0e1a;
+  --color-surface:      #111520;
+  --color-surface-alt:  #141826;
+  --color-surface-edge: #1a2030;
 
   /* Borders */
-  --color-border:        #3a4659;
-  --color-border-subtle: #232b3d;
+  --color-border:        #1f2538;
+  --color-border-subtle: #2a3448;
 
   /* Text */
-  --color-text-primary:   #e6edf3;
-  --color-text-value:     #d5dde9;
-  --color-text-secondary: #b8c1d0;
+  --color-text-primary:   #e0e6f0;
+  --color-text-value:     #e0e6f0;
+  --color-text-secondary: #a7bad2;
   --color-text-tertiary:  #8b95a6;
   --color-text-muted:     #6e7787;
 
-  /* Accent (sky) */
-  --color-accent:              #0ea5e9;
-  --color-accent-light:        #38bdf8;
-  --color-accent-dark:         #0284c7;
-  --color-accent-soft:         #3eb8e8;
-  --color-accent-faint:        rgba(14, 165, 233, 0.10);
-  --color-accent-faint-border: rgba(14, 165, 233, 0.22);
-  --color-accent-faint-text:   #5ec3f0;
+  /* Accent */
+  --color-accent:              #4ba8c4;
+  --color-accent-light:        #6bbdd4;
+  --color-accent-dark:         #3a8aaa;
+  --color-accent-soft:         #5cb5cc;
+  --color-accent-faint:        rgba(75, 168, 196, 0.10);
+  --color-accent-faint-border: rgba(75, 168, 196, 0.22);
+  --color-accent-faint-text:   #7ec5d8;
 
-  /* Metric — Messages (emerald) */
-  --color-metric-messages:        #34d399;
-  --color-metric-messages-bg:     #19281f;
-  --color-metric-messages-border: rgba(52, 211, 153, 0.42);
-  --color-metric-messages-label:  #7eb89c;
+  /* Metric — Messages */
+  --color-metric-messages:        #5ba87f;
+  --color-metric-messages-bg:     #122018;
+  --color-metric-messages-border: rgba(91, 168, 127, 0.42);
+  --color-metric-messages-label:  #6a9e7f;
 
-  /* Metric — Threads (indigo) */
-  --color-metric-threads:        #818cf8;
-  --color-metric-threads-bg:     #1f2138;
-  --color-metric-threads-border: rgba(129, 140, 248, 0.42);
-  --color-metric-threads-label:  #8e93c4;
+  /* Metric — Threads */
+  --color-metric-threads:        #9d8fd4;
+  --color-metric-threads-bg:     #1e1b38;
+  --color-metric-threads-border: rgba(157, 143, 212, 0.42);
+  --color-metric-threads-label:  #9288b8;
 
-  /* Metric — Favorites (pink) */
-  --color-metric-favorites:        #fb7185;
-  --color-metric-favorites-bg:     #2b1b24;
-  --color-metric-favorites-border: rgba(251, 113, 133, 0.42);
-  --color-metric-favorites-label:  #c08594;
+  /* Metric — Favorites */
+  --color-metric-favorites:        #d48aa0;
+  --color-metric-favorites-bg:     #281520;
+  --color-metric-favorites-border: rgba(212, 138, 160, 0.42);
+  --color-metric-favorites-label:  #b87d90;
 
   /* Aura palette — 5 colors, hash-by-id assignment via getAura() */
   --color-aura-1: #7dd3fc;
@@ -66,12 +112,11 @@
 
 @layer utilities {
   .num {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Manrope', system-ui, sans-serif;
     font-feature-settings: 'tnum';
   }
   .font-display {
-    font-family: 'Fraunces', serif;
-    font-optical-sizing: auto;
+    font-family: 'Lora', serif;
   }
 }
 
@@ -80,7 +125,7 @@
 .scrollbar-thin::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
 .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
 
-::selection { background: rgba(14, 165, 233, 0.20); color: var(--color-text-primary); }
+::selection { background: rgba(75, 168, 196, 0.20); color: var(--color-text-primary); }
 input::placeholder, textarea::placeholder { color: var(--color-text-muted); }
 
 .recharts-surface { outline: none; }

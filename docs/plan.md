@@ -28,7 +28,7 @@ If new parked features get added later that each have substantive rationale + de
 
 ## Queued Adjustments
 
-*(None currently queued.)*
+- **Dashboard visual refresh (locked design tokens) — done 2026-05-18.** Applied sandbox-finalized tokens: Manrope/Lora/Outfit/Poppins typography, accent-colored table numbers, top-to-bottom gradient overlays on stat cards, row-banding composition fix through colored columns.
 
 ---
 

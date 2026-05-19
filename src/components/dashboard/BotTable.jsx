@@ -8,10 +8,10 @@ function avatarGlow(color) {
   return `0 0 0 1.5px ${color}, 0 0 10px 1px ${color}8c, 0 0 18px 2px ${color}38`
 }
 
-function SortHeader({ label, active, dir, onClick, className = '' }) {
+function SortHeader({ label, active, dir, onClick, className = '', style }) {
   const Icon = !active ? ArrowUpDown : dir === 'asc' ? ArrowUp : ArrowDown
   return (
-    <th className={`py-3 px-3 text-[11px] uppercase tracking-[0.22em] font-bold ${className}`}>
+    <th className={`py-3 px-3 text-[11px] uppercase tracking-[0.22em] font-bold ${className}`} style={style}>
       <button
         onClick={onClick}
         className={`inline-flex items-center gap-1 transition ${active ? 'text-accent-light' : 'text-text-tertiary hover:text-text-secondary'}`}
@@ -46,6 +46,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                   active={sortBy === m.key}
                   dir={sortDir}
                   onClick={() => toggleSort(m.key)}
+                  style={{ background: `color-mix(in srgb, ${m.accentVar} var(--table-header-tint-opacity), transparent)` }}
                 />
               ))}
               <SortHeader
@@ -76,7 +77,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                 <tr
                   key={bot.id}
                   className="border-b border-border-subtle hover:bg-surface-alt/60 transition cursor-pointer"
-                  style={{ backgroundColor: isEven ? 'var(--color-surface-alt)' : 'var(--color-surface)' }}
+                  style={isEven ? { background: 'rgba(255, 255, 255, var(--table-banding-alpha))' } : undefined}
                   onClick={() => onViewBot(bot.id)}
                 >
                   <td className="pl-5 py-3 font-bold">
@@ -99,7 +100,17 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                         </div>
                       )}
                       <div className="min-w-0">
-                        <span className="truncate block text-text-primary text-[14px] font-bold">{bot.name}</span>
+                        <span
+                          className="truncate block"
+                          style={{
+                            fontFamily: 'var(--table-text-font)',
+                            fontWeight: 'var(--table-text-weight)',
+                            fontSize: 'var(--table-size)',
+                            color: 'var(--color-text-primary)',
+                          }}
+                        >
+                          {bot.name}
+                        </span>
                         {bot.snapshotCount > 0 && (
                           <span className="text-[10px] text-text-muted num">
                             {bot.snapshotCount} snap{bot.snapshotCount !== 1 ? 's' : ''}
@@ -112,8 +123,21 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                     const deltaKey = `delta${m.key[0].toUpperCase()}${m.key.slice(1)}`
                     const delta = bot[deltaKey]
                     return (
-                      <td key={m.key} className="py-3 px-3 text-right">
-                        <div className="num text-[14px] font-bold text-text-value" title={bot.latest ? fmtFull(bot[m.key]) : undefined}>
+                      <td
+                        key={m.key}
+                        className="py-3 px-3 text-right"
+                        style={{ background: `color-mix(in srgb, ${m.accentVar} var(--table-row-tint-opacity), transparent)` }}
+                      >
+                        <div
+                          className="leading-none"
+                          title={bot.latest ? fmtFull(bot[m.key]) : undefined}
+                          style={{
+                            fontFamily: 'var(--table-nums-font)',
+                            fontWeight: 'var(--table-nums-weight)',
+                            fontSize: 'var(--table-size)',
+                            color: m.accentVar,
+                          }}
+                        >
                           {bot.latest ? fmt(bot[m.key]) : '—'}
                         </div>
                         {delta > 0 && (
@@ -122,7 +146,15 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                       </td>
                     )
                   })}
-                  <td className="py-3 px-3 text-right text-xs text-text-muted num whitespace-nowrap hidden md:table-cell">
+                  <td
+                    className="py-3 px-3 text-right whitespace-nowrap hidden md:table-cell"
+                    style={{
+                      fontFamily: 'var(--table-text-font)',
+                      fontWeight: 'var(--table-text-weight)',
+                      fontSize: 'var(--table-size)',
+                      color: 'var(--color-text-muted)',
+                    }}
+                  >
                     {fmtRelative(bot.lastCapturedAt)}
                   </td>
                   <td className="py-3 px-3 hidden md:table-cell">

@@ -28,11 +28,13 @@
   --accent-threads: #9d8fd4;
   --accent-favorites: #d48aa0;
 
-  /* Gradients */
-  --gradient-bots:      linear-gradient(to bottom, color-mix(in srgb, var(--accent-bots)      35%, transparent), transparent);
-  --gradient-messages:  linear-gradient(to bottom, color-mix(in srgb, var(--accent-messages)  35%, transparent), transparent);
-  --gradient-threads:   linear-gradient(to bottom, color-mix(in srgb, var(--accent-threads)   35%, transparent), transparent);
-  --gradient-favorites: linear-gradient(to bottom, color-mix(in srgb, var(--accent-favorites) 35%, transparent), transparent);
+  /* Gradients — rgba() avoids LightningCSS wrapping these in @supports color-mix,
+     which generated two different gradient variants (vivid fallback vs. 35% color-mix)
+     and caused visible stat-card differences across browser versions. */
+  --gradient-bots:      linear-gradient(to bottom, rgba(75,  168, 196, 0.35), transparent);
+  --gradient-messages:  linear-gradient(to bottom, rgba(91,  168, 127, 0.35), transparent);
+  --gradient-threads:   linear-gradient(to bottom, rgba(157, 143, 212, 0.35), transparent);
+  --gradient-favorites: linear-gradient(to bottom, rgba(212, 138, 160, 0.35), transparent);
 
   /* Table tints & banding */
   --table-header-tint-opacity: 14%;

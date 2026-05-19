@@ -38,9 +38,12 @@ Bots imported before the import-side avatar mapping fix landed (Phase 7 late) do
 **What shipped:**
 - CSS token architecture via Tailwind v4 `@theme` — 40+ semantic tokens (surfaces, borders, text, accent, per-metric, 5 auras)
 - Dark theme is the default at `:root`. Future themes scope via `[data-theme="..."]` overrides.
-- Quicksand (body) + Inter (numerals) via @fontsource replace Geist + JetBrains Mono
+- Quicksand (body) via @fontsource; Manrope/Lora/Outfit/Poppins via Google Fonts (replaces Geist + JetBrains Mono)
 - Per-bot aura glow rings on avatars; aura colors carry through to overlay chart lines
-- Metric-tinted stat cards (green/indigo/pink backgrounds)
+- Metric-tinted stat cards with top-to-bottom gradient overlays
+
+**Follow-up fix (2026-05-19) — render variance:**
+Stat cards were rendering noticeably different between page reloads — some refreshes showed vivid/saturated gradients with bright avatar rings, others showed flat/subtle gradients. Root cause: the gradient token values used `color-mix()`, which LightningCSS (Tailwind v4's compiler) automatically wraps in `@supports (color:color-mix(in lab, red, red))`, generating two different compiled rules — a full-color vivid fallback for older browsers and a 35% blended version for modern ones. Fixed by replacing all four gradient tokens with `rgba()` equivalents, which compiles to a single consistent rule with no `@supports` split. Also removed unused Inter @fontsource imports (~150 kB) and deduplicated the Quicksand font request (was being loaded twice — once from @fontsource bundle, once from Google Fonts URL).
 
 **5 remaining themes (queued, not in scope for current work):**
 - Light, Yume Kawaii, Ocean, Dark Academia, Synthwave

@@ -2,6 +2,24 @@ import { X } from 'lucide-react'
 import changelog from '/CHANGELOG.md?raw'
 import Modal from './Modal.jsx'
 
+// Parse **bold** and `code` spans within a single line of text.
+function inlineMarkdown(text, key) {
+  const parts = []
+  const re = /(\*\*(.+?)\*\*|`([^`]+)`)/g
+  let last = 0, m, i = 0
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) parts.push(text.slice(last, m.index))
+    if (m[2] !== undefined) {
+      parts.push(<strong key={i++} className="text-text-primary font-semibold">{m[2]}</strong>)
+    } else {
+      parts.push(<code key={i++} className="text-[11px] px-1 py-0.5 rounded bg-surface-edge text-accent-faint-text font-mono">{m[3]}</code>)
+    }
+    last = m.index + m[0].length
+  }
+  if (last < text.length) parts.push(text.slice(last))
+  return <span key={key}>{parts}</span>
+}
+
 function renderChangelog(raw) {
   const lines = raw.split('\n')
   const elements = []
@@ -11,11 +29,11 @@ function renderChangelog(raw) {
   function flushList() {
     if (listBuffer.length === 0) return
     elements.push(
-      <ul key={key++} className="space-y-1 mb-3">
+      <ul key={key++} className="space-y-1.5 mb-3">
         {listBuffer.map((item, i) => (
-          <li key={i} className="flex gap-2 text-sm text-text-secondary">
+          <li key={i} className="flex gap-2 text-sm text-text-secondary leading-snug">
             <span className="text-accent-faint-text mt-0.5 shrink-0">—</span>
-            <span>{item}</span>
+            {inlineMarkdown(item, i)}
           </li>
         ))}
       </ul>
@@ -33,9 +51,10 @@ function renderChangelog(raw) {
       )
     } else if (line.startsWith('## ')) {
       flushList()
+      const title = line.slice(3).replace(/^\[|\]$/g, '')
       elements.push(
-        <h3 key={key++} className="font-display text-lg font-medium text-text-primary mt-6 mb-1 first:mt-0">
-          {line.slice(3)}
+        <h3 key={key++} className="font-display text-base font-semibold text-text-primary mt-6 mb-1 first:mt-0">
+          {title}
         </h3>
       )
     } else if (line.startsWith('# ')) {

@@ -2,13 +2,9 @@
 
 ## [Unreleased]
 
-### Additions
-- Added `public/dev/sandbox.html` — minimal design tool for typography and accent color iteration. Not user-facing.
-- Expanded design sandbox with gradient, table tint, spacing, typography depth, and wordmark controls.
-- Added preset save/load/delete, before/after comparison toggle, and expanded font catalog (48 fonts across 7 categories) to the design sandbox. Sandbox is now feature-complete for design iteration.
-
 ### Removed
 - Deleted `docs/reference-artifact.jsx` — the original single-file prototype used as a behavioral reference during Phases 1–5. All relevant patterns have been extracted into the live codebase; the file is fully superseded by git history.
+- Design sandbox (`public/dev/sandbox.html`) moved to a separate repo for usage-budget isolation; no longer present in this codebase.
 
 ---
 

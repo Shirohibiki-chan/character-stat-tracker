@@ -80,6 +80,13 @@ All resolved as of 2026-05-16–17:
 - **v1.9** (2026-05-17): `isStatsModal` gate in `onDialogOpen` — checks for `button[title="Copy stats"]` before doing anything; suppresses nuisance toasts on character cards, share dialogs, and other unrelated modals
 - **v1.10** (2026-05-17): `NON_BOT_STATS_MODAL_TITLES` blocklist added to `isStatsModal`; Creator Analytics modal excluded by h2 title — resolves bug 3
 
+### v1.11 (2026-05-19) — Profile gate, resize, hide/restore
+
+- **Profile gate:** HUD only visible on own creator profile page (gates on "Announce" button / analytics icon). SPA navigation handled via URL polling + debounced MutationObserver.
+- **Resizable:** bottom-right corner drag grip; min 280×200 px; size persisted via `GM_setValue`.
+- **Hide/restore:** header × hides HUD entirely; small 📊 restore pill in corner; state persisted; restore pill respects profile gate.
+- **Position persistence:** already existed from v1.6; unchanged.
+
 ### Still Pending
 
 - `@updateURL` and `@downloadURL` metadata in the userscript header pointing at the raw GitHub URL — needed for Tampermonkey auto-update without manual re-install

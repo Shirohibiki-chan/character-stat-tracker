@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.10
+// @version      1.11
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -82,10 +82,12 @@ function isDuplicateInQueue(avatarUrl) {
   return getQueue().some(c => normalizeAvatar(c.avatarUrl) === norm)
 }
 
-// ── Auto-capture setting ──────────────────────────────────────────────────────
+// ── Persistent settings ───────────────────────────────────────────────────────
 
-const AUTO_KEY     = 'charsnap_auto_capture'
-const PILL_POS_KEY = 'charsnap_pill_pos'
+const AUTO_KEY       = 'charsnap_auto_capture'
+const PILL_POS_KEY   = 'charsnap_pill_pos'
+const HUD_HIDDEN_KEY = 'charsnap_hud_hidden'
+const HUD_SIZE_KEY   = 'charsnap_hud_size'
 
 function getAutoCapture() {
   return GM_getValue(AUTO_KEY, '1') !== '0'
@@ -103,6 +105,10 @@ function setAutoCapture(on) {
     disconnectTabWatcher()
     injectCaptureButton(dialog)
   }
+}
+
+function getHudHidden() {
+  return GM_getValue(HUD_HIDDEN_KEY, '0') === '1'
 }
 
 // ── Pointer-event dispatch ────────────────────────────────────────────────────
@@ -135,7 +141,6 @@ function getActiveTabName(dialog) {
 }
 
 // waitForTotalTab — used only by the manual Capture button (Auto OFF mode).
-// Attempts a programmatic switch then polls until Radix confirms it.
 function waitForTotalTab(dialog) {
   return new Promise((resolve, reject) => {
     if (getActiveTabName(dialog) === 'Total') { resolve(); return }
@@ -386,11 +391,36 @@ function applyPillPos() {
   hudEl.style.setProperty('right',  '20px', 'important')
 }
 
+// ── HUD size persistence ──────────────────────────────────────────────────────
+
+const HUD_MIN_W = 280
+const HUD_MIN_H = 200
+
+function loadHudSize() {
+  try { return JSON.parse(GM_getValue(HUD_SIZE_KEY, null)) } catch { return null }
+}
+
+function saveHudSize(w, h) {
+  GM_setValue(HUD_SIZE_KEY, JSON.stringify({ w, h }))
+}
+
+function applyHudSize() {
+  if (!hudEl || !hudExpanded) return
+  const size = loadHudSize()
+  if (size) {
+    hudEl.style.setProperty('width',  size.w + 'px', 'important')
+    hudEl.style.setProperty('height', size.h + 'px', 'important')
+  } else {
+    hudEl.style.removeProperty('width')
+    hudEl.style.removeProperty('height')
+  }
+}
+
 // ── Drag ──────────────────────────────────────────────────────────────────────
 //
 // Threshold-based: pointer must move >4 px before drag starts, so a normal
-// click never accidentally begins a drag. Buttons are excluded from initiating
-// a drag — pressing Export/Clear/etc. never moves the widget.
+// click never accidentally begins a drag. Buttons, anchors, and the resize
+// grip are excluded from initiating a drag.
 
 const DRAG_THRESHOLD_PX = 4
 
@@ -424,7 +454,8 @@ function attachDrag() {
 
       if (!dragging) {
         if (Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return
-        if (startTarget?.closest('button, a')) { cleanup(); return }
+        // Don't drag when clicking buttons, links, or the resize grip
+        if (startTarget?.closest('button, a, .cs-resize-grip')) { cleanup(); return }
         // Enter drag mode — switch element to top/left coords
         dragging = true
         const rect = hudEl.getBoundingClientRect()
@@ -470,34 +501,209 @@ function attachDrag() {
   })
 }
 
+// ── Resize ────────────────────────────────────────────────────────────────────
+//
+// Attaches a bottom-right drag grip to the expanded panel. Called after every
+// updateHUD() in expanded mode (innerHTML wipe recreates panel DOM).
+
+function attachResize() {
+  const panel = hudEl?.querySelector('.cs-hud-panel')
+  if (!panel || panel.querySelector('.cs-resize-grip')) return
+
+  const grip = document.createElement('div')
+  grip.className = 'cs-resize-grip'
+  grip.title = 'Resize'
+  panel.appendChild(grip)
+
+  grip.addEventListener('pointerdown', e => {
+    if (e.button !== 0) return
+    e.preventDefault()
+    e.stopPropagation()
+
+    const pointerId = e.pointerId
+    const startX    = e.clientX
+    const startY    = e.clientY
+    const startRect = hudEl.getBoundingClientRect()
+    const startW    = startRect.width
+    const startH    = startRect.height
+
+    grip.setPointerCapture(pointerId)
+    document.documentElement.style.setProperty('cursor',      'se-resize', 'important')
+    document.documentElement.style.setProperty('user-select', 'none',      'important')
+
+    function onMove(ev) {
+      if (ev.pointerId !== pointerId) return
+      const maxW = window.innerWidth  - startRect.left - 10
+      const maxH = window.innerHeight - startRect.top  - 10
+      const newW = Math.max(HUD_MIN_W, Math.min(maxW, startW + ev.clientX - startX))
+      const newH = Math.max(HUD_MIN_H, Math.min(maxH, startH + ev.clientY - startY))
+      hudEl.style.setProperty('width',  newW + 'px', 'important')
+      hudEl.style.setProperty('height', newH + 'px', 'important')
+    }
+
+    function onUp(ev) {
+      if (ev.pointerId !== pointerId) return
+      const rect = hudEl.getBoundingClientRect()
+      saveHudSize(rect.width, rect.height)
+      document.documentElement.style.removeProperty('cursor')
+      document.documentElement.style.removeProperty('user-select')
+      grip.removeEventListener('pointermove',   onMove)
+      grip.removeEventListener('pointerup',     onUp)
+      grip.removeEventListener('pointercancel', onUp)
+    }
+
+    grip.addEventListener('pointermove',   onMove)
+    grip.addEventListener('pointerup',     onUp)
+    grip.addEventListener('pointercancel', onUp)
+  })
+}
+
+// ── Profile gate ──────────────────────────────────────────────────────────────
+//
+// The HUD and restore pill are shown ONLY when viewing your own creator profile.
+// Gate condition: presence of owner-only DOM elements that CharSnap renders
+// exclusively on your own page — the "Announce" button (primary) and the
+// analytics/stats icon button (fallback). If CharSnap renames these, update
+// isOwnProfile() below.
+//
+// SPA navigation is detected via URL polling (popstate alone isn't reliable on
+// all router implementations) plus a debounced MutationObserver for late-loading
+// banner content on the same URL.
+
+function isOwnProfile() {
+  // Primary: "Announce" button — only visible on your own creator profile
+  for (const btn of document.querySelectorAll('button')) {
+    if (btn.textContent.trim() === 'Announce') return true
+  }
+  // Fallback: creator analytics/stats icon button in the banner
+  // CharSnap may use aria-label or title — adjust if their markup changes
+  if (document.querySelector(
+    'button[aria-label*="nalytics" i], button[title*="nalytics" i], ' +
+    'button[aria-label*="Creator stats" i], button[title*="Creator stats" i]'
+  )) return true
+  return false
+}
+
+function applyProfileGate() {
+  if (!hudEl || !restoreEl) return
+  const allowed = isOwnProfile()
+  const hidden  = getHudHidden()
+  hudEl.style.setProperty('display',     (allowed && !hidden) ? 'block' : 'none', 'important')
+  restoreEl.style.setProperty('display', (allowed && hidden)  ? 'flex'  : 'none', 'important')
+  // Refresh HUD content when it becomes visible so queue count is current
+  if (allowed && !hidden) updateHUD()
+}
+
+function startProfileWatcher() {
+  let lastHref      = location.href
+  let checkTimer    = null
+  let mutationTimer = null
+
+  function scheduleCheck(delay) {
+    clearTimeout(checkTimer)
+    checkTimer = setTimeout(applyProfileGate, delay)
+  }
+
+  // URL-change polling — SPA navigation doesn't fire load events reliably
+  setInterval(() => {
+    if (location.href !== lastHref) {
+      lastHref = location.href
+      scheduleCheck(800) // give the new page time to render
+    }
+  }, 400)
+
+  // DOM mutation watcher — catches banner content loading async on same URL
+  const mo = new MutationObserver(() => {
+    clearTimeout(mutationTimer)
+    mutationTimer = setTimeout(applyProfileGate, 300)
+  })
+  mo.observe(document.body, { childList: true, subtree: true })
+
+  // Initial check after page has settled
+  scheduleCheck(1200)
+}
+
 // ── Floating HUD ──────────────────────────────────────────────────────────────
 
-let hudEl = null
+let hudEl      = null
+let restoreEl  = null
 let hudExpanded = false
+
+function hideHUD() {
+  GM_setValue(HUD_HIDDEN_KEY, '1')
+  applyProfileGate()
+}
+
+function showHUD() {
+  GM_setValue(HUD_HIDDEN_KEY, '0')
+  applyProfileGate()
+}
 
 function renderHUD() {
   if (hudEl) return
   hudEl = document.createElement('div')
   hudEl.id = 'charsnap-hud'
-  // Inline !important styles escape any stacking context CharSnap's body may create.
+  // Start hidden — profile gate will reveal it on own-profile pages
   hudEl.style.cssText = [
     'position: fixed !important',
     'z-index: 2147483647 !important',
     'isolation: isolate !important',
     'pointer-events: auto !important',
+    'display: none !important',
     'font-family: system-ui, sans-serif',
     'font-size: 12px',
   ].join(';')
-  // Append to <html>, not <body>, so we're a sibling of CharSnap's React root
-  // and outside any stacking context it establishes.
+  // Append to <html>, not <body>, to escape any stacking context CharSnap creates
   document.documentElement.appendChild(hudEl)
-  // Re-inject if the element is ever evicted (React re-renders can wipe injected nodes)
+  // Re-inject if evicted by a React re-render
   new MutationObserver(() => {
     if (!hudEl.isConnected) document.documentElement.appendChild(hudEl)
   }).observe(document.documentElement, { childList: true })
   applyPillPos()
   attachDrag()
   updateHUD()
+}
+
+function renderRestorePill() {
+  if (restoreEl) return
+  restoreEl = document.createElement('button')
+  restoreEl.id = 'charsnap-restore'
+  restoreEl.title = 'Show CharSnap Capture'
+  restoreEl.textContent = '📊'
+  restoreEl.style.cssText = [
+    'position: fixed !important',
+    'bottom: 20px !important',
+    'right: 20px !important',
+    'z-index: 2147483647 !important',
+    'display: none !important',
+    'width: 32px !important',
+    'height: 32px !important',
+    'border-radius: 50% !important',
+    'background: #1c1917 !important',
+    'border: 1px solid #44403c !important',
+    'color: #fbbf24 !important',
+    'font-size: 14px !important',
+    'cursor: pointer !important',
+    'align-items: center !important',
+    'justify-content: center !important',
+    'box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important',
+    'isolation: isolate !important',
+    'pointer-events: auto !important',
+  ].join(';')
+  document.documentElement.appendChild(restoreEl)
+  new MutationObserver(() => {
+    if (!restoreEl.isConnected) document.documentElement.appendChild(restoreEl)
+  }).observe(document.documentElement, { childList: true })
+  // JS-based hover because inline !important beats CSS :hover
+  restoreEl.addEventListener('mouseenter', () => {
+    restoreEl.style.setProperty('background',    '#292524', 'important')
+    restoreEl.style.setProperty('border-color',  '#57534e', 'important')
+  })
+  restoreEl.addEventListener('mouseleave', () => {
+    restoreEl.style.setProperty('background',    '#1c1917', 'important')
+    restoreEl.style.setProperty('border-color',  '#44403c', 'important')
+  })
+  restoreEl.addEventListener('click', showHUD)
 }
 
 function hudLabel(count) {
@@ -520,6 +726,9 @@ function updateHUD() {
       hudExpanded = true
       updateHUD()
     })
+    // Clear explicit size when collapsed to pill (pill auto-sizes)
+    hudEl.style.removeProperty('width')
+    hudEl.style.removeProperty('height')
     return
   }
 
@@ -527,7 +736,10 @@ function updateHUD() {
     <div class="cs-hud-panel">
       <div class="cs-hud-header">
         <span class="cs-hud-title">${hudLabel(count)}</span>
-        <button class="cs-hud-close" id="cs-hud-close" title="Close">×</button>
+        <div class="cs-hud-header-btns">
+          <button class="cs-hud-collapse" id="cs-hud-close" title="Collapse to pill">&#8722;</button>
+          <button class="cs-hud-hide-btn" id="cs-hud-hide" title="Hide (restore pill appears in corner)">&times;</button>
+        </div>
       </div>
       <div class="cs-hud-body" id="cs-hud-body">
         <button class="cs-hud-auto${auto ? ' cs-hud-auto--on' : ''}" id="cs-auto-btn">
@@ -550,6 +762,8 @@ function updateHUD() {
     hudExpanded = false
     updateHUD()
   })
+
+  hudEl.querySelector('#cs-hud-hide').addEventListener('click', hideHUD)
 
   hudEl.querySelector('#cs-auto-btn').addEventListener('click', () => setAutoCapture(!auto))
 
@@ -587,6 +801,10 @@ function updateHUD() {
     GM_setValue(PILL_POS_KEY, null)
     applyPillPos()
   })
+
+  // Apply persisted size and attach resize grip after panel DOM is ready
+  applyHudSize()
+  attachResize()
 }
 
 // ── Modal observer ────────────────────────────────────────────────────────────
@@ -693,7 +911,7 @@ function injectStyles() {
 
     /* ── HUD ── */
 
-    /* Drag cursor — buttons override with pointer */
+    /* Drag cursor — buttons and grip override with their own cursors */
     #charsnap-hud { cursor: grab; }
     #charsnap-hud button,
     #charsnap-hud a { cursor: pointer; }
@@ -718,7 +936,7 @@ function injectStyles() {
     .cs-hud-pill--empty { color: #57534e; border-color: #292524; }
     .cs-hud-pill--empty:hover { background: #1f1d1c; border-color: #3c3837; color: #78716c; }
 
-    /* Expanded panel */
+    /* Expanded panel — flex column so body can scroll when HUD is resized short */
     .cs-hud-panel {
       background: #1c1917;
       border: 1px solid #44403c;
@@ -726,6 +944,11 @@ function injectStyles() {
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
       min-width: 210px;
       overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
     }
     .cs-hud-header {
       display: flex;
@@ -733,6 +956,7 @@ function injectStyles() {
       justify-content: space-between;
       padding: 10px 12px 8px;
       border-bottom: 1px solid #292524;
+      flex-shrink: 0;
     }
     .cs-hud-title {
       color: #fbbf24;
@@ -740,22 +964,33 @@ function injectStyles() {
       font-size: 12px;
       white-space: nowrap;
     }
-    .cs-hud-close {
+    .cs-hud-header-btns {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-left: 8px;
+    }
+    /* Collapse (−) and Hide (×) buttons in header */
+    .cs-hud-collapse,
+    .cs-hud-hide-btn {
       color: #78716c;
       background: none;
       border: none;
       cursor: pointer;
       font-size: 18px;
       line-height: 1;
-      padding: 0 0 0 10px;
+      padding: 0 4px;
       transition: color 0.15s;
     }
-    .cs-hud-close:hover { color: #d6d3d1; }
+    .cs-hud-collapse:hover,
+    .cs-hud-hide-btn:hover { color: #d6d3d1; }
     .cs-hud-body {
-      padding: 10px 12px;
+      padding: 10px 12px 20px; /* bottom padding leaves room for resize grip */
       display: flex;
       flex-direction: column;
       gap: 8px;
+      flex: 1;
+      overflow-y: auto;
     }
     .cs-hud-auto {
       display: inline-block;
@@ -819,6 +1054,23 @@ function injectStyles() {
     }
     .cs-hud-action--muted:hover:not(:disabled) { background: #1f1d1c; color: #78716c; border-color: #292524; }
 
+    /* ── Resize grip (bottom-right corner of expanded panel) ── */
+    .cs-resize-grip {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 18px;
+      height: 18px;
+      cursor: se-resize;
+      /* Diagonal dotted grip lines */
+      background-image:
+        radial-gradient(circle, rgba(120,113,108,0.55) 1px, transparent 1px);
+      background-size: 4px 4px;
+      background-position: 2px 2px;
+      background-repeat: repeat;
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+
     /* ── Toasts ── */
     #charsnap-toasts {
       display: flex;
@@ -862,7 +1114,9 @@ function injectStyles() {
 
 injectStyles()
 renderHUD()
+renderRestorePill()
 observeModals()
+startProfileWatcher()
 
 document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.altKey && e.key.toLowerCase() === 'r') {
@@ -872,4 +1126,4 @@ document.addEventListener('keydown', e => {
     applyPillPos()
   }
 }, true)
-console.log('[CharSnap Capture] Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')
+console.log('[CharSnap Capture] v1.11 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')

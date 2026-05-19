@@ -4,6 +4,16 @@
 
 ---
 
+## 2026-05-19 (Userscript v1.11 — profile gate, resize, hide/restore)
+
+### Additions
+- **Profile gate:** the capture box (HUD) now only appears when you are viewing your own creator profile page. On any other page — another creator's profile, explore, settings, etc. — the box is hidden. It reappears automatically when you navigate back to your own profile. The gate checks for owner-only buttons in the creator banner (the "Announce" button is the primary signal).
+- **Resizable box:** drag the bottom-right corner grip to resize the expanded panel to any size you prefer. Minimum size is 280 × 200 px; the box cannot be dragged beyond the viewport edge. Size is saved and restored on reload.
+- **Hide / restore:** clicking the × in the panel header now hides the box entirely. A small 📊 icon appears in the bottom-right corner as a restore affordance. Click it to bring the box back. The hidden/visible state is persisted across page loads. The restore icon also respects the profile gate — it only shows on your own profile.
+- **Position persistence (existing):** position was already saved from drag. The − button collapses the expanded panel back to the pill (as before); × hides it entirely.
+
+---
+
 ## 2026-05-19 (Tag filter, manual PFP, bulk tags, pagination + grid view)
 
 ### Additions

@@ -33,6 +33,7 @@ If new parked features get added later that each have substantive rationale + de
 - **Manual PFP override — done 2026-05-19.** Click-to-edit PFP in bot detail view; supports URL or file upload; `avatarIsManual` flag prevents import overwrites; pencil badge indicator.
 - **Bulk tag editing — done 2026-05-19.** Multi-select mode on the bot list with add/remove tags action bar; selections persist across pagination.
 - **Pagination + grid view — done 2026-05-19.** 25/50/100 page size, localStorage-persisted; page/grid toggle also persisted; full pagination controls with ellipsis.
+- **Grid view hero-banner cards — done 2026-05-19.** Full-width landscape banner (~120 px, center-cropped PFP), card body with name/tags/stats trio. Tag overflow: max 2 chips + `+N` pill with popover for remaining tags. Stats trio: 3 equal columns, full labels (Messages / Threads / Favorites), per-metric color. PFP edit camera icon on banner hover. Bulk-select checkbox overlaid on banner when select mode active. Grid uses `repeat(auto-fill, minmax(220px, 1fr))`.
 
 ---
 

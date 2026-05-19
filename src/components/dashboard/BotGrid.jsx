@@ -1,13 +1,31 @@
-import { Pencil } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Camera } from 'lucide-react'
 import { METRICS } from '../../constants/metrics.js'
 import { getAura } from '../../constants/auras.js'
 import { fmt } from '../../constants/format.js'
 
-function avatarGlow(color) {
-  return `0 0 0 1.5px ${color}, 0 0 10px 1px ${color}8c, 0 0 18px 2px ${color}38`
+const METRIC_COLORS = {
+  messages:  'var(--color-metric-messages)',
+  chats:     'var(--color-metric-threads)',
+  favorites: 'var(--color-metric-favorites)',
 }
 
 export default function BotGrid({ sorted, onViewBot, selectMode, selectedIds, onToggleSelect }) {
+  const [popoverBotId, setPopoverBotId] = useState(null)
+  const popoverRef = useRef(null)
+
+  // Close extra-tags popover on outside click
+  useEffect(() => {
+    if (!popoverBotId) return
+    function close(e) {
+      if (popoverRef.current && !popoverRef.current.contains(e.target)) {
+        setPopoverBotId(null)
+      }
+    }
+    document.addEventListener('mousedown', close)
+    return () => document.removeEventListener('mousedown', close)
+  }, [popoverBotId])
+
   if (sorted.length === 0) {
     return (
       <div className="text-center py-16 text-text-muted text-sm border border-border rounded-lg bg-surface">
@@ -17,101 +35,150 @@ export default function BotGrid({ sorted, onViewBot, selectMode, selectedIds, on
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+    <div
+      className="grid gap-3"
+      style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}
+    >
       {sorted.map(bot => {
         const aura = getAura(bot.id)
         const selected = selectedIds?.has(bot.id)
+        const tags = bot.tags || []
+        const visibleTags = tags.slice(0, 2)
+        const extraTags = tags.slice(2)
+        const isPopoverOpen = popoverBotId === bot.id
+
         return (
           <div
             key={bot.id}
-            className={`relative border rounded-lg bg-surface p-3 cursor-pointer transition hover:border-accent/40 hover:bg-surface-alt flex flex-col items-center gap-2 text-center ${
-              selected ? 'border-accent/60 bg-accent-faint' : 'border-border'
+            className={`rounded-lg bg-surface border cursor-pointer transition-colors ${
+              selected
+                ? 'border-accent/60 bg-accent-faint'
+                : 'border-border hover:border-accent/40 hover:bg-surface-alt'
             }`}
             onClick={() => selectMode ? onToggleSelect?.(bot.id) : onViewBot?.(bot.id)}
           >
-            {selectMode && (
-              <div className="absolute top-2 left-2 z-10" onClick={e => e.stopPropagation()}>
-                <input
-                  type="checkbox"
-                  checked={!!selected}
-                  onChange={() => onToggleSelect?.(bot.id)}
-                  className="w-4 h-4 cursor-pointer accent-accent"
-                />
-              </div>
-            )}
-
-            <div className="relative mt-1">
+            {/* Hero banner */}
+            <div className="relative h-[120px] rounded-t-lg overflow-hidden group bg-surface-edge">
               {bot.avatar ? (
                 <img
                   src={bot.avatar}
                   alt=""
-                  className="w-16 h-16 rounded-full object-cover shrink-0"
-                  style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
+                  className="w-full h-full object-cover object-center"
                   onError={e => { e.target.style.display = 'none' }}
                 />
               ) : (
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl text-text-secondary shrink-0"
-                  style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
-                >
-                  {bot.name?.[0]?.toUpperCase() || '?'}
+                <div className="w-full h-full flex items-center justify-center">
+                  <Camera size={28} className="text-text-muted opacity-40" />
                 </div>
               )}
-              {bot.avatarIsManual && (
+
+              {/* PFP edit affordance — bottom-right, visible on hover */}
+              <button
+                className="absolute bottom-2 right-2 w-7 h-7 rounded-full flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                title="Edit PFP"
+                onClick={e => { e.stopPropagation(); onViewBot?.(bot.id) }}
+              >
+                <Camera size={13} className="text-white" />
+              </button>
+
+              {/* Bulk-select checkbox — top-left, only in select mode */}
+              {selectMode && (
                 <div
-                  className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center"
-                  style={{ background: 'var(--color-accent)', boxShadow: '0 0 0 2px var(--color-bg)' }}
-                  title="PFP manually set"
+                  className="absolute top-2 left-2 z-10"
+                  onClick={e => e.stopPropagation()}
                 >
-                  <Pencil size={9} style={{ color: '#051018' }} />
+                  <input
+                    type="checkbox"
+                    checked={!!selected}
+                    onChange={() => onToggleSelect?.(bot.id)}
+                    className="w-4 h-4 cursor-pointer accent-accent"
+                  />
                 </div>
               )}
+
+              {/* Aura glow ring — bottom edge of banner bleeds into card body */}
+              <div
+                className="absolute inset-x-0 bottom-0 h-px"
+                style={{ background: aura, opacity: 0.5 }}
+              />
             </div>
 
-            <div className="w-full min-w-0">
+            {/* Card body */}
+            <div className="px-3.5 pt-3 pb-3.5 flex flex-col gap-2">
+              {/* Name */}
               <p
-                className="text-sm font-bold text-text-primary truncate"
+                className="text-sm font-medium text-text-primary truncate text-center"
                 style={{ fontFamily: 'var(--table-text-font)' }}
               >
                 {bot.name}
               </p>
-            </div>
 
-            {bot.latest && (
-              <div className="w-full space-y-0.5">
-                {METRICS.map(m => (
-                  <div key={m.key} className="flex justify-between items-center text-[11px]">
-                    <span className="text-text-muted">{m.label.charAt(0)}</span>
+              {/* Tag row */}
+              {tags.length > 0 && (
+                <div className="flex flex-wrap gap-1 justify-center">
+                  {visibleTags.map(t => (
                     <span
-                      className="num font-bold"
-                      style={{ color: 'var(--color-table-nums)', fontFamily: 'var(--table-nums-font)' }}
+                      key={t}
+                      className="text-[10px] px-2 py-0.5 rounded font-semibold uppercase tracking-wide"
+                      style={{ background: 'var(--color-accent-faint)', color: 'var(--color-accent-faint-text)' }}
                     >
-                      {fmt(bot[m.key])}
+                      {t}
                     </span>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                  {extraTags.length > 0 && (
+                    <div className="relative">
+                      <button
+                        className="text-[10px] px-2 py-0.5 rounded font-semibold text-text-muted hover:text-text-secondary hover:bg-surface-edge transition"
+                        onClick={e => { e.stopPropagation(); setPopoverBotId(isPopoverOpen ? null : bot.id) }}
+                      >
+                        +{extraTags.length}
+                      </button>
+                      {isPopoverOpen && (
+                        <div
+                          ref={popoverRef}
+                          className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 z-30 min-w-[120px] max-w-[200px] bg-surface-alt border border-border rounded-lg p-2 shadow-lg"
+                          onClick={e => e.stopPropagation()}
+                        >
+                          <div className="flex flex-wrap gap-1 justify-center">
+                            {extraTags.map(t => (
+                              <span
+                                key={t}
+                                className="text-[10px] px-2 py-0.5 rounded font-semibold uppercase tracking-wide"
+                                style={{ background: 'var(--color-accent-faint)', color: 'var(--color-accent-faint-text)' }}
+                              >
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
 
-            {(bot.tags || []).length > 0 && (
-              <div className="flex flex-wrap gap-1 justify-center">
-                {bot.tags.slice(0, 2).map(t => (
-                  <span
-                    key={t}
-                    className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide"
-                    style={{
-                      background: 'var(--color-accent-faint)',
-                      color: 'var(--color-accent-faint-text)',
-                    }}
-                  >
-                    {t}
-                  </span>
-                ))}
-                {bot.tags.length > 2 && (
-                  <span className="text-[9px] text-text-muted">+{bot.tags.length - 2}</span>
-                )}
-              </div>
-            )}
+              {/* Stats trio */}
+              {bot.latest && (
+                <div className="grid grid-cols-3 gap-1 mt-0.5">
+                  {METRICS.map(m => (
+                    <div key={m.key} className="flex flex-col items-center gap-0.5">
+                      <span
+                        className="text-[10px] text-text-tertiary font-medium leading-tight"
+                        style={{ fontFamily: 'var(--table-text-font)' }}
+                      >
+                        {m.label}
+                      </span>
+                      <span
+                        className="text-sm num font-bold leading-tight"
+                        style={{ color: METRIC_COLORS[m.key], fontFamily: 'var(--table-nums-font)' }}
+                      >
+                        {fmt(bot[m.key])}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )
       })}

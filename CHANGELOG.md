@@ -4,6 +4,15 @@
 
 ---
 
+## 2026-05-19 (Fix: consistent stat card appearance across browsers)
+
+### Fixes
+- **Stat card gradient variance:** the stat card gradient overlays (the subtle color tint at the top of each card) previously rendered noticeably different between browser versions. Modern browsers got a 35%-opacity tint; older browsers got a full-saturated color wash — a side effect of Tailwind's CSS compiler automatically generating a `@supports color-mix` split for the gradient definitions. Replaced the `color-mix()` expressions with equivalent `rgba()` values, which compile to a single consistent rule with no conditional split.
+- **Removed redundant Quicksand font request:** Quicksand was being loaded from both the self-hosted `@fontsource` bundle and Google Fonts simultaneously. Removed it from the Google Fonts URL; the bundled version is used exclusively.
+- **Removed unused Inter font bundle:** the `@fontsource/inter` imports in the JS entry point loaded ~150 kB of Inter font files that are not referenced by any CSS token. Removed. CSS bundle shrinks from 40.4 kB to 35.1 kB.
+
+---
+
 ## 2026-05-19 (Userscript v1.14 — faster tab switch)
 
 ### Changes

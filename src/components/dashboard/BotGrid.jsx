@@ -63,7 +63,7 @@ export default function BotGrid({ sorted, onViewBot, selectMode, selectedIds, on
                 <img
                   src={bot.avatar}
                   alt=""
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-cover object-top"
                   onError={e => { e.target.style.display = 'none' }}
                 />
               ) : (

@@ -4,6 +4,16 @@
 
 ---
 
+## 2026-05-19 (Import — richer bot-match dropdown)
+
+### Changes
+- **Custom bot-match dropdown:** the "which bot does this belong to?" chooser in the import review step has been redesigned from a plain `<select>` to a custom component. Each bot option now shows a PFP thumbnail (24 px circle), the bot name, and a secondary info row with latest message count, snapshot count, up to 2 tags, and last-updated relative date (e.g. `3.1M messages · 2 snaps · HSR · updated 2d ago`).
+- **Type-ahead filter:** a search field at the top of the open dropdown filters bot options by name or tag as you type. The two pinned options (skip / create new) remain visible at all times regardless of filter state.
+- **Smart ranking:** bots are ordered by how closely their latest message count matches the incoming snapshot — the likeliest match appears first. The top result gets a "Closest match" badge. After the top 3 closest matches, the remaining bots sort alphabetically.
+- **Current selection preview:** the closed dropdown button shows the selected bot's PFP thumbnail alongside the name so you can confirm the selection at a glance without reopening the panel.
+
+---
+
 ## 2026-05-19 (Grid view — hero banner cards)
 
 ### Changes

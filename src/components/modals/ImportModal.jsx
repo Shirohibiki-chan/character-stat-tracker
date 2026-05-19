@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { X, ArrowLeft, AlertTriangle, Check } from 'lucide-react'
+import { useState, useMemo, useRef, useEffect } from 'react'
+import { X, ArrowLeft, AlertTriangle, Check, ChevronDown } from 'lucide-react'
 import { parsePasteInput } from '../../services/parser.js'
 import { useImport } from '../../hooks/use-import.js'
 import { METRICS } from '../../constants/metrics.js'
-import { fmt } from '../../constants/format.js'
+import { fmt, fmtRelative } from '../../constants/format.js'
 import Modal from './Modal.jsx'
 
 function ScopePill({ scope }) {
@@ -19,14 +19,193 @@ function ScopePill({ scope }) {
   )
 }
 
+function BotMatchDropdown({ value, onChange, capture, allBots }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [search, setSearch] = useState('')
+  const containerRef = useRef(null)
+
+  useEffect(() => {
+    if (!isOpen) return
+    function close(e) {
+      if (!containerRef.current?.contains(e.target)) {
+        setIsOpen(false)
+        setSearch('')
+      }
+    }
+    document.addEventListener('mousedown', close)
+    return () => document.removeEventListener('mousedown', close)
+  }, [isOpen])
+
+  // Top 3 by message-count proximity, then remaining alphabetically
+  const ranked = useMemo(() => {
+    const captureMessages = capture.messages ?? 0
+    const withDist = allBots.map(bot => {
+      const snaps = [...(bot.snapshots || [])].sort((a, b) => new Date(a.date) - new Date(b.date))
+      const latest = snaps.at(-1)
+      return { bot, dist: Math.abs((latest?.messages ?? 0) - captureMessages) }
+    })
+    withDist.sort((a, b) => a.dist - b.dist)
+    const top = withDist.slice(0, 3).map(x => x.bot)
+    const rest = withDist.slice(3).map(x => x.bot).sort((a, b) => a.name.localeCompare(b.name))
+    return [...top, ...rest]
+  }, [allBots, capture.messages])
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return ranked
+    const q = search.trim().toLowerCase()
+    return ranked.filter(b =>
+      b.name.toLowerCase().includes(q) ||
+      (b.tags || []).some(t => t.toLowerCase().includes(q))
+    )
+  }, [ranked, search])
+
+  function select(v) {
+    onChange(v)
+    setIsOpen(false)
+    setSearch('')
+  }
+
+  const selectedBot = value && value !== '__new__' ? allBots.find(b => b.id === value) : null
+  const triggerLabel = value == null
+    ? '— skip this entry —'
+    : value === '__new__'
+      ? (capture.name ? `✦ Create new: "${capture.name}"` : '✦ Create new bot…')
+      : (selectedBot?.name ?? '…')
+
+  const showClosestBadge = (capture.messages ?? 0) > 0 && allBots.length > 1
+
+  return (
+    <div ref={containerRef}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(o => !o)}
+        className="w-full flex items-center justify-between bg-surface-alt border border-border rounded px-2 py-1.5 text-xs focus:outline-none hover:border-accent/30 transition"
+      >
+        <div className="flex items-center gap-1.5 min-w-0">
+          {selectedBot?.avatar && (
+            <img
+              src={selectedBot.avatar}
+              alt=""
+              className="w-4 h-4 rounded-full object-cover shrink-0"
+              onError={e => { e.target.style.display = 'none' }}
+            />
+          )}
+          <span className={`truncate text-xs ${value == null ? 'text-text-muted' : 'text-text-primary'}`}>
+            {triggerLabel}
+          </span>
+        </div>
+        <ChevronDown size={12} className="shrink-0 ml-2 text-text-muted" />
+      </button>
+
+      {isOpen && (
+        <div className="mt-1 border border-border rounded bg-surface-alt overflow-hidden">
+          <div className="px-2 pt-2 pb-1">
+            <input
+              autoFocus
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Filter bots…"
+              className="w-full bg-surface border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
+            />
+          </div>
+
+          <div className="max-h-[240px] overflow-y-auto scrollbar-thin">
+            {/* Pinned options — always visible */}
+            <button
+              type="button"
+              onClick={() => select(null)}
+              className={`w-full text-left px-3 py-1.5 text-xs hover:bg-surface-edge transition ${value === null ? 'text-text-secondary font-medium' : 'text-text-muted'}`}
+            >
+              — skip this entry —
+            </button>
+            <button
+              type="button"
+              onClick={() => select('__new__')}
+              className={`w-full text-left px-3 py-1.5 text-xs hover:bg-surface-edge transition ${value === '__new__' ? 'font-medium' : ''}`}
+              style={{ color: 'var(--color-accent-faint-text)' }}
+            >
+              {capture.name ? `✦ Create new: "${capture.name}"` : '✦ Create new bot…'}
+            </button>
+
+            {filtered.length > 0 && (
+              <div className="border-t border-border my-1 mx-2" />
+            )}
+
+            {filtered.map((bot, idx) => {
+              const snaps = [...(bot.snapshots || [])].sort((a, b) => new Date(a.date) - new Date(b.date))
+              const latest = snaps.at(-1) ?? null
+              const messages = latest?.messages ?? 0
+              const snapshotCount = snaps.length
+              const tags = (bot.tags || []).slice(0, 2)
+              const lastDate = latest?.date ?? null
+              const isSelected = value === bot.id
+              const isClosest = showClosestBadge && idx === 0
+
+              const metaParts = [
+                `${fmt(messages)} messages`,
+                `${snapshotCount} snap${snapshotCount !== 1 ? 's' : ''}`,
+                ...tags,
+                lastDate ? `updated ${fmtRelative(lastDate)}` : null,
+              ].filter(Boolean)
+
+              return (
+                <button
+                  key={bot.id}
+                  type="button"
+                  onClick={() => select(bot.id)}
+                  className={`w-full text-left px-3 py-2 hover:bg-surface-edge transition ${isSelected ? 'bg-surface-edge' : ''}`}
+                >
+                  <div className="flex items-start gap-2">
+                    <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 bg-surface-edge mt-0.5">
+                      {bot.avatar ? (
+                        <img
+                          src={bot.avatar}
+                          alt=""
+                          className="w-full h-full object-cover"
+                          onError={e => { e.target.style.display = 'none' }}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[9px] font-bold text-text-muted">
+                          {bot.name?.charAt(0).toUpperCase() || '?'}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-xs text-text-primary font-medium">{bot.name}</span>
+                        {isClosest && (
+                          <span
+                            className="text-[8px] px-1.5 py-0.5 rounded font-semibold shrink-0"
+                            style={{ background: 'var(--color-accent-faint)', color: 'var(--color-accent-faint-text)' }}
+                          >
+                            Closest match
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[10px] text-text-muted mt-0.5 leading-relaxed">
+                        {metaParts.join(' · ')}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              )
+            })}
+
+            {filtered.length === 0 && search.trim() && (
+              <div className="px-3 py-3 text-xs text-text-muted text-center">
+                No bots match "{search}"
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function ReviewRow({ item, allBots, onChange, onNameChange }) {
   const { capture, status, candidates, assignedBotId, newName } = item
   const isCreatingNew = assignedBotId === '__new__'
-  const candidateIds = new Set(candidates.map(b => b.id))
-  const orderedBots = [
-    ...candidates,
-    ...allBots.filter(b => !candidateIds.has(b.id)),
-  ]
 
   return (
     <div className="border border-border rounded-lg p-3 space-y-2">
@@ -43,20 +222,12 @@ function ReviewRow({ item, allBots, onChange, onNameChange }) {
       </div>
 
       <div className="space-y-1.5">
-        <select
-          value={assignedBotId || ''}
-          onChange={e => onChange(e.target.value || null)}
-          className="w-full bg-surface-alt border border-border rounded px-2 py-1.5 text-xs text-text-primary focus:outline-none focus:border-accent/50"
-        >
-          <option value="">— skip this entry —</option>
-          <option value="__new__">
-            {capture.name ? `✦ Create new: "${capture.name}"` : '✦ Create new bot…'}
-          </option>
-          {orderedBots.length > 0 && <option disabled>──────────────</option>}
-          {orderedBots.map(b => (
-            <option key={b.id} value={b.id}>{b.name}</option>
-          ))}
-        </select>
+        <BotMatchDropdown
+          value={assignedBotId}
+          onChange={onChange}
+          capture={capture}
+          allBots={allBots}
+        />
         {isCreatingNew && !capture.name && (
           <input
             value={newName}

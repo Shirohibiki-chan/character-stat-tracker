@@ -130,6 +130,7 @@ All resolved as of 2026-05-16–17:
 
 ## Recently Shipped (2026-05-19)
 
+- Import match dropdown redesign (custom dropdown with PFP thumbnails, metadata rows, type-ahead filter, smart ranking by message-count proximity, "Closest match" badge)
 - Tag filter from Tags chart (click tag/bar → navigate to table with filter applied)
 - Manual PFP override in bot detail view (URL / file upload; `avatarIsManual` lock; pencil badge)
 - Bulk tag editing (multi-select mode, Add/Remove tags action bar, persistent across pages)

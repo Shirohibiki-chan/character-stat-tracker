@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-05-19 (Userscript v1.13 — faster auto-capture)
+
+### Changes
+- **Capture speed:** the "Captured [name]" toast now appears as quickly as the stat numbers finish rendering in the browser, rather than waiting a fixed 200 ms after the Total tab activates. In practice this means the capture registers near-instantly once the tab switches. The fix applies to both auto-capture (when the script clicks Total for you) and manual-capture mode (when you click the Capture button yourself). The fallback timeout is 2 seconds — if stats haven't appeared by then, the same "Could not read stats" error fires as before.
+
+---
+
 ## 2026-05-19 (Userscript v1.12 — toast anchored to capture box)
 
 ### Changes

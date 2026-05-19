@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.12
+// @version      1.13
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -159,7 +159,7 @@ function waitForTotalTab(dialog) {
     const timer = setInterval(() => {
       if (getActiveTabName(dialog) === 'Total') {
         clearInterval(timer)
-        setTimeout(resolve, 200)
+        resolve()
         return
       }
       if (!retried && ticks === 15) { retried = true; dispatchPointerClick(totalTab) }
@@ -201,6 +201,39 @@ function readStats(dialog) {
     scope: 'Total',
     capturedAt: new Date().toISOString(),
   }
+}
+
+// ── Stat readiness wait ───────────────────────────────────────────────────────
+//
+// Resolves the moment readStats() returns a valid result — no fixed delay.
+// Uses MutationObserver watching the dialog for any DOM or text change so the
+// capture fires as soon as CharSnap finishes rendering the Total tab's numbers.
+// Falls back to null after timeoutMs if stats never appear.
+
+function waitForStats(dialog, timeoutMs = 2000) {
+  return new Promise(resolve => {
+    // Immediate check: stats already in DOM (e.g. Total was already active)
+    const snap = readStats(dialog)
+    if (snap && snap.name) { resolve(snap); return }
+
+    let settled = false
+    function finish(result) {
+      if (settled) return
+      settled = true
+      mo.disconnect()
+      resolve(result)
+    }
+
+    const mo = new MutationObserver(() => {
+      const c = readStats(dialog)
+      if (c && c.name) finish(c)
+    })
+    // Watch both childList (new elements) and characterData (text-node updates)
+    // so we catch React rendering the numbers regardless of how it patches the DOM.
+    mo.observe(dialog, { subtree: true, childList: true, characterData: true })
+
+    setTimeout(() => finish(null), timeoutMs)
+  })
 }
 
 // ── Toast notifications (anchored inside HUD box) ─────────────────────────────
@@ -262,9 +295,8 @@ function performAutoCapture(dialog) {
   disconnectTabWatcher()
 
   async function doCapture() {
-    await new Promise(r => setTimeout(r, 200)) // let stats re-render after tab switch
-    const capture = readStats(dialog)
-    if (!capture || !capture.name) { showToast('Could not read stats from modal.'); return }
+    const capture = await waitForStats(dialog)
+    if (!capture) { showToast('Could not read stats from modal.'); return }
     if (isDuplicateInQueue(capture.avatarUrl)) {
       showToast(`Already captured <b>${escHtml(capture.name)}</b> — skipped.`)
       return
@@ -336,8 +368,8 @@ function injectCaptureButton(dialog) {
     btn.textContent = '…'
     try {
       await waitForTotalTab(dialog)
-      const capture = readStats(dialog)
-      if (!capture || !capture.name) throw new Error('Could not read stats from modal.')
+      const capture = await waitForStats(dialog)
+      if (!capture) throw new Error('Could not read stats from modal.')
       if (isDuplicateInQueue(capture.avatarUrl)) {
         btn.textContent = 'Already captured'
         setTimeout(() => { btn.textContent = 'Capture'; btn.disabled = false }, 2000)
@@ -1144,4 +1176,4 @@ document.addEventListener('keydown', e => {
     applyPillPos()
   }
 }, true)
-console.log('[CharSnap Capture] v1.12 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')
+console.log('[CharSnap Capture] v1.13 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')

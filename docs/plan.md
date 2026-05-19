@@ -29,6 +29,10 @@ If new parked features get added later that each have substantive rationale + de
 ## Queued Adjustments
 
 - **Dashboard visual refresh (locked design tokens) — done 2026-05-18.** Applied sandbox-finalized tokens: Manrope/Lora/Outfit/Poppins typography, accent-colored table numbers, top-to-bottom gradient overlays on stat cards, row-banding composition fix through colored columns.
+- **Tag filter from Tag Totals — done 2026-05-19.** Clicking a tag in the Tags chart navigates to the bot list and applies that tag as a filter, with a removable chip display.
+- **Manual PFP override — done 2026-05-19.** Click-to-edit PFP in bot detail view; supports URL or file upload; `avatarIsManual` flag prevents import overwrites; pencil badge indicator.
+- **Bulk tag editing — done 2026-05-19.** Multi-select mode on the bot list with add/remove tags action bar; selections persist across pagination.
+- **Pagination + grid view — done 2026-05-19.** 25/50/100 page size, localStorage-persisted; page/grid toggle also persisted; full pagination controls with ellipsis.
 
 ---
 

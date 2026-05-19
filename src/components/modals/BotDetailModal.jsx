@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { X, ChevronLeft, Pencil, Check, Plus, Trash2, TrendingUp, Camera } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -41,7 +41,45 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
     chats: '', messages: '', favorites: '', scope: 'Total',
   })
 
+  const [editingPfp, setEditingPfp] = useState(false)
+  const [pfpUrl, setPfpUrl] = useState('')
+  const [pfpFileName, setPfpFileName] = useState('')
+  const [pfpDataUrl, setPfpDataUrl] = useState(null)
+  const pfpFileRef = useRef(null)
+
   const isDirty = addingSnap && !!(newSnap.chats || newSnap.messages || newSnap.favorites)
+
+  function handlePfpFile(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setPfpFileName(file.name)
+    setPfpUrl('')
+    const reader = new FileReader()
+    reader.onload = ev => setPfpDataUrl(ev.target.result)
+    reader.readAsDataURL(file)
+  }
+
+  function handlePfpSave() {
+    const newAvatar = pfpDataUrl || pfpUrl.trim()
+    if (!newAvatar) return
+    onUpdateMeta({ avatar: newAvatar, avatarIsManual: true })
+    setEditingPfp(false)
+    setPfpUrl('')
+    setPfpFileName('')
+    setPfpDataUrl(null)
+  }
+
+  function handlePfpReset() {
+    onUpdateMeta({ avatarIsManual: false })
+    setEditingPfp(false)
+  }
+
+  function closePfpEditor() {
+    setEditingPfp(false)
+    setPfpUrl('')
+    setPfpFileName('')
+    setPfpDataUrl(null)
+  }
 
   const aura = getAura(bot.id)
 
@@ -104,22 +142,40 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
           <button onClick={onClose} className="p-1 text-text-muted hover:text-text-primary transition">
             <ChevronLeft size={20} />
           </button>
-          {bot.avatar ? (
-            <img
-              src={bot.avatar}
-              alt=""
-              className="w-14 h-14 rounded-full object-cover shrink-0"
-              style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
-              onError={e => { e.target.style.display = 'none' }}
-            />
-          ) : (
-            <div
-              className="w-14 h-14 rounded-full flex items-center justify-center text-text-secondary font-display text-2xl shrink-0"
-              style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
-            >
-              {bot.name?.[0]?.toUpperCase() || '?'}
+          <div
+            className="relative w-14 h-14 shrink-0 group cursor-pointer"
+            onClick={() => setEditingPfp(p => !p)}
+            title="Change profile picture"
+          >
+            {bot.avatar ? (
+              <img
+                src={bot.avatar}
+                alt=""
+                className="w-14 h-14 rounded-full object-cover"
+                style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
+                onError={e => { e.target.style.display = 'none' }}
+              />
+            ) : (
+              <div
+                className="w-14 h-14 rounded-full flex items-center justify-center text-text-secondary font-display text-2xl"
+                style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
+              >
+                {bot.name?.[0]?.toUpperCase() || '?'}
+              </div>
+            )}
+            <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+              <Camera size={16} className="text-white" />
             </div>
-          )}
+            {bot.avatarIsManual && (
+              <div
+                className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center"
+                style={{ background: 'var(--color-accent)', boxShadow: '0 0 0 2px var(--color-bg)' }}
+                title="PFP manually set"
+              >
+                <Pencil size={9} style={{ color: '#051018' }} />
+              </div>
+            )}
+          </div>
           <div className="flex-1 min-w-0">
             {editingMeta ? (
               <div className="flex flex-col gap-2">
@@ -173,6 +229,55 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
             )}
           </div>
         </div>
+
+        {/* PFP editor (inline below header) */}
+        {editingPfp && (
+          <div className="border-b border-border bg-surface-alt px-6 py-4 shrink-0">
+            <div className="text-[10px] uppercase tracking-[0.22em] font-bold text-text-muted mb-3">Change profile picture</div>
+            <div className="space-y-2">
+              <div>
+                <label className="text-[10px] text-text-muted block mb-1">Image URL</label>
+                <input
+                  value={pfpUrl}
+                  onChange={e => { setPfpUrl(e.target.value); setPfpDataUrl(null); setPfpFileName('') }}
+                  placeholder="https://…"
+                  className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary focus:outline-none focus:border-accent/50"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => pfpFileRef.current?.click()}
+                  className="text-xs px-3 py-1.5 border border-border rounded hover:border-accent/40 text-text-secondary hover:text-text-primary transition shrink-0"
+                >
+                  Browse file…
+                </button>
+                <span className="text-[10px] text-text-muted truncate">{pfpFileName || 'No file chosen'}</span>
+                <input ref={pfpFileRef} type="file" accept="image/*" onChange={handlePfpFile} className="hidden" />
+              </div>
+              {bot.avatarIsManual && (
+                <button
+                  onClick={handlePfpReset}
+                  className="text-[10px] text-text-muted hover:text-text-secondary transition underline underline-offset-2"
+                >
+                  Allow future imports to update PFP (clear manual lock)
+                </button>
+              )}
+            </div>
+            <div className="flex gap-2 justify-end mt-3">
+              <button onClick={closePfpEditor} className="px-3 py-1.5 text-xs text-text-secondary hover:text-text-primary transition">
+                Cancel
+              </button>
+              <button
+                onClick={handlePfpSave}
+                disabled={!pfpUrl.trim() && !pfpDataUrl}
+                className="px-3 py-1.5 text-xs font-bold rounded disabled:opacity-50 disabled:cursor-not-allowed transition"
+                style={{ background: 'linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark))', color: '#051018' }}
+              >
+                Save PFP
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Scrollable body */}
         <div className="overflow-y-auto scrollbar-thin px-6 py-5 flex-1">

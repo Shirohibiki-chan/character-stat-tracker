@@ -99,6 +99,13 @@ All resolved as of 2026-05-16–17:
 3. **Theme follow-up** — 5 additional themes (Light, Yume Kawaii, Ocean, Dark Academia, Synthwave); requires theme-switcher UI; deferred
 4. **Design sandbox** — moved to a separate repo for usage-budget isolation; no longer present in this codebase.
 
+## Recently Shipped (2026-05-19)
+
+- Tag filter from Tags chart (click tag/bar → navigate to table with filter applied)
+- Manual PFP override in bot detail view (URL / file upload; `avatarIsManual` lock; pencil badge)
+- Bulk tag editing (multi-select mode, Add/Remove tags action bar, persistent across pages)
+- Pagination + grid view (25/50/100 page size, List/Grid toggle, both localStorage-persisted)
+
 ## Process Notes
 
 - Read `CLAUDE.md` first — architecture rules, layer order, naming conventions, don't-do's

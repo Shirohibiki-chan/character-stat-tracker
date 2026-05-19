@@ -22,7 +22,7 @@ function SortHeader({ label, active, dir, onClick, className = '', style }) {
   )
 }
 
-export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBot, onEditBot, onAddSnapshot, onDeleteBot }) {
+export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBot, onEditBot, onAddSnapshot, onDeleteBot, selectMode, selectedIds, onToggleSelect }) {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null)
 
   return (
@@ -31,6 +31,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-surface-alt">
+              {selectMode && <th className="py-3 pl-4 w-8" />}
               <SortHeader
                 className="text-left pl-5"
                 label="Bot"
@@ -65,7 +66,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
           <tbody>
             {sorted.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center py-12 text-text-muted text-sm">
+                <td colSpan={selectMode ? 8 : 7} className="text-center py-12 text-text-muted text-sm">
                   No bots match your filters.
                 </td>
               </tr>
@@ -73,31 +74,53 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
             {sorted.map((bot, idx) => {
               const aura = getAura(bot.id)
               const isEven = idx % 2 === 1
+              const isSelected = selectMode && selectedIds?.has(bot.id)
               return (
                 <tr
                   key={bot.id}
-                  className={`transition cursor-pointer${isEven ? ' row-banded' : ''}`}
-                  onClick={() => onViewBot(bot.id)}
+                  className={`transition cursor-pointer${isEven ? ' row-banded' : ''}${isSelected ? ' !bg-accent-faint' : ''}`}
+                  onClick={() => selectMode ? onToggleSelect?.(bot.id) : onViewBot(bot.id)}
                 >
+                  {selectMode && (
+                    <td className="pl-4 py-3" onClick={e => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={!!isSelected}
+                        onChange={() => onToggleSelect?.(bot.id)}
+                        className="w-4 h-4 cursor-pointer accent-accent"
+                      />
+                    </td>
+                  )}
                   <td className="pl-5 py-3 font-bold">
                     <div className="flex items-center gap-3">
                       <span className="text-text-muted text-xs num w-6 shrink-0">{idx + 1}</span>
-                      {bot.avatar ? (
-                        <img
-                          src={bot.avatar}
-                          alt=""
-                          className="w-8 h-8 rounded-full object-cover shrink-0"
-                          style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
-                          onError={e => { e.target.style.display = 'none' }}
-                        />
-                      ) : (
-                        <div
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-text-secondary text-xs shrink-0 font-bold"
-                          style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
-                        >
-                          {bot.name?.[0]?.toUpperCase() || '?'}
-                        </div>
-                      )}
+                      <div className="relative shrink-0">
+                        {bot.avatar ? (
+                          <img
+                            src={bot.avatar}
+                            alt=""
+                            className="w-8 h-8 rounded-full object-cover"
+                            style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
+                            onError={e => { e.target.style.display = 'none' }}
+                          />
+                        ) : (
+                          <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-text-secondary text-xs font-bold"
+                            style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
+                          >
+                            {bot.name?.[0]?.toUpperCase() || '?'}
+                          </div>
+                        )}
+                        {bot.avatarIsManual && (
+                          <div
+                            className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full flex items-center justify-center"
+                            style={{ background: 'var(--color-accent)', boxShadow: '0 0 0 1.5px var(--color-bg)' }}
+                            title="PFP manually set"
+                          >
+                            <Pencil size={8} style={{ color: '#051018' }} />
+                          </div>
+                        )}
+                      </div>
                       <div className="min-w-0">
                         <span
                           className="truncate block"

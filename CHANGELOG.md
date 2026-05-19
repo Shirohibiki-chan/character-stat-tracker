@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-05-19 (Tag filter, manual PFP, bulk tags, pagination + grid view)
+
+### Additions
+- **Tag Totals → filter:** clicking a tag name or bar in the Tags chart navigates to the bot list and filters it to that tag. The active filter appears as a removable chip above the table; click the × to clear it.
+- **Manual PFP override:** click the avatar in any bot's detail view to open a PFP editor. Paste an image URL or browse for a file. The new picture is saved as a manual override (indicated by a small pencil badge on the avatar) and will NOT be overwritten by future snapshot imports. Use "Allow future imports to update PFP" to clear the lock without removing the image.
+- **Bulk tag editing:** a "Select" toggle in the table/grid header switches the bot list into multi-select mode. After selecting bots, a bottom action bar appears with "Add tags…" and "Remove tags…" pickers. Adding is additive (doesn't remove existing tags); removing only strips the chosen tags. "Select all visible" selects the current page. Selections persist as you navigate pages; "Done" or "Clear selection" exits the mode.
+- **Pagination:** the bot list is now paginated. Default is 50 bots per page; choose 25, 50, or 100 from the page-size selector. Pagination controls appear below the list. Search, filter, and sort changes reset to page 1. Page size preference is saved in localStorage.
+- **Grid view:** a List/Grid toggle in the table header switches to a card grid layout showing each bot's avatar, name, and key stats. Also paginated. Preference is saved in localStorage.
+
+---
+
 ## 2026-05-19 (Bug fixes)
 
 ### Fixes

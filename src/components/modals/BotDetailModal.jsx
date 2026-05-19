@@ -224,7 +224,7 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                 <TrendingUp size={16} className="text-accent opacity-60" />
                 Growth over time
               </div>
-              <div style={{ height: 280 }}>
+              <div style={{ height: 280, overflow: 'hidden' }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartSnaps} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
                     <CartesianGrid stroke="var(--color-border-subtle)" />

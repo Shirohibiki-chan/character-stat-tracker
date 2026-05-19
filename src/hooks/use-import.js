@@ -6,6 +6,7 @@ export function useImport() {
   const bots = useBotStore(s => s.bots)
   const addBot = useBotStore(s => s.addBot)
   const addSnapshot = useBotStore(s => s.addSnapshot)
+  const updateBot = useBotStore(s => s.updateBot)
 
   function previewCaptures(captures) {
     const botsArr = Object.values(bots)
@@ -23,10 +24,7 @@ export function useImport() {
 
       if (capture.name) {
         const matches = botsArr.filter(b => b.name.toLowerCase() === capture.name.toLowerCase())
-        if (matches.length === 1) {
-          return { capture, status: 'auto', candidates: [], assignedBotId: matches[0].id, newName: '' }
-        }
-        if (matches.length > 1) {
+        if (matches.length >= 1) {
           return { capture, status: 'ambiguous', candidates: matches, assignedBotId: null, newName: '' }
         }
         return { capture, status: 'new', candidates: [], assignedBotId: '__new__', newName: capture.name }
@@ -51,6 +49,9 @@ export function useImport() {
         addBot(createBot({ name, avatar: item.capture.avatarUrl || null, snapshots: [snap] }))
       } else {
         addSnapshot(item.assignedBotId, snap)
+        if (item.capture.avatarUrl) {
+          updateBot(item.assignedBotId, { avatar: item.capture.avatarUrl })
+        }
       }
     }
   }

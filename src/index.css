@@ -145,3 +145,4 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.08); }
 input::placeholder, textarea::placeholder { color: var(--color-text-muted); }
 
 .recharts-surface { outline: none; }
+.recharts-wrapper:focus { outline: none; }

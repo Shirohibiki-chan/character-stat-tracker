@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function Modal({ onClose, isDirty = false, children }) {
   const [confirming, setConfirming] = useState(false)
+  const backdropRef = useRef(null)
+  const downOnBackdrop = useRef(false)
 
   function tryClose() {
     if (isDirty) setConfirming(true)
@@ -22,8 +24,10 @@ export default function Modal({ onClose, isDirty = false, children }) {
   return (
     <>
       <div
+        ref={backdropRef}
         className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-        onClick={tryClose}
+        onMouseDown={e => { downOnBackdrop.current = e.target === backdropRef.current }}
+        onClick={() => { if (downOnBackdrop.current) tryClose() }}
       >
         {children}
       </div>

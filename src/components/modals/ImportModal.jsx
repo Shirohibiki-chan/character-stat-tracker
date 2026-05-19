@@ -74,7 +74,7 @@ function ReviewRow({ item, allBots, onChange, onNameChange }) {
       )}
       {status === 'ambiguous' && (
         <div className="text-[10px] text-accent-faint-text flex items-center gap-1">
-          <AlertTriangle size={9} /> Multiple bots with this name — please pick one
+          <AlertTriangle size={9} /> {candidates.length === 1 ? 'Bot found — please confirm or reassign' : 'Multiple bots with this name — please pick one'}
         </div>
       )}
     </div>

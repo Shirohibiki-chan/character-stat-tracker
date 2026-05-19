@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-05-19 (Bug fixes)
+
+### Fixes
+- Import: when a capture's name matches exactly one existing bot, the review screen now requires you to confirm or reassign instead of silently pre-selecting that bot. Prevents stats from accidentally landing on the wrong bot when only one exists in the library.
+- Import: re-importing a snapshot for an existing bot now also updates that bot's profile picture to the one from the new capture. Previously the PFP was only written when a bot was first created.
+- Charts: clicking on a chart element (bar, point, canvas) no longer leaves a visible white focus outline on the chart wrapper.
+- Modals: click-outside-to-close no longer fires when you click inside the modal and drag the pointer outside before releasing. Both the press and the release must land outside the modal for it to close.
+- Bot detail: growth chart no longer causes right-axis labels (messages scale) to visibly snap into place a beat after the modal opens.
+
+---
+
 ## 2026-05-18 (Table tweaks)
 
 ### Adjustments

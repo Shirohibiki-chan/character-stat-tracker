@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-05-19 (Userscript v1.12 — toast anchored to capture box)
+
+### Changes
+- **Toast position:** the "Captured [name]. Undo" toast (and all other userscript toasts) now appears inside the capture box itself, overlaying its bottom edge — instead of floating at the bottom-left of the viewport. The toast width adapts when you resize the box.
+- **Multiple toasts:** up to 3 toasts stack vertically inside the box (newest at the bottom); adding a fourth quietly removes the oldest.
+- **Auto-dismiss timing:** toasts now dismiss after 4 seconds (was 5).
+- **Suppress when hidden:** if you've hidden the capture box with ×, new toasts are suppressed entirely. Toasts already showing dismiss immediately when you hide the box.
+- **Suppress when collapsed:** toasts are also suppressed when the box is collapsed to its pill mode, and any showing toasts dismiss when you collapse.
+- **Navigate away:** any in-flight toasts dismiss immediately when the profile gate hides the box (e.g., navigating to another creator's profile).
+
+---
+
 ## 2026-05-19 (Userscript v1.11 — profile gate, resize, hide/restore)
 
 ### Additions

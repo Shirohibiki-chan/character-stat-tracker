@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.11
+// @version      1.12
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -203,39 +203,45 @@ function readStats(dialog) {
   }
 }
 
-// ── Toast notifications ───────────────────────────────────────────────────────
+// ── Toast notifications (anchored inside HUD box) ─────────────────────────────
+//
+// Toasts render inside the HUD box, overlaying its bottom edge. They are
+// suppressed when the box is hidden (user clicked ×) or collapsed to pill,
+// and dismissed immediately when the box hides or the profile gate closes it.
 
-let toastContainerEl = null
+const TOAST_MAX         = 3
+const TOAST_DURATION_MS = 4000
+let toastAreaEl = null
 
-function ensureToastContainer() {
-  if (toastContainerEl) return
-  toastContainerEl = document.createElement('div')
-  toastContainerEl.id = 'charsnap-toasts'
-  toastContainerEl.style.cssText = [
-    'position: fixed !important',
-    'bottom: 20px !important',
-    'left: 20px !important',
-    'z-index: 2147483647 !important',
-    'display: flex',
-    'flex-direction: column',
-    'gap: 6px',
-    'align-items: flex-start',
-  ].join(';')
-  document.documentElement.appendChild(toastContainerEl)
-  toastContainerEl.addEventListener('click', e => {
-    const btn = e.target.closest('.cs-toast-undo')
-    if (!btn) return
-    removeFromQueue(btn.dataset.ts)
-    btn.closest('.charsnap-toast')?.remove()
-  })
+function ensureToastArea() {
+  if (!hudEl) return
+  if (!toastAreaEl) {
+    toastAreaEl = document.createElement('div')
+    toastAreaEl.id = 'charsnap-toast-area'
+    toastAreaEl.addEventListener('click', e => {
+      const btn = e.target.closest('.cs-toast-undo')
+      if (!btn) return
+      removeFromQueue(btn.dataset.ts)
+      btn.closest('.charsnap-toast')?.remove()
+    })
+  }
+  if (!toastAreaEl.isConnected) hudEl.appendChild(toastAreaEl)
 }
 
-function showToast(html, durationMs = 5000) {
-  ensureToastContainer()
+function dismissAllToasts() {
+  if (!toastAreaEl) return
+  while (toastAreaEl.firstChild) toastAreaEl.removeChild(toastAreaEl.firstChild)
+}
+
+function showToast(html, durationMs = TOAST_DURATION_MS) {
+  if (getHudHidden() || !hudExpanded) return
+  ensureToastArea()
+  if (!toastAreaEl) return
+  while (toastAreaEl.children.length >= TOAST_MAX) toastAreaEl.firstChild?.remove()
   const toast = document.createElement('div')
   toast.className = 'charsnap-toast'
   toast.innerHTML = html
-  toastContainerEl.appendChild(toast)
+  toastAreaEl.appendChild(toast)
   setTimeout(() => toast.remove(), durationMs)
 }
 
@@ -586,12 +592,14 @@ function isOwnProfile() {
 
 function applyProfileGate() {
   if (!hudEl || !restoreEl) return
-  const allowed = isOwnProfile()
-  const hidden  = getHudHidden()
-  hudEl.style.setProperty('display',     (allowed && !hidden) ? 'block' : 'none', 'important')
-  restoreEl.style.setProperty('display', (allowed && hidden)  ? 'flex'  : 'none', 'important')
+  const allowed  = isOwnProfile()
+  const hidden   = getHudHidden()
+  const visible  = allowed && !hidden
+  if (!visible) dismissAllToasts()
+  hudEl.style.setProperty('display',     visible          ? 'block' : 'none', 'important')
+  restoreEl.style.setProperty('display', (allowed && hidden) ? 'flex' : 'none', 'important')
   // Refresh HUD content when it becomes visible so queue count is current
-  if (allowed && !hidden) updateHUD()
+  if (visible) updateHUD()
 }
 
 function startProfileWatcher() {
@@ -630,6 +638,7 @@ let restoreEl  = null
 let hudExpanded = false
 
 function hideHUD() {
+  dismissAllToasts()
   GM_setValue(HUD_HIDDEN_KEY, '1')
   applyProfileGate()
 }
@@ -759,6 +768,7 @@ function updateHUD() {
   `
 
   hudEl.querySelector('#cs-hud-close').addEventListener('click', () => {
+    dismissAllToasts()
     hudExpanded = false
     updateHUD()
   })
@@ -805,6 +815,8 @@ function updateHUD() {
   // Apply persisted size and attach resize grip after panel DOM is ready
   applyHudSize()
   attachResize()
+  // Re-attach toast area (panel innerHTML wipe detaches it on each updateHUD call)
+  ensureToastArea()
 }
 
 // ── Modal observer ────────────────────────────────────────────────────────────
@@ -1071,12 +1083,16 @@ function injectStyles() {
       clip-path: polygon(100% 0, 100% 100%, 0 100%);
     }
 
-    /* ── Toasts ── */
-    #charsnap-toasts {
+    /* ── Toasts (anchored inside HUD box) ── */
+    #charsnap-toast-area {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      align-items: flex-start;
+      gap: 4px;
+      pointer-events: none; /* pass through to panel when no toast is showing */
     }
     .charsnap-toast {
       background: #1c1917;
@@ -1088,11 +1104,13 @@ function injectStyles() {
       color: #d6d3d1;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
       animation: cs-toast-in 0.15s ease;
-      max-width: 280px;
+      box-sizing: border-box;
+      width: 100%;
       line-height: 1.4;
+      pointer-events: auto;
     }
     @keyframes cs-toast-in {
-      from { opacity: 0; transform: translateX(8px); }
+      from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: none; }
     }
     .charsnap-toast b { color: #e7e5e4; font-weight: 600; }
@@ -1126,4 +1144,4 @@ document.addEventListener('keydown', e => {
     applyPillPos()
   }
 }, true)
-console.log('[CharSnap Capture] v1.11 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')
+console.log('[CharSnap Capture] v1.12 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')

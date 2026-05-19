@@ -80,6 +80,13 @@ All resolved as of 2026-05-16–17:
 - **v1.9** (2026-05-17): `isStatsModal` gate in `onDialogOpen` — checks for `button[title="Copy stats"]` before doing anything; suppresses nuisance toasts on character cards, share dialogs, and other unrelated modals
 - **v1.10** (2026-05-17): `NON_BOT_STATS_MODAL_TITLES` blocklist added to `isStatsModal`; Creator Analytics modal excluded by h2 title — resolves bug 3
 
+### v1.12 (2026-05-19) — Toast anchor to HUD box
+
+- **Toast repositioning:** all userscript toasts now render inside the capture box, overlaying its bottom edge (~8 px margin). Toasts adapt to box width when resized.
+- **Stacking / cap:** up to 3 toasts stack vertically (newest at bottom); oldest is removed when a 4th arrives.
+- **Suppress + dismiss on hide:** toasts suppressed when box is hidden (×) or collapsed to pill; existing toasts dismissed immediately on hide, collapse, and profile-gate-off (navigate away).
+- **Auto-dismiss:** 4 s (was 5 s).
+
 ### v1.11 (2026-05-19) — Profile gate, resize, hide/restore
 
 - **Profile gate:** HUD only visible on own creator profile page (gates on "Announce" button / analytics icon). SPA navigation handled via URL polling + debounced MutationObserver.

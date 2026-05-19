@@ -2,12 +2,28 @@
 
 ## [Unreleased]
 
-### Additions
-- Applied locked design tokens from sandbox: new typography (Manrope/Lora/Outfit/Poppins), refined accent colors, top-to-bottom gradient overlays on stat cards, column-accented table numbers in Manrope 700, and fixed row banding visibility through colored columns. Avatar glow preserved.
+---
+
+## 2026-05-18 (Visual polish)
+
+### Adjustments
+- New typography and color system applied from sandbox: Manrope for stat numbers and table figures, Lora for the wordmark, Outfit for card labels, Poppins for body text. Accent palette shifted to cool slate-blue with per-metric tints (teal for bots, green for messages, purple for threads, pink for favorites). Avatar glow preserved.
+- Stat card gradients are now visible — cards were using pre-tinted dark backgrounds that hid the overlay; switched to neutral surfaces so the top-to-bottom color fade shows properly.
+- Each stat card now shows "+N this week" (green) or "−N this week" (red) below the main number, compared to 7 days ago.
+- "Total Bots" card now has a bot icon and shows how many new bots were added this week, matching the metric card style.
+- Abbreviated numbers (K / M / B) now always show one decimal place — e.g. 89.6M instead of 90M.
+- Full unabbreviated number removed from below stat card values — cleaner layout with room for the weekly delta line.
+- Table stat numbers changed to warm off-white — easier to read against all three column tint backgrounds than the previous metric accent colors.
+- Table stat numbers are heavier (800 weight, 14 px) so they read as clearly distinct from the bot name text.
+- Table column headers are now ALL CAPS.
+- Row divider lines removed from the table — alternating row banding provides enough separation on its own.
+
+### Fixes
+- Table row hover now works correctly on both light and dark rows — previously banded rows showed no highlight on hover, and dark-row hover produced nearly the same shade as the banding.
 
 ### Removed
-- Deleted `docs/reference-artifact.jsx` — the original single-file prototype used as a behavioral reference during Phases 1–5. All relevant patterns have been extracted into the live codebase; the file is fully superseded by git history.
-- Design sandbox (`public/dev/sandbox.html`) moved to a separate repo for usage-budget isolation; no longer present in this codebase.
+- `docs/reference-artifact.jsx` — original single-file prototype used as a behavioral reference during Phases 1–5; fully superseded by git history.
+- Design sandbox (`public/dev/sandbox.html`) moved to a separate repo.
 
 ---
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.13
+// @version      1.14
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @match        https://charsnap.ai/*
@@ -119,10 +119,12 @@ function getHudHidden() {
 // finger/mouse press would.
 
 function dispatchPointerClick(el) {
-  const opts = { bubbles: true, cancelable: true }
+  // isPrimary + pointerId are required by some Radix UI versions to treat the
+  // event as a real pointer interaction rather than discarding it as untrusted.
+  const opts = { bubbles: true, cancelable: true, isPrimary: true, pointerId: 1 }
   el.dispatchEvent(new PointerEvent('pointerdown', opts))
   el.dispatchEvent(new PointerEvent('pointerup',   opts))
-  el.dispatchEvent(new MouseEvent('click',         opts))
+  el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
 }
 
 // Radix tabs are keyboard-accessible; focus + Enter triggers the tab handler
@@ -334,19 +336,21 @@ function performAutoCapture(dialog) {
   })
   activeTabWatcher = observer
 
-  // Attempt 2: keyboard activation at ~1.5 s if pointer chain didn't land
+  // Attempt 2: keyboard activation 50 ms after pointer attempt (was 1500 ms).
+  // MutationObserver fires the instant the tab activates, so the retry can be
+  // nearly immediate — no need to wait for a "grace period".
   setTimeout(() => {
     if (fired || !document.body.contains(dialog) || !totalTab) return
     if (getActiveTabName(dialog) === 'Total') return
     dispatchKeyboardActivate(totalTab)
-  }, 1500)
+  }, 50)
 
-  // Prompt only after both techniques have had time to work (~3 s total)
+  // Prompt only if both programmatic techniques failed (~1.5 s total, was 3 s)
   setTimeout(() => {
     if (!fired && document.body.contains(dialog) && getActiveTabName(dialog) !== 'Total') {
       showToast('Click the <b>Total</b> tab to capture.', 8000)
     }
-  }, 3000)
+  }, 1500)
 }
 
 // ── Manual Capture button (Auto OFF mode) ─────────────────────────────────────
@@ -1176,4 +1180,4 @@ document.addEventListener('keydown', e => {
     applyPillPos()
   }
 }, true)
-console.log('[CharSnap Capture] v1.13 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')
+console.log('[CharSnap Capture] v1.14 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')

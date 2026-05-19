@@ -91,7 +91,7 @@ All resolved as of 2026-05-16–17:
 1. **Favicon and page `<title>`** — small, unblocking
 2. **Userscript `@updateURL` / `@downloadURL`** — one-line metadata addition
 3. **Theme follow-up** — 5 additional themes (Light, Yume Kawaii, Ocean, Dark Academia, Synthwave); requires theme-switcher UI; deferred
-4. **Design sandbox** — `public/dev/sandbox.html` is feature-complete (v3). Preset save/load/delete, before/after comparison toggle, and 48-font catalog shipped 2026-05-18. Use it to finalize a design direction, then implement the result in the React app.
+4. **Design sandbox** — moved to a separate repo for usage-budget isolation; no longer present in this codebase.
 
 ## Process Notes
 

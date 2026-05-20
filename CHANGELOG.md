@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-05-20 (Fix: userscript v1.20 — toast flashing and floating above capture box)
+
+### Fixes
+- **Userscript v1.20 — toast notification flashing:** every HUD state change (capture, button click, queue update) called `updateHUD()`, which wiped the panel's innerHTML. The toast area element lived inside the panel, so it was detached and re-appended on every update — causing the toast to visibly flash or replay its enter animation mid-display. Fixed by moving `#charsnap-toast-area` out of the HUD panel entirely: it is now a sibling of the HUD (both appended directly to `<html>`), so HUD re-renders never touch it.
+- **Userscript v1.20 — toast position:** the toast was previously overlaid at the bottom edge of the capture box interior. It now floats ~7 px above the box as a separate element, so it never covers the box content. `positionToastArea()` keeps it anchored to the box top edge on every move, resize, and state change.
+
+---
+
 ## 2026-05-20 (Fix: userscript v1.19 — HUD buttons broken after export queue confirmation)
 
 ### Fixes

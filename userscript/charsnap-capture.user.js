@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.17
+// @version      1.18
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -234,7 +234,14 @@ function readStats(dialog) {
 
 function waitForStats(dialog, timeoutMs = 2000) {
   function hasData(snap) {
-    return snap && snap.name && (snap.messages > 0 || snap.chats > 0 || snap.favorites > 0)
+    if (!snap || !snap.name) return false
+    if (snap.messages === 0 && snap.chats === 0 && snap.favorites === 0) return false
+    // If a breakdown was found but group is 0 and messages equals the solo count,
+    // CharSnap is still showing placeholder values — the real total hasn't loaded yet.
+    // Bots with genuinely zero group messages will fall through to the 2 s timeout.
+    if ('messagesGroup' in snap && snap.messagesGroup === 0
+        && snap.messagesSolo > 0 && snap.messages === snap.messagesSolo) return false
+    return true
   }
 
   return new Promise(resolve => {
@@ -788,6 +795,8 @@ function hudLabel(count) {
 
 function updateHUD() {
   if (!hudEl) return
+  // Don't clobber an active export/clear confirmation screen
+  if (hudEl.querySelector('#cs-clear-yes')) return
   const count = getQueue().length
   const auto  = getAutoCapture()
 
@@ -1210,4 +1219,4 @@ document.addEventListener('keydown', e => {
     applyPillPos()
   }
 }, true)
-console.log('[CharSnap Capture] v1.16 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')
+console.log('[CharSnap Capture] v1.18 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')

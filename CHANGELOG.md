@@ -4,9 +4,10 @@
 
 ---
 
-## 2026-05-20 (Fix: zero-stat captures no longer rejected by import parser)
+## 2026-05-20 (Fix: userscript capturing zero stats; parser rejecting zero-stat imports)
 
 ### Fixes
+- **Userscript v1.15 — capturing zeros instead of real stats:** `waitForStats` was resolving as soon as the bot's name appeared in the modal, even though CharSnap renders placeholder `0` values in the stat elements before the real data arrives. The function now waits for at least one non-zero stat before resolving. If stats are genuinely all-zero after 2 seconds (brand-new bot with no activity), it captures those zeros rather than dropping the snapshot.
 - **Import rejecting brand-new bots with zero stats:** the JSON import parser was filtering out any capture where messages, threads, and favorites were all 0 — a falsy check that accidentally dropped valid captures for bots that genuinely have no activity yet. The parser now checks whether the stat fields *exist* in the source JSON (regardless of their value), so a new bot with all-zero stats imports correctly.
 
 ---

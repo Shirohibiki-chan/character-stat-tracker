@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-05-20 (Userscript v2.2 — settings panel)
+
+### Additions
+- **Userscript v2.2 — settings panel:** clicking the gear icon in the expanded HUD header opens a settings view. A `← Back` button returns to the captures list. Settings include:
+  - **Default state on load** — choose whether the HUD starts as Pill, Expanded, or Hidden when you land on your own creator profile page. Defaults to Pill. Persists across page loads.
+  - **Auto-capture toggle** — same ON/OFF toggle as the toolbar, mirrored here for discoverability. Auto-capture is event-driven (fires when you open a bot's stats modal) — no interval to configure.
+  - **Reset position** — returns the HUD to its default bottom-right corner without losing other settings.
+  - **Reset size** — returns the expanded panel to its default 360×480 dimensions without losing other settings.
+  - **Clear all settings** — two-step confirm; wipes position, size, default-state pref, auto-capture pref, and force-show flag back to defaults. Captures queue is preserved.
+  - **Wipe captures queue** — two-step confirm; clears all queued captures (same as the footer Clear action). Settings are preserved.
+
+---
+
 ## 2026-05-20 (Userscript v2.1.1 — profile gate bypass, HUD force-show shortcut)
 
 ### Fixes

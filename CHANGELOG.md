@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-05-20 (Fix: userscript v1.18 — messages capturing placeholder value; export queue confirmation dismissing)
+
+### Fixes
+- **Userscript v1.18 — messages total still wrong (capturing placeholder):** `waitForStats` was resolving the moment any non-zero stat appeared in the DOM. CharSnap renders a placeholder state first — the large messages element shows the solo count and the breakdown span shows `(solo + 0)` — then updates both to the real values a moment later. The fix: `hasData` now refuses to resolve when a breakdown is present with `messagesGroup === 0` and `messages === messagesSolo` (the exact signature of the placeholder state). Genuine zero-group bots fall through to the existing 2 s timeout and are still captured correctly.
+- **Userscript v1.18 — export queue "Clear?" confirmation immediately dismissed:** any external DOM mutation on the page (e.g. CharSnap's React re-rendering in response to HUD changes) could trigger the profile-gate watcher, which called `updateHUD()` and wiped the confirmation screen. Fixed by adding a guard at the top of `updateHUD`: if `#cs-clear-yes` is already in the panel, bail out immediately without resetting the view.
+
+---
+
 ## 2026-05-20 (Fix: userscript v1.17 — messages group count still zero)
 
 ### Fixes

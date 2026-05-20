@@ -119,9 +119,19 @@ All resolved as of 2026-05-16–17:
 - **Hide/restore:** header × hides HUD entirely; small 📊 restore pill in corner; state persisted; restore pill respects profile gate.
 - **Position persistence:** already existed from v1.6; unchanged.
 
+### v2.2 (2026-05-20) — Settings panel
+
+- Settings view behind gear icon: default state on load (Pill/Expanded/Hidden), auto-capture mirror toggle, reset HUD position, reset HUD size, clear all settings (two-step confirm, queue preserved), wipe captures queue (two-step confirm, settings preserved).
+- `DEFAULT_STATE_KEY` GM storage key for default-state pref.
+- `getDefaultState()`, `resetHudPosition()`, `resetHudSize()`, `clearAllSettings()` helper functions.
+- Initial page-load applies default-state pref in `renderHUD()` — sets `hudExpanded = true` for 'expanded', sets `HUD_HIDDEN_KEY = '1'` for 'hidden' (unless force-show active).
+- `settingsOpen` module state; collapse and hide both reset it to false.
+- Settings gear icon no longer disabled; "Settings (coming soon)" tooltip updated to "Settings".
+
 ### Still Pending
 
-*(none)*
+- Userscript `@updateURL` / `@downloadURL` auto-update metadata — already added in v2.1 header; no remaining work.
+- `isOwnProfile()` selector fix — deferred until console diagnostic output (Ctrl+Shift+Alt+H) shows what CharSnap's current profile page contains.
 
 ---
 
@@ -134,9 +144,18 @@ All resolved as of 2026-05-16–17:
 ## What's Left
 
 1. **Favicon and page `<title>`** — small, unblocking
-2. **Userscript `@updateURL` / `@downloadURL`** — one-line metadata addition
+2. **`isOwnProfile()` selector fix** — deferred until console diagnostic (Ctrl+Shift+Alt+H) shows what CharSnap's current profile page contains; the Ctrl+Shift+Alt+H force-show bypass is the workaround in the meantime
 3. **Theme follow-up** — 5 additional themes (Light, Yume Kawaii, Ocean, Dark Academia, Synthwave); requires theme-switcher UI; deferred
 4. **Design sandbox** — moved to a separate repo for usage-budget isolation; no longer present in this codebase.
+
+## Recently Shipped (2026-05-20 — v2.2 settings panel)
+
+- Gear icon in expanded HUD header now opens a settings view (was `disabled`).
+- Settings: default state on load (Pill/Expanded/Hidden), auto-capture toggle mirror, Reset position, Reset size, Clear all settings (two-step confirm), Wipe captures queue (two-step confirm).
+- `DEFAULT_STATE_KEY = 'charsnap_default_state'` — new GM storage key; default is `'pill'`.
+- On initial page load, `renderHUD()` applies the default-state pref before first render.
+- `clearAllSettings()` wipes all non-queue GM keys and resets in-memory HUD state; queue is explicitly excluded.
+- `← Back` button returns from settings to the captures list; collapse and hide both reset `settingsOpen`.
 
 ## Recently Shipped (2026-05-20 — v2.1.1 profile gate fix)
 

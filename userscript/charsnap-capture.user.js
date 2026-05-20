@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.1.1
+// @version      2.2
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -144,7 +144,8 @@ const AUTO_KEY        = 'charsnap_auto_capture'
 const PILL_POS_KEY    = 'charsnap_pill_pos'
 const HUD_HIDDEN_KEY  = 'charsnap_hud_hidden'
 const HUD_SIZE_KEY    = 'charsnap_hud_size'
-const FORCE_SHOW_KEY  = 'charsnap_force_show'
+const FORCE_SHOW_KEY    = 'charsnap_force_show'
+const DEFAULT_STATE_KEY = 'charsnap_default_state'
 
 function getAutoCapture() {
   return GM_getValue(AUTO_KEY, '1') !== '0'
@@ -166,6 +167,10 @@ function setAutoCapture(on) {
 
 function getHudHidden() {
   return GM_getValue(HUD_HIDDEN_KEY, '0') === '1'
+}
+
+function getDefaultState() {
+  return GM_getValue(DEFAULT_STATE_KEY, 'pill')
 }
 
 // ── Pointer-event dispatch ────────────────────────────────────────────────────
@@ -541,6 +546,28 @@ function applyHudSize() {
   }
 }
 
+function resetHudPosition() {
+  GM_setValue(PILL_POS_KEY, null)
+  applyPillPos()
+}
+
+function resetHudSize() {
+  GM_setValue(HUD_SIZE_KEY, null)
+  applyHudSize()
+}
+
+function clearAllSettings() {
+  GM_setValue(AUTO_KEY, '1')
+  GM_setValue(PILL_POS_KEY, null)
+  GM_setValue(HUD_HIDDEN_KEY, '0')
+  GM_setValue(HUD_SIZE_KEY, null)
+  GM_setValue(FORCE_SHOW_KEY, '0')
+  GM_setValue(DEFAULT_STATE_KEY, 'pill')
+  hudExpanded = false
+  settingsOpen = false
+  applyPillPos()
+}
+
 // ── Drag ──────────────────────────────────────────────────────────────────────
 //
 // Threshold-based: pointer must move >4 px before drag starts, so a normal
@@ -763,6 +790,7 @@ function startProfileWatcher() {
 let hudEl            = null
 let restoreEl        = null
 let hudExpanded      = false
+let settingsOpen     = false
 let confirmingAction = false  // true while export/clear confirmation is showing
 let searchQuery      = ''
 let selectMode       = false
@@ -774,6 +802,7 @@ function hideHUD() {
   dismissAllToasts()
   confirmingAction = false
   selectMode = false
+  settingsOpen = false
   selectedIds.clear()
   GM_setValue(HUD_HIDDEN_KEY, '1')
   GM_setValue(FORCE_SHOW_KEY, '0')
@@ -831,6 +860,13 @@ function renderHUD() {
     if (!hudEl.isConnected) document.documentElement.appendChild(hudEl)
     if (!toastAreaEl.isConnected) document.documentElement.appendChild(toastAreaEl)
   }).observe(document.documentElement, { childList: true })
+  // Apply default-state preference on initial page load
+  const initState = getDefaultState()
+  if (initState === 'expanded') {
+    hudExpanded = true
+  } else if (initState === 'hidden' && GM_getValue(FORCE_SHOW_KEY, '0') !== '1') {
+    GM_setValue(HUD_HIDDEN_KEY, '1')
+  }
   applyPillPos()
   attachDrag()
   updateHUD()
@@ -929,6 +965,112 @@ function updateHUD() {
     return
   }
 
+  // ── Settings view ────────────────────────────────────────────────────────────
+  if (settingsOpen) {
+    const ds = getDefaultState()
+    const stateOpts = ['pill', 'expanded', 'hidden'].map(v =>
+      `<button class="cs-settings-opt${ds === v ? ' cs-settings-opt--active' : ''}" data-state-val="${v}">${v.charAt(0).toUpperCase() + v.slice(1)}</button>`
+    ).join('')
+
+    hudEl.innerHTML = `
+      <div class="cs-hud-panel">
+        <div class="cs-hud-header">
+          <button class="cs-hud-back-btn" id="cs-settings-back">← Back</button>
+          <span class="cs-hud-title" style="text-align:center;margin:0 4px">Settings</span>
+          <div class="cs-hud-header-right">
+            <button class="cs-hud-icon-btn" id="cs-hud-hide" title="Hide">${SVG_CLOSE}</button>
+          </div>
+        </div>
+        <div class="cs-settings-body" id="cs-hud-body">
+          <div class="cs-settings-section">
+            <div class="cs-settings-label">Default state on load</div>
+            <div class="cs-settings-opts">${stateOpts}</div>
+          </div>
+          <div class="cs-settings-section">
+            <div class="cs-settings-row-inline">
+              <span class="cs-settings-label cs-settings-label--inline">Auto-capture</span>
+              <button class="cs-hud-auto${auto ? ' cs-hud-auto--on' : ''}" id="cs-settings-auto">AUTO: ${auto ? 'ON' : 'OFF'}</button>
+            </div>
+            <div class="cs-settings-note">Fires when you open a bot's stats modal — no interval.</div>
+          </div>
+          <div class="cs-settings-section">
+            <div class="cs-settings-label">HUD</div>
+            <button class="cs-hud-action cs-settings-action" id="cs-reset-pos">Reset position to default corner</button>
+            <button class="cs-hud-action cs-settings-action" id="cs-reset-size">Reset size to default (360×480)</button>
+          </div>
+          <div class="cs-settings-section">
+            <div class="cs-settings-label">Data</div>
+            <button class="cs-hud-action cs-hud-action--danger cs-settings-action" id="cs-clear-settings-btn">Clear all settings (queue preserved)</button>
+            <button class="cs-hud-action cs-hud-action--danger cs-settings-action" id="cs-wipe-queue-btn"${count === 0 ? ' disabled' : ''}>Wipe captures queue${count > 0 ? ' (' + count + ')' : ''}</button>
+          </div>
+        </div>
+        <div class="cs-hud-footer" id="cs-hud-footer"></div>
+      </div>
+    `
+
+    hudEl.querySelector('#cs-settings-back').addEventListener('click', () => {
+      settingsOpen = false
+      updateHUD()
+    })
+    hudEl.querySelector('#cs-hud-hide').addEventListener('click', hideHUD)
+    hudEl.querySelector('#cs-settings-auto').addEventListener('click', () => setAutoCapture(!auto))
+
+    hudEl.querySelectorAll('[data-state-val]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        GM_setValue(DEFAULT_STATE_KEY, btn.dataset.stateVal)
+        updateHUD()
+      })
+    })
+
+    hudEl.querySelector('#cs-reset-pos').addEventListener('click', () => {
+      resetHudPosition()
+      showToast('Position reset to default corner.')
+    })
+
+    hudEl.querySelector('#cs-reset-size').addEventListener('click', () => {
+      resetHudSize()
+      showToast('Size reset to default (360×480).')
+    })
+
+    const setupSettingsConfirm = (btnId, confirmMsg, onConfirm) => {
+      const btn = hudEl.querySelector('#' + btnId)
+      if (!btn || btn.disabled) return
+      btn.addEventListener('click', () => {
+        confirmingAction = true
+        const footer = hudEl.querySelector('#cs-hud-footer')
+        footer.innerHTML = `
+          <span class="cs-hud-confirm-msg">${confirmMsg}</span>
+          <button class="cs-hud-action cs-hud-action--danger-confirm cs-hud-action--sm" id="cs-confirm-yes">Yes</button>
+          <button class="cs-hud-action cs-hud-action--sm" id="cs-confirm-no">Cancel</button>
+        `
+        footer.querySelector('#cs-confirm-yes').addEventListener('click', () => {
+          confirmingAction = false
+          onConfirm()
+        })
+        footer.querySelector('#cs-confirm-no').addEventListener('click', () => {
+          confirmingAction = false
+          updateHUD()
+        })
+      })
+    }
+
+    setupSettingsConfirm('cs-clear-settings-btn', 'Clear all settings?', () => {
+      clearAllSettings()
+      updateHUD()
+    })
+
+    setupSettingsConfirm('cs-wipe-queue-btn', `Wipe ${count} capture${count !== 1 ? 's' : ''}?`, () => {
+      clearQueue()
+      updateHUD()
+      showToast('Captures queue wiped.')
+    })
+
+    applyHudSize()
+    attachResize()
+    positionToastArea()
+    return
+  }
+
   const deltas   = computeDeltas(q)
   const selCount = selectedIds.size
 
@@ -1001,7 +1143,7 @@ function updateHUD() {
         <div class="cs-hud-header-right">
           <span class="cs-hud-drag-dots" aria-hidden="true">${SVG_DOTS}</span>
           <button class="cs-hud-icon-btn" id="cs-hud-collapse" title="Collapse to pill">${SVG_COLLAPSE}</button>
-          <button class="cs-hud-icon-btn" id="cs-hud-settings" title="Settings (coming soon)" disabled>${SVG_SETTINGS}</button>
+          <button class="cs-hud-icon-btn" id="cs-hud-settings" title="Settings">${SVG_SETTINGS}</button>
           <button class="cs-hud-icon-btn" id="cs-hud-hide" title="Hide">${SVG_CLOSE}</button>
         </div>
       </div>
@@ -1023,10 +1165,16 @@ function updateHUD() {
     dismissAllToasts()
     hudExpanded = false
     confirmingAction = false
+    settingsOpen = false
     selectMode = false
     selectedIds.clear()
     expandedCaptureId = null
     searchQuery = ''
+    updateHUD()
+  })
+  hudEl.querySelector('#cs-hud-settings').addEventListener('click', () => {
+    settingsOpen = true
+    confirmingAction = false
     updateHUD()
   })
   hudEl.querySelector('#cs-hud-hide').addEventListener('click', hideHUD)
@@ -1624,6 +1772,86 @@ function injectStyles() {
       margin-left: 6px;
     }
     .cs-toast-undo:hover, .cs-toast-undo-readd:hover { text-decoration: underline; }
+
+    /* ── Settings view ── */
+    .cs-hud-back-btn {
+      background: none;
+      border: none;
+      color: #78716c;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 4px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color 0.12s;
+    }
+    .cs-hud-back-btn:hover { color: #d6d3d1; }
+    .cs-settings-body {
+      padding: 8px 12px 6px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .cs-settings-body::-webkit-scrollbar { width: 4px; }
+    .cs-settings-body::-webkit-scrollbar-track { background: transparent; }
+    .cs-settings-body::-webkit-scrollbar-thumb { background: #44403c; border-radius: 2px; }
+    .cs-settings-section {
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #1f1d1c;
+    }
+    .cs-settings-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .cs-settings-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #78716c;
+      margin-bottom: 7px;
+    }
+    .cs-settings-label--inline { margin-bottom: 0; }
+    .cs-settings-opts { display: flex; gap: 4px; }
+    .cs-settings-opt {
+      flex: 1;
+      padding: 4px 0;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid #44403c;
+      background: #292524;
+      color: #a8a29e;
+      transition: background 0.12s, color 0.12s;
+      text-align: center;
+    }
+    .cs-settings-opt:hover { background: #3c3837; color: #d6d3d1; }
+    .cs-settings-opt--active {
+      background: rgba(251, 191, 36, 0.12);
+      color: #fbbf24;
+      border-color: rgba(251, 191, 36, 0.3);
+    }
+    .cs-settings-row-inline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    .cs-settings-note {
+      font-size: 10px;
+      color: #57534e;
+      line-height: 1.4;
+    }
+    .cs-settings-action {
+      width: 100%;
+      margin-bottom: 5px;
+      text-align: left;
+      box-sizing: border-box;
+    }
+    .cs-settings-action:last-child { margin-bottom: 0; }
   `)
 }
 
@@ -1656,4 +1884,4 @@ document.addEventListener('keydown', e => {
     applyProfileGate()
   }
 }, true)
-console.log('[CharSnap Capture] v2.1.1 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')
+console.log('[CharSnap Capture] v2.2 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')

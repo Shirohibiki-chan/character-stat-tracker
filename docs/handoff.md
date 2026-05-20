@@ -138,6 +138,12 @@ All resolved as of 2026-05-16–17:
 3. **Theme follow-up** — 5 additional themes (Light, Yume Kawaii, Ocean, Dark Academia, Synthwave); requires theme-switcher UI; deferred
 4. **Design sandbox** — moved to a separate repo for usage-budget isolation; no longer present in this codebase.
 
+## Recently Shipped (2026-05-20 — v2.1.1 profile gate fix)
+
+- `Ctrl+Shift+Alt+H` (Cmd on Mac) forces the HUD visible on any CharSnap page, bypassing the `isOwnProfile()` profile gate. Persists across page navigations via `GM_setValue`. Clicking × clears the override.
+- Pressing the shortcut logs diagnostic info to the browser console: current URL, `isOwnProfile()` result, and all visible button texts — to identify why the gate may be failing.
+- Root cause: `isOwnProfile()` detects "Announce" button or analytics icon; if CharSnap changed their profile UI those selectors stop matching. Gate detection fix deferred until console logs show what's actually present.
+
 ## Recently Shipped (2026-05-20 — v2.1 part 2)
 
 - Userscript v2.1: captures list in HUD body — scrollable, avatar thumbnails (letter-initials fallback), bot name, relative timestamp / scope / stat summary per row, positive-delta badges when same bot captured multiple times

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.1
+// @version      2.1.1
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -140,10 +140,11 @@ function removeCapturesBulk(captures) {
 
 // ── Persistent settings ───────────────────────────────────────────────────────
 
-const AUTO_KEY       = 'charsnap_auto_capture'
-const PILL_POS_KEY   = 'charsnap_pill_pos'
-const HUD_HIDDEN_KEY = 'charsnap_hud_hidden'
-const HUD_SIZE_KEY   = 'charsnap_hud_size'
+const AUTO_KEY        = 'charsnap_auto_capture'
+const PILL_POS_KEY    = 'charsnap_pill_pos'
+const HUD_HIDDEN_KEY  = 'charsnap_hud_hidden'
+const HUD_SIZE_KEY    = 'charsnap_hud_size'
+const FORCE_SHOW_KEY  = 'charsnap_force_show'
 
 function getAutoCapture() {
   return GM_getValue(AUTO_KEY, '1') !== '0'
@@ -712,7 +713,8 @@ function isOwnProfile() {
 
 function applyProfileGate() {
   if (!hudEl || !restoreEl) return
-  const allowed  = isOwnProfile()
+  const forced   = GM_getValue(FORCE_SHOW_KEY, '0') === '1'
+  const allowed  = forced || isOwnProfile()
   const hidden   = getHudHidden()
   const visible  = allowed && !hidden
   if (!visible) { dismissAllToasts(); confirmingAction = false }
@@ -774,6 +776,7 @@ function hideHUD() {
   selectMode = false
   selectedIds.clear()
   GM_setValue(HUD_HIDDEN_KEY, '1')
+  GM_setValue(FORCE_SHOW_KEY, '0')
   applyProfileGate()
 }
 
@@ -1639,5 +1642,18 @@ document.addEventListener('keydown', e => {
     GM_setValue(PILL_POS_KEY, null)
     applyPillPos()
   }
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.altKey && e.key.toLowerCase() === 'h') {
+    e.preventDefault()
+    e.stopPropagation()
+    // Diagnostic log — helps identify why the profile gate might be failing
+    const btns = Array.from(document.querySelectorAll('button'))
+      .map(b => b.textContent.trim()).filter(t => t).slice(0, 20)
+    console.log('[CharSnap Capture] force-show triggered')
+    console.log('[CharSnap Capture] isOwnProfile:', isOwnProfile(), '| url:', location.href)
+    console.log('[CharSnap Capture] buttons on page:', btns.join(' | ') || 'none')
+    GM_setValue(FORCE_SHOW_KEY, '1')
+    GM_setValue(HUD_HIDDEN_KEY, '0')
+    applyProfileGate()
+  }
 }, true)
-console.log('[CharSnap Capture] v2.1 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')
+console.log('[CharSnap Capture] v2.1.1 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')

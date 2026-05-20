@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-05-20 (Userscript v2.1.1 — profile gate bypass, HUD force-show shortcut)
+
+### Fixes
+- **Userscript v2.1.1 — HUD invisible after update:** the profile gate was not detecting the creator profile page, hiding both the HUD and restore pill everywhere. Added `Ctrl+Shift+Alt+H` (Cmd on Mac) as a force-show override that persists across navigations. Pressing it logs diagnostic info to the browser console (which buttons CharSnap has on the page and whether `isOwnProfile()` passed) to help identify the root cause. Clicking the × hide button clears the override.
+
+---
+
 ## 2026-05-20 (Userscript v2.1 — captures list, per-row remove, inline preview, search, multi-select)
 
 ### Additions

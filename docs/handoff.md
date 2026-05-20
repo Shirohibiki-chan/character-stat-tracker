@@ -130,6 +130,7 @@ All resolved as of 2026-05-16–17:
 
 ## Recently Shipped (2026-05-20)
 
+- Zero-stat import fix: captures with all-zero stats (brand-new bots) no longer silently rejected by the JSON parser
 - Dashboard scope-contamination fix: all stat/delta/ranking computations now read from Total-scope snapshots only; mixed-scope data no longer produces wrong totals or absurd values in stat cards
 - Import match "Closest match" ranking now compares against Total-scope message counts only
 

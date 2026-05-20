@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-05-20 (Fix: zero-stat captures no longer rejected by import parser)
+
+### Fixes
+- **Import rejecting brand-new bots with zero stats:** the JSON import parser was filtering out any capture where messages, threads, and favorites were all 0 — a falsy check that accidentally dropped valid captures for bots that genuinely have no activity yet. The parser now checks whether the stat fields *exist* in the source JSON (regardless of their value), so a new bot with all-zero stats imports correctly.
+
+---
+
 ## 2026-05-20 (Fix: dashboard stats and growth only use Total-scope snapshots)
 
 ### Fixes

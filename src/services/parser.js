@@ -40,7 +40,10 @@ function parseJSON(text) {
   try {
     const data = JSON.parse(text)
     const arr = Array.isArray(data) ? data : (data.captures ? data.captures : [data])
-    const captures = arr.map(c => ({
+    // Filter on the raw object before parseCommaNum so that valid captures with
+    // all-zero stats (e.g. a brand-new bot) aren't dropped by a falsy check.
+    const valid = arr.filter(c => c && typeof c === 'object' && ('messages' in c || 'chats' in c || 'favorites' in c))
+    const captures = valid.map(c => ({
       name: c.name || null,
       avatarUrl: c.avatarUrl || c.avatar || null,
       scope: mapScope(c.scope),
@@ -48,7 +51,7 @@ function parseJSON(text) {
       messages: parseCommaNum(c.messages),
       favorites: parseCommaNum(c.favorites),
       capturedAt: c.capturedAt || new Date().toISOString(),
-    })).filter(c => c.chats || c.messages || c.favorites)
+    }))
     if (!captures.length) return { kind: 'unknown', captures: [] }
     return { kind: 'json', captures }
   } catch {

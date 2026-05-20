@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-05-20 (Fix: userscript v1.19 — HUD buttons broken after export queue confirmation)
+
+### Fixes
+- **Userscript v1.19 — HUD buttons completely unresponsive:** the v1.18 DOM-query guard in `updateHUD` (checking for `#cs-clear-yes`) left the HUD permanently stuck on the confirmation screen if it was showing during any navigation or profile-gate re-check. Fixed by replacing the DOM query with a `confirmingAction` JS variable that is explicitly set and cleared at every entry/exit point.
+
+---
+
 ## 2026-05-20 (Fix: userscript v1.18 — messages capturing placeholder value; export queue confirmation dismissing)
 
 ### Fixes

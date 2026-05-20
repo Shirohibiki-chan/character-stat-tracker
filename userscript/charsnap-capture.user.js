@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.18
+// @version      1.19
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -664,7 +664,7 @@ function applyProfileGate() {
   const allowed  = isOwnProfile()
   const hidden   = getHudHidden()
   const visible  = allowed && !hidden
-  if (!visible) dismissAllToasts()
+  if (!visible) { dismissAllToasts(); confirmingAction = false }
   hudEl.style.setProperty('display',     visible          ? 'block' : 'none', 'important')
   restoreEl.style.setProperty('display', (allowed && hidden) ? 'flex' : 'none', 'important')
   // Refresh HUD content when it becomes visible so queue count is current
@@ -706,12 +706,14 @@ function startProfileWatcher() {
 
 // ── Floating HUD ──────────────────────────────────────────────────────────────
 
-let hudEl      = null
-let restoreEl  = null
-let hudExpanded = false
+let hudEl           = null
+let restoreEl       = null
+let hudExpanded     = false
+let confirmingAction = false  // true while export/clear confirmation is showing
 
 function hideHUD() {
   dismissAllToasts()
+  confirmingAction = false
   GM_setValue(HUD_HIDDEN_KEY, '1')
   applyProfileGate()
 }
@@ -795,8 +797,7 @@ function hudLabel(count) {
 
 function updateHUD() {
   if (!hudEl) return
-  // Don't clobber an active export/clear confirmation screen
-  if (hudEl.querySelector('#cs-clear-yes')) return
+  if (confirmingAction) return
   const count = getQueue().length
   const auto  = getAutoCapture()
 
@@ -845,6 +846,7 @@ function updateHUD() {
   hudEl.querySelector('#cs-hud-close').addEventListener('click', () => {
     dismissAllToasts()
     hudExpanded = false
+    confirmingAction = false
     updateHUD()
   })
 
@@ -856,6 +858,7 @@ function updateHUD() {
     const q = getQueue()
     if (!q.length) return
     GM_setClipboard(JSON.stringify({ captures: q }, null, 2), 'text')
+    confirmingAction = true
     const body = hudEl.querySelector('#cs-hud-body')
     body.innerHTML = `
       <p class="cs-hud-msg">Queue copied to clipboard.</p>
@@ -865,11 +868,12 @@ function updateHUD() {
         <button class="cs-hud-action" id="cs-clear-no">Keep</button>
       </div>
     `
-    body.querySelector('#cs-clear-yes').addEventListener('click', () => { clearQueue(); updateHUD() })
-    body.querySelector('#cs-clear-no').addEventListener('click', updateHUD)
+    body.querySelector('#cs-clear-yes').addEventListener('click', () => { confirmingAction = false; clearQueue(); updateHUD() })
+    body.querySelector('#cs-clear-no').addEventListener('click', () => { confirmingAction = false; updateHUD() })
   })
 
   hudEl.querySelector('#cs-clear-btn')?.addEventListener('click', () => {
+    confirmingAction = true
     const body = hudEl.querySelector('#cs-hud-body')
     body.innerHTML = `
       <p class="cs-hud-msg">Clear all ${count} capture${count !== 1 ? 's' : ''}?</p>
@@ -878,8 +882,8 @@ function updateHUD() {
         <button class="cs-hud-action" id="cs-clear-no">Cancel</button>
       </div>
     `
-    body.querySelector('#cs-clear-yes').addEventListener('click', () => { clearQueue(); updateHUD() })
-    body.querySelector('#cs-clear-no').addEventListener('click', updateHUD)
+    body.querySelector('#cs-clear-yes').addEventListener('click', () => { confirmingAction = false; clearQueue(); updateHUD() })
+    body.querySelector('#cs-clear-no').addEventListener('click', () => { confirmingAction = false; updateHUD() })
   })
 
   hudEl.querySelector('#cs-reset-pos')?.addEventListener('click', () => {
@@ -1219,4 +1223,4 @@ document.addEventListener('keydown', e => {
     applyPillPos()
   }
 }, true)
-console.log('[CharSnap Capture] v1.18 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')
+console.log('[CharSnap Capture] v1.19 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')

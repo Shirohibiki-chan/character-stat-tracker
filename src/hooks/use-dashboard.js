@@ -7,11 +7,15 @@ function sortedSnapshots(bot) {
 
 function enrichBot(bot) {
   const snaps = sortedSnapshots(bot)
-  const latest = snaps.length ? snaps[snaps.length - 1] : null
-  const prev = snaps.length >= 2 ? snaps[snaps.length - 2] : null
+  // Stats and deltas must use only Total-scope snapshots so we always compare
+  // cumulative all-time values, never period-specific counts (24h, 7d, 30d).
+  const totalSnaps = snaps.filter(s => s.scope === 'Total')
+  const latest = totalSnaps.length ? totalSnaps[totalSnaps.length - 1] : null
+  const prev = totalSnaps.length >= 2 ? totalSnaps[totalSnaps.length - 2] : null
   return {
     ...bot,
     _snaps: snaps,
+    _totalSnaps: totalSnaps,
     latest,
     chats: latest?.chats ?? 0,
     messages: latest?.messages ?? 0,
@@ -20,7 +24,7 @@ function enrichBot(bot) {
     deltaMessages: prev != null ? (latest?.messages ?? 0) - (prev.messages ?? 0) : null,
     deltaFavorites: prev != null ? (latest?.favorites ?? 0) - (prev.favorites ?? 0) : null,
     snapshotCount: snaps.length,
-    lastCapturedAt: latest?.date ?? null,
+    lastCapturedAt: snaps.length ? snaps[snaps.length - 1].date : null,
   }
 }
 
@@ -66,14 +70,15 @@ export function useDashboard(bots) {
   const totals = useMemo(() => {
     const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
     return filtered.reduce((acc, b) => {
-      const snaps = b._snaps
-      const latest = snaps.length ? snaps[snaps.length - 1] : null
+      // Use Total-scope snapshots so weekly gain compares cumulative values only.
+      const totalSnaps = b._totalSnaps
+      const latest = totalSnaps.length ? totalSnaps[totalSnaps.length - 1] : null
       let baseline = null
-      if (snaps.length >= 2) {
-        for (let i = snaps.length - 2; i >= 0; i--) {
-          if (new Date(snaps[i].date).getTime() <= weekAgo) { baseline = snaps[i]; break }
+      if (totalSnaps.length >= 2) {
+        for (let i = totalSnaps.length - 2; i >= 0; i--) {
+          if (new Date(totalSnaps[i].date).getTime() <= weekAgo) { baseline = totalSnaps[i]; break }
         }
-        if (!baseline) baseline = snaps[0]
+        if (!baseline) baseline = totalSnaps[0]
       }
       const gain = (key) => latest && baseline ? (latest[key] ?? 0) - (baseline[key] ?? 0) : 0
       return {
@@ -83,7 +88,7 @@ export function useDashboard(bots) {
         deltaChats:     acc.deltaChats     + gain('chats'),
         deltaMessages:  acc.deltaMessages  + gain('messages'),
         deltaFavorites: acc.deltaFavorites + gain('favorites'),
-        newBots: acc.newBots + (snaps.length > 0 && new Date(snaps[0].date).getTime() > weekAgo ? 1 : 0),
+        newBots: acc.newBots + (totalSnaps.length > 0 && new Date(totalSnaps[0].date).getTime() > weekAgo ? 1 : 0),
       }
     }, { chats: 0, messages: 0, favorites: 0, deltaChats: 0, deltaMessages: 0, deltaFavorites: 0, newBots: 0 })
   }, [filtered])

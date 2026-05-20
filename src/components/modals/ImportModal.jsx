@@ -36,11 +36,15 @@ function BotMatchDropdown({ value, onChange, capture, allBots }) {
     return () => document.removeEventListener('mousedown', close)
   }, [isOpen])
 
-  // Top 3 by message-count proximity, then remaining alphabetically
+  // Top 3 by message-count proximity, then remaining alphabetically.
+  // Compare against Total-scope snapshots only — incoming captures are Total-scope,
+  // so comparing against 24h/7d/30d values would give a misleading proximity score.
   const ranked = useMemo(() => {
     const captureMessages = capture.messages ?? 0
     const withDist = allBots.map(bot => {
-      const snaps = [...(bot.snapshots || [])].sort((a, b) => new Date(a.date) - new Date(b.date))
+      const snaps = [...(bot.snapshots || [])]
+        .filter(s => s.scope === 'Total')
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
       const latest = snaps.at(-1)
       return { bot, dist: Math.abs((latest?.messages ?? 0) - captureMessages) }
     })

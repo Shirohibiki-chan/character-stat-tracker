@@ -4,6 +4,16 @@
 
 ---
 
+## 2026-05-20 (Fix: dashboard stats and growth only use Total-scope snapshots)
+
+### Fixes
+- **Stat cards showing wrong totals:** the "Total messages / threads / favorites" aggregate cards were summing each bot's most-recently-captured value regardless of scope. If the latest capture for a bot was a "Last 24h" or "Last 7d" snapshot (period-specific, not cumulative), that small partial number fed into the total — and conversely, a stale data anomaly could cause an absurdly inflated value. The cards now always sum the latest **Total-scope** snapshot value per bot.
+- **Row growth indicators using wrong baseline:** the `+N` growth delta shown under each bot's stats in the table was computed by comparing the last two snapshots regardless of scope, so a Total snapshot could be compared against a 24h one (or vice versa), producing a meaningless or missing delta. Deltas now always compare two consecutive Total-scope snapshots.
+- **"This week" growth wrong when scopes were mixed:** the same scope-contamination affected the weekly-gain delta shown on the dashboard stat cards. The baseline search now only walks Total-scope snapshots, so the "this week" number reflects all-time-count growth, not a comparison across different period windows.
+- **Import match ranking used partial-scope values:** the "Closest match" ranking in the import bot-picker now compares incoming captures against each bot's latest **Total-scope** message count. Previously it could rank against a 24h value, making the closest-match badge point at the wrong bot.
+
+---
+
 ## 2026-05-19 (Import — richer bot-match dropdown)
 
 ### Changes

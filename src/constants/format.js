@@ -1,3 +1,6 @@
+// DISPLAY-ONLY — output is a formatted string for the DOM.
+// Never pass fmt() output into arithmetic, comparisons, or sorts.
+// Always operate on the raw numeric value and call fmt() only at the render site.
 export function fmt(n) {
   if (n == null || Number.isNaN(n)) return '—'
   const abs = Math.abs(n)

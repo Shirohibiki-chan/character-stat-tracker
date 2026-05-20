@@ -47,7 +47,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                   active={sortBy === m.key}
                   dir={sortDir}
                   onClick={() => toggleSort(m.key)}
-                  style={{ background: `color-mix(in srgb, ${m.accentVar} var(--table-header-tint-opacity), transparent)` }}
+                  style={{ background: m.headerTint }}
                 />
               ))}
               <SortHeader
@@ -148,7 +148,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                       <td
                         key={m.key}
                         className="py-3 px-3 text-right"
-                        style={{ background: `color-mix(in srgb, ${m.accentVar} var(--table-row-tint-opacity), transparent)` }}
+                        style={{ background: m.rowTint }}
                       >
                         <div
                           className="leading-none"

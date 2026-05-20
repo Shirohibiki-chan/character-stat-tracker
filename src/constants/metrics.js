@@ -1,4 +1,5 @@
-// card.* values are CSS var() references consumed by StatCard.
+// card.* and tint values use hardcoded rgba/hex — not CSS var() references —
+// so inline styles resolve correctly on first paint before the CSS file is cached.
 export const METRICS = [
   {
     key: 'messages',
@@ -6,12 +7,14 @@ export const METRICS = [
     color: '#34d399',
     icon: 'MessagesSquare',
     accentVar: 'var(--accent-messages)',
+    rowTint:    'rgba(91, 168, 127, 0.10)',
+    headerTint: 'rgba(91, 168, 127, 0.14)',
     card: {
-      bg:       'var(--color-surface)',
-      border:   'var(--color-metric-messages-border)',
-      label:    'var(--color-text-secondary)',
-      number:   'var(--color-metric-messages)',
-      gradient: 'var(--gradient-messages)',
+      bg:       '#111520',
+      border:   'rgba(91, 168, 127, 0.42)',
+      label:    '#a7bad2',
+      number:   '#5ba87f',
+      gradient: 'linear-gradient(to bottom, rgba(91, 168, 127, 0.35), rgba(91, 168, 127, 0))',
     },
   },
   {
@@ -20,12 +23,14 @@ export const METRICS = [
     color: '#818cf8',
     icon: 'MessageSquare',
     accentVar: 'var(--accent-threads)',
+    rowTint:    'rgba(157, 143, 212, 0.10)',
+    headerTint: 'rgba(157, 143, 212, 0.14)',
     card: {
-      bg:       'var(--color-surface)',
-      border:   'var(--color-metric-threads-border)',
-      label:    'var(--color-text-secondary)',
-      number:   'var(--color-metric-threads)',
-      gradient: 'var(--gradient-threads)',
+      bg:       '#111520',
+      border:   'rgba(157, 143, 212, 0.42)',
+      label:    '#a7bad2',
+      number:   '#9d8fd4',
+      gradient: 'linear-gradient(to bottom, rgba(157, 143, 212, 0.35), rgba(157, 143, 212, 0))',
     },
   },
   {
@@ -34,20 +39,22 @@ export const METRICS = [
     color: '#fb7185',
     icon: 'Heart',
     accentVar: 'var(--accent-favorites)',
+    rowTint:    'rgba(212, 138, 160, 0.10)',
+    headerTint: 'rgba(212, 138, 160, 0.14)',
     card: {
-      bg:       'var(--color-surface)',
-      border:   'var(--color-metric-favorites-border)',
-      label:    'var(--color-text-secondary)',
-      number:   'var(--color-metric-favorites)',
-      gradient: 'var(--gradient-favorites)',
+      bg:       '#111520',
+      border:   'rgba(212, 138, 160, 0.42)',
+      label:    '#a7bad2',
+      number:   '#d48aa0',
+      gradient: 'linear-gradient(to bottom, rgba(212, 138, 160, 0.35), rgba(212, 138, 160, 0))',
     },
   },
 ]
 
 export const BOTS_CARD = {
-  bg:       'var(--color-surface)',
-  border:   'var(--color-metric-bots-border)',
-  label:    'var(--color-text-secondary)',
-  number:   'var(--color-metric-bots)',
-  gradient: 'var(--gradient-bots)',
+  bg:       '#111520',
+  border:   'rgba(75, 168, 196, 0.42)',
+  label:    '#a7bad2',
+  number:   '#4ba8c4',
+  gradient: 'linear-gradient(to bottom, rgba(75, 168, 196, 0.35), rgba(75, 168, 196, 0))',
 }

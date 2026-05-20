@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.16
+// @version      1.17
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -45,13 +45,14 @@ function escHtml(str) {
 }
 
 function parseBreakdown(dialog) {
-  // Closing paren is not required — the ℹ️ icon can appear between the number
-  // and ")". Among all matches, take the one with the largest total to avoid
-  // false positives from other elements that might match with a group count of 0.
+  // [^0-9+(]* between the first number and "+" tolerates the ℹ️ icon (or any
+  // non-digit, non-paren character) appearing in that gap.
+  // Among all matches, take the one with the largest total to avoid false
+  // positives from other elements that coincidentally match with a low group count.
   const spans = dialog.querySelectorAll('span.text-xs.text-secondary, span.text-xs')
   let best = null
   for (const span of spans) {
-    const m = span.textContent.match(/\(([0-9,]+)\s*\+\s*([0-9,]+)/)
+    const m = span.textContent.match(/\(([0-9,]+)[^0-9+(]*\+\s*([0-9,]+)/)
     if (m) {
       const entry = { messagesSolo: parseNumber(m[1]), messagesGroup: parseNumber(m[2]) }
       if (!best || entry.messagesSolo + entry.messagesGroup > best.messagesSolo + best.messagesGroup) {
@@ -199,15 +200,16 @@ function readStats(dialog) {
   if (statEls.length < 3) statEls = Array.from(dialog.querySelectorAll('div.text-3xl'))
   if (statEls.length < 3) return null
 
-  const chats     = parseNumber(statEls[0].textContent)
-  const favorites = parseNumber(statEls[2].textContent)
-  const breakdown = parseBreakdown(dialog)
-  // CharSnap's DOM may place the solo count in the large stat element rather than
-  // the all-time total. When a breakdown (solo + group) is found, derive the total
-  // from it — this is always correct regardless of which value the DOM element holds.
-  const messages = breakdown
-    ? breakdown.messagesSolo + breakdown.messagesGroup
-    : parseNumber(statEls[1].textContent)
+  const chats       = parseNumber(statEls[0].textContent)
+  const favorites   = parseNumber(statEls[2].textContent)
+  const domMessages = parseNumber(statEls[1].textContent)
+  const breakdown   = parseBreakdown(dialog)
+  const breakdownSum = breakdown ? breakdown.messagesSolo + breakdown.messagesGroup : 0
+  // Take whichever is larger: the DOM element value or the breakdown sum.
+  // If CharSnap puts the solo count in the large element, the correct breakdown
+  // sum (solo + group) will be larger and wins. If the DOM holds the real total
+  // and the breakdown is absent or a false-positive with a lower sum, the DOM wins.
+  const messages = Math.max(domMessages, breakdownSum)
 
   return {
     name,

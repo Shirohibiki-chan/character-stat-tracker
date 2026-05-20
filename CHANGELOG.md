@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-05-20 (Fix: userscript v1.17 — messages group count still zero)
+
+### Fixes
+- **Userscript v1.17 — messagesGroup capturing as 0:** the ℹ️ icon in CharSnap's breakdown span moved to appear between the solo count and the `+` sign (e.g. `(2,613,440 ℹ️ + 518,222)`), which broke the `\s*` whitespace match in the breakdown regex and caused the real breakdown span to not match. A false-positive span elsewhere in the modal (with a `+ 0` pattern) was winning instead, giving the wrong total. Fixed by widening the regex gap between the first number and `+` to accept any non-digit non-paren characters (`[^0-9+(]*`), so the ℹ️ icon no longer prevents a match. Added a `Math.max(domElement, breakdownSum)` safety net: if the DOM element happens to hold the real total and the breakdown sum is lower (false positive), the DOM value wins automatically.
+
+---
+
 ## 2026-05-20 (Fix: stat card gradients and table tints missing on first load)
 
 ### Fixes

@@ -116,7 +116,7 @@ All resolved as of 2026-05-16–17:
 
 ### Still Pending
 
-- `@updateURL` and `@downloadURL` metadata in the userscript header pointing at the raw GitHub URL — needed for Tampermonkey auto-update without manual re-install
+*(none)*
 
 ---
 

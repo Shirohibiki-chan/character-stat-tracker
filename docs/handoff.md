@@ -83,6 +83,11 @@ All resolved as of 2026-05-16–17:
 - **v1.9** (2026-05-17): `isStatsModal` gate in `onDialogOpen` — checks for `button[title="Copy stats"]` before doing anything; suppresses nuisance toasts on character cards, share dialogs, and other unrelated modals
 - **v1.10** (2026-05-17): `NON_BOT_STATS_MODAL_TITLES` blocklist added to `isStatsModal`; Creator Analytics modal excluded by h2 title — resolves bug 3
 
+### v1.15 (2026-05-20) — Fix zero-stat captures
+
+- `waitForStats` now waits for at least one non-zero stat before resolving. Previously it resolved immediately when the bot name appeared in the h2, even though CharSnap renders `0` placeholder values in the stat elements before real data arrives — causing captures to record all-zero stats.
+- After 2-second timeout, resolves with the current DOM reading regardless (handles genuinely zero-stat bots with no activity).
+
 ### v1.14 (2026-05-19) — Faster tab switch
 
 - Keyboard-activation fallback reduced from 1 500 ms to 50 ms after initial pointer-click attempt.
@@ -111,7 +116,7 @@ All resolved as of 2026-05-16–17:
 
 ### Still Pending
 
-- `@updateURL` and `@downloadURL` metadata in the userscript header pointing at the raw GitHub URL — needed for Tampermonkey auto-update without manual re-install
+*(none)*
 
 ---
 
@@ -130,6 +135,8 @@ All resolved as of 2026-05-16–17:
 
 ## Recently Shipped (2026-05-20)
 
+- Zero-stat import fix: captures with all-zero stats (brand-new bots) no longer silently rejected by the JSON parser
+- Userscript v1.15: `waitForStats` no longer resolves on CharSnap's placeholder zeros — waits for non-zero values, with 2s fallback for genuinely empty bots
 - Dashboard scope-contamination fix: all stat/delta/ranking computations now read from Total-scope snapshots only; mixed-scope data no longer produces wrong totals or absurd values in stat cards
 - Import match "Closest match" ranking now compares against Total-scope message counts only
 

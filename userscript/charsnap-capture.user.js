@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.14
+// @version      1.15
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
+// @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
+// @downloadURL  https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
 // @match        https://charsnap.ai/*
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -207,16 +209,22 @@ function readStats(dialog) {
 
 // ── Stat readiness wait ───────────────────────────────────────────────────────
 //
-// Resolves the moment readStats() returns a valid result — no fixed delay.
-// Uses MutationObserver watching the dialog for any DOM or text change so the
-// capture fires as soon as CharSnap finishes rendering the Total tab's numbers.
-// Falls back to null after timeoutMs if stats never appear.
+// Resolves as soon as readStats() returns a result with a name AND at least one
+// non-zero stat — this skips the initial placeholder state CharSnap renders
+// before the real values arrive. If stats remain all-zero after timeoutMs (a
+// brand-new bot with no activity), resolves with the zero-value snapshot anyway
+// so the capture isn't silently lost. Falls back to null only if readStats()
+// never returns a valid result at all.
 
 function waitForStats(dialog, timeoutMs = 2000) {
+  function hasData(snap) {
+    return snap && snap.name && (snap.messages > 0 || snap.chats > 0 || snap.favorites > 0)
+  }
+
   return new Promise(resolve => {
-    // Immediate check: stats already in DOM (e.g. Total was already active)
+    // Immediate check: stats already populated (e.g. Total was already active)
     const snap = readStats(dialog)
-    if (snap && snap.name) { resolve(snap); return }
+    if (hasData(snap)) { resolve(snap); return }
 
     let settled = false
     function finish(result) {
@@ -228,13 +236,15 @@ function waitForStats(dialog, timeoutMs = 2000) {
 
     const mo = new MutationObserver(() => {
       const c = readStats(dialog)
-      if (c && c.name) finish(c)
+      if (hasData(c)) finish(c)
     })
     // Watch both childList (new elements) and characterData (text-node updates)
     // so we catch React rendering the numbers regardless of how it patches the DOM.
     mo.observe(dialog, { subtree: true, childList: true, characterData: true })
 
-    setTimeout(() => finish(null), timeoutMs)
+    // After timeout, resolve with whatever is in the DOM — this handles genuinely
+    // zero-stat bots (brand-new, no activity) that will never trigger hasData().
+    setTimeout(() => finish(readStats(dialog)), timeoutMs)
   })
 }
 
@@ -1180,4 +1190,4 @@ document.addEventListener('keydown', e => {
     applyPillPos()
   }
 }, true)
-console.log('[CharSnap Capture] v1.14 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')
+console.log('[CharSnap Capture] v1.15 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')

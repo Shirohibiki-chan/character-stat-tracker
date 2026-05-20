@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.15
+// @version      1.16
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -45,12 +45,21 @@ function escHtml(str) {
 }
 
 function parseBreakdown(dialog) {
+  // Closing paren is not required — the ℹ️ icon can appear between the number
+  // and ")". Among all matches, take the one with the largest total to avoid
+  // false positives from other elements that might match with a group count of 0.
   const spans = dialog.querySelectorAll('span.text-xs.text-secondary, span.text-xs')
+  let best = null
   for (const span of spans) {
-    const m = span.textContent.match(/\(([0-9,]+)\s*\+\s*([0-9,]+)\)/)
-    if (m) return { messagesSolo: parseNumber(m[1]), messagesGroup: parseNumber(m[2]) }
+    const m = span.textContent.match(/\(([0-9,]+)\s*\+\s*([0-9,]+)/)
+    if (m) {
+      const entry = { messagesSolo: parseNumber(m[1]), messagesGroup: parseNumber(m[2]) }
+      if (!best || entry.messagesSolo + entry.messagesGroup > best.messagesSolo + best.messagesGroup) {
+        best = entry
+      }
+    }
   }
-  return null
+  return best
 }
 
 // ── Queue management ──────────────────────────────────────────────────────────
@@ -191,9 +200,14 @@ function readStats(dialog) {
   if (statEls.length < 3) return null
 
   const chats     = parseNumber(statEls[0].textContent)
-  const messages  = parseNumber(statEls[1].textContent)
   const favorites = parseNumber(statEls[2].textContent)
   const breakdown = parseBreakdown(dialog)
+  // CharSnap's DOM may place the solo count in the large stat element rather than
+  // the all-time total. When a breakdown (solo + group) is found, derive the total
+  // from it — this is always correct regardless of which value the DOM element holds.
+  const messages = breakdown
+    ? breakdown.messagesSolo + breakdown.messagesGroup
+    : parseNumber(statEls[1].textContent)
 
   return {
     name,
@@ -666,8 +680,12 @@ function startProfileWatcher() {
     }
   }, 400)
 
-  // DOM mutation watcher — catches banner content loading async on same URL
-  const mo = new MutationObserver(() => {
+  // DOM mutation watcher — catches banner content loading async on same URL.
+  // Ignore mutations that come from inside our own HUD elements so that
+  // in-HUD DOM changes (e.g. the Export queue "Clear?" view) don't trigger
+  // a profile-gate re-check that resets the HUD back to its default state.
+  const mo = new MutationObserver((mutations) => {
+    if (mutations.every(m => hudEl?.contains(m.target) || restoreEl?.contains(m.target))) return
     clearTimeout(mutationTimer)
     mutationTimer = setTimeout(applyProfileGate, 300)
   })
@@ -1190,4 +1208,4 @@ document.addEventListener('keydown', e => {
     applyPillPos()
   }
 }, true)
-console.log('[CharSnap Capture] v1.15 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')
+console.log('[CharSnap Capture] v1.16 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')

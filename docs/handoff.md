@@ -83,6 +83,11 @@ All resolved as of 2026-05-16–17:
 - **v1.9** (2026-05-17): `isStatsModal` gate in `onDialogOpen` — checks for `button[title="Copy stats"]` before doing anything; suppresses nuisance toasts on character cards, share dialogs, and other unrelated modals
 - **v1.10** (2026-05-17): `NON_BOT_STATS_MODAL_TITLES` blocklist added to `isStatsModal`; Creator Analytics modal excluded by h2 title — resolves bug 3
 
+### v1.16 (2026-05-20) — Fix wrong message count; export queue UI reset
+
+- **Messages reading wrong value:** CharSnap's DOM puts the solo count in the large stat element; total is now derived as `solo + group` from the breakdown when present. Breakdown regex no longer requires closing `)` (tolerates ℹ️ icon inside parens). Among multiple matches, highest-total wins to avoid false positives.
+- **Export queue "Clear?" UI reverting:** profile-gate `MutationObserver` was watching HUD-internal DOM changes; it now ignores mutations inside `hudEl`/`restoreEl`, so the "Clear?" view persists until the user acts.
+
 ### v1.15 (2026-05-20) — Fix zero-stat captures
 
 - `waitForStats` now waits for at least one non-zero stat before resolving. Previously it resolved immediately when the bot name appeared in the h2, even though CharSnap renders `0` placeholder values in the stat elements before real data arrives — causing captures to record all-zero stats.

@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-05-20 (Fix: userscript v1.16 — wrong message count; export queue UI reset)
+
+### Fixes
+- **Userscript v1.16 — messages capturing solo count instead of total:** CharSnap's DOM places the solo messages count in the large stat element; the all-time total was being skipped. When the `(solo + group)` breakdown is present in the modal, the total is now derived as `solo + group` — always correct regardless of which value the DOM element holds. The breakdown regex no longer requires a closing `)`, tolerating the ℹ️ icon that may appear inside the parentheses. Among multiple breakdown-looking spans, the one with the largest total is used to avoid false positives from other elements.
+- **Userscript v1.16 — Export queue "Clear?" UI immediately reverting:** the profile-gate `MutationObserver` was watching all of `document.body` including the HUD element itself. Replacing the HUD's inner HTML (e.g. switching to the "Clear?" view) triggered a mutation, which called `updateHUD()` 300 ms later and reset the HUD to its default state. The observer now ignores mutations that originate inside the HUD's own elements.
+
+---
+
 ## 2026-05-20 (Fix: userscript capturing zero stats; parser rejecting zero-stat imports)
 
 ### Fixes

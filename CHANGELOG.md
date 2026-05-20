@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-05-20 (Fix: stat card gradients and table tints missing on first load)
+
+### Fixes
+- **Stat card gradients and table column tints not rendering on first page load:** all gradient and tint values in the React components were referenced as CSS custom properties (`var(--gradient-messages)`, `var(--accent-threads)`, etc.) inside inline styles. Inline styles are resolved by the browser at paint time — if the CSS file hasn't been parsed yet (first visit, cold cache), the `var()` references resolve to nothing, leaving stat cards flat/dark and table column tints invisible. Re-refreshing would load the CSS from cache and show everything correctly. Fixed by replacing all `var()` references in inline styles with hardcoded `rgba()` / hex values directly in the JS constants, so rendering is independent of CSS load order.
+
+---
+
 ## 2026-05-20 (Fix: userscript v1.16 — wrong message count; export queue UI reset)
 
 ### Fixes

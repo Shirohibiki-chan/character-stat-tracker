@@ -138,6 +138,14 @@ All resolved as of 2026-05-16–17:
 3. **Theme follow-up** — 5 additional themes (Light, Yume Kawaii, Ocean, Dark Academia, Synthwave); requires theme-switcher UI; deferred
 4. **Design sandbox** — moved to a separate repo for usage-budget isolation; no longer present in this codebase.
 
+## Recently Shipped (2026-05-20 — v2.1 part 2)
+
+- Userscript v2.1: captures list in HUD body — scrollable, avatar thumbnails (letter-initials fallback), bot name, relative timestamp / scope / stat summary per row, positive-delta badges when same bot captured multiple times
+- Per-row × remove with 8s Undo toast (re-inserts into queue via undoBuffer)
+- Inline JSON preview: click row → expands below row, click again to collapse; no modal
+- Search/filter input (toolbar, above list): case-insensitive substring match, preserves input focus on queue updates
+- Multi-select mode: Select button → checkboxes on rows, footer shows count / All / Remove / Export / Cancel; Remove N and Export N both support single Undo toast
+
 ## Recently Shipped (2026-05-20 — v2.0 part 1)
 
 - Userscript v2.0: three-state HUD model (Pill / Expanded / Hidden), new header with icon buttons (collapse, settings placeholder, hide), sticky footer action bar with Export + Clear, confirm states moved to footer, "Reset position" removed from body (moves to settings in part 3), default expanded size 360×480, min size 280×360

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.0
+// @version      2.1
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -42,6 +42,21 @@ function escHtml(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
+}
+
+function fmtNum(n) {
+  if (!n) return '0'
+  if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M'
+  if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K'
+  return String(n)
+}
+
+function timeAgo(isoStr) {
+  const s = Math.floor((Date.now() - new Date(isoStr).getTime()) / 1000)
+  if (s < 60)    return s + 's ago'
+  if (s < 3600)  return Math.floor(s / 60) + 'm ago'
+  if (s < 86400) return Math.floor(s / 3600) + 'h ago'
+  return Math.floor(s / 86400) + 'd ago'
 }
 
 function parseBreakdown(dialog) {
@@ -92,6 +107,35 @@ function isDuplicateInQueue(avatarUrl) {
   const norm = normalizeAvatar(avatarUrl)
   if (!norm) return false
   return getQueue().some(c => normalizeAvatar(c.avatarUrl) === norm)
+}
+
+function computeDeltas(queue) {
+  const prev = new Map()
+  return queue.map(cap => {
+    const key = normalizeAvatar(cap.avatarUrl) || cap.name
+    const p = prev.get(key) || null
+    prev.set(key, cap)
+    if (!p) return null
+    return { messages: cap.messages - p.messages, chats: cap.chats - p.chats, favorites: cap.favorites - p.favorites }
+  })
+}
+
+function removeCapture(capture) {
+  if (expandedCaptureId === capture.capturedAt) expandedCaptureId = null
+  undoBuffer.set(capture.capturedAt, capture)
+  setTimeout(() => undoBuffer.delete(capture.capturedAt), 8000)
+  removeFromQueue(capture.capturedAt)
+}
+
+function removeCapturesBulk(captures) {
+  const bulkKey = 'bulk_' + Date.now()
+  undoBuffer.set(bulkKey, captures)
+  setTimeout(() => undoBuffer.delete(bulkKey), 8000)
+  const tsSet = new Set(captures.map(c => c.capturedAt))
+  const q = getQueue().filter(c => !tsSet.has(c.capturedAt))
+  GM_setValue(QUEUE_KEY, JSON.stringify(q))
+  updateHUD()
+  return bulkKey
 }
 
 // ── Persistent settings ───────────────────────────────────────────────────────
@@ -714,14 +758,21 @@ function startProfileWatcher() {
 
 // ── Floating HUD ──────────────────────────────────────────────────────────────
 
-let hudEl           = null
-let restoreEl       = null
-let hudExpanded     = false
+let hudEl            = null
+let restoreEl        = null
+let hudExpanded      = false
 let confirmingAction = false  // true while export/clear confirmation is showing
+let searchQuery      = ''
+let selectMode       = false
+let selectedIds      = new Set()
+let expandedCaptureId = null
+const undoBuffer     = new Map()
 
 function hideHUD() {
   dismissAllToasts()
   confirmingAction = false
+  selectMode = false
+  selectedIds.clear()
   GM_setValue(HUD_HIDDEN_KEY, '1')
   applyProfileGate()
 }
@@ -752,10 +803,24 @@ function renderHUD() {
   toastAreaEl = document.createElement('div')
   toastAreaEl.id = 'charsnap-toast-area'
   toastAreaEl.addEventListener('click', e => {
-    const btn = e.target.closest('.cs-toast-undo')
-    if (!btn) return
-    removeFromQueue(btn.dataset.ts)
-    btn.closest('.charsnap-toast')?.remove()
+    const undoBtn = e.target.closest('.cs-toast-undo')
+    if (undoBtn) {
+      removeFromQueue(undoBtn.dataset.ts)
+      undoBtn.closest('.charsnap-toast')?.remove()
+      return
+    }
+    const actionBtn = e.target.closest('[data-toast-action]')
+    if (!actionBtn) return
+    const action = actionBtn.dataset.toastAction
+    const key    = actionBtn.dataset.key
+    if (action === 'readd') {
+      const cap = undoBuffer.get(key)
+      if (cap) { undoBuffer.delete(key); addToQueue(cap); updateHUD() }
+    } else if (action === 'readd-bulk') {
+      const caps = undoBuffer.get(key)
+      if (caps) { undoBuffer.delete(key); caps.forEach(c => addToQueue(c)); updateHUD() }
+    }
+    actionBtn.closest('.charsnap-toast')?.remove()
   })
   document.documentElement.appendChild(toastAreaEl)
   // Re-inject either element if evicted by a React re-render
@@ -821,10 +886,28 @@ const SVG_COLLAPSE = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none
 const SVG_SETTINGS = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'
 const SVG_CLOSE    = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
 
+function buildSelectFooter(totalCount, selCount) {
+  const allSelected = totalCount > 0 && selCount === totalCount
+  return `
+    <div class="cs-hud-select-row">
+      <span class="cs-hud-select-count">${selCount} selected</span>
+      <button class="cs-hud-action cs-hud-action--sm" id="cs-select-all-btn">${allSelected ? 'None' : 'All'}</button>
+      <button class="cs-hud-icon-btn" id="cs-select-cancel-btn" title="Exit select mode">${SVG_CLOSE}</button>
+    </div>
+    ${selCount > 0 ? `
+      <div class="cs-hud-select-actions">
+        <button class="cs-hud-action cs-hud-action--danger" id="cs-remove-selected-btn">Remove ${selCount}</button>
+        <button class="cs-hud-action cs-hud-action--primary" id="cs-export-selected-btn">Export ${selCount}</button>
+      </div>
+    ` : ''}
+  `
+}
+
 function updateHUD() {
   if (!hudEl) return
   if (confirmingAction) return
-  const count = getQueue().length
+  const q     = getQueue()
+  const count = q.length
   const auto  = getAutoCapture()
 
   if (!hudExpanded) {
@@ -843,6 +926,71 @@ function updateHUD() {
     return
   }
 
+  const deltas   = computeDeltas(q)
+  const selCount = selectedIds.size
+
+  // Build captures list HTML
+  let capturesHtml
+  if (count === 0) {
+    capturesHtml = `
+      <div class="cs-captures-empty">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+        <span>No captures yet — open a bot's stats modal on CharSnap to capture it.</span>
+      </div>
+    `
+  } else {
+    capturesHtml = q.map((cap, i) => {
+      const delta      = deltas[i]
+      const isSelected = selectedIds.has(cap.capturedAt)
+      const isExpanded = expandedCaptureId === cap.capturedAt
+      const initials   = escHtml((cap.name || '?')[0].toUpperCase())
+      const avatarHtml = cap.avatarUrl
+        ? `<img class="cs-cap-avatar" src="${escHtml(cap.avatarUrl)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.removeProperty('display')"><div class="cs-cap-avatar-fallback" style="display:none">${initials}</div>`
+        : `<div class="cs-cap-avatar-fallback">${initials}</div>`
+      const summary = `${fmtNum(cap.messages)} msgs · ${fmtNum(cap.chats)} threads · ${fmtNum(cap.favorites)} favs`
+      let deltaHtml = ''
+      if (delta) {
+        const parts = []
+        if (delta.messages  > 0) parts.push(`<span class="cs-cap-delta">+${fmtNum(delta.messages)} msgs</span>`)
+        if (delta.chats     > 0) parts.push(`<span class="cs-cap-delta">+${fmtNum(delta.chats)} threads</span>`)
+        if (delta.favorites > 0) parts.push(`<span class="cs-cap-delta">+${fmtNum(delta.favorites)} favs</span>`)
+        if (parts.length) deltaHtml = `<div class="cs-cap-deltas">${parts.join('')}</div>`
+      }
+      const checkHtml   = selectMode
+        ? `<input type="checkbox" class="cs-cap-checkbox"${isSelected ? ' checked' : ''} data-ts="${escHtml(cap.capturedAt)}">`
+        : ''
+      const previewHtml = isExpanded
+        ? `<div class="cs-cap-preview"><pre>${escHtml(JSON.stringify(cap, null, 2))}</pre></div>`
+        : ''
+      return `
+        <div class="cs-capture-row${isSelected ? ' cs-capture-row--selected' : ''}" data-bot-name="${escHtml((cap.name || '').toLowerCase())}" data-cs-ts="${escHtml(cap.capturedAt)}">
+          <div class="cs-cap-row-main">
+            ${checkHtml}
+            <div class="cs-cap-avatar-wrap">${avatarHtml}</div>
+            <div class="cs-cap-info">
+              <div class="cs-cap-name">${escHtml(cap.name || 'Unknown')}</div>
+              <div class="cs-cap-meta">${escHtml(timeAgo(cap.capturedAt))} · ${escHtml(cap.scope || 'Total')} · ${escHtml(summary)}</div>
+              ${deltaHtml}
+            </div>
+            <button class="cs-cap-remove" title="Remove capture" data-ts="${escHtml(cap.capturedAt)}">×</button>
+          </div>
+          ${previewHtml}
+        </div>
+      `
+    }).join('')
+  }
+
+  const footerInner = selectMode
+    ? buildSelectFooter(count, selCount)
+    : `
+        <button class="cs-hud-action cs-hud-action--primary" id="cs-export-btn"${count === 0 ? ' disabled' : ''}>Export queue</button>
+        <button class="cs-hud-action cs-hud-action--danger" id="cs-clear-btn"${count === 0 ? ' disabled' : ''}>Clear</button>
+        ${count > 0 ? '<button class="cs-hud-action" id="cs-select-btn">Select</button>' : ''}
+      `
+
   hudEl.innerHTML = `
     <div class="cs-hud-panel">
       <div class="cs-hud-header">
@@ -855,29 +1003,84 @@ function updateHUD() {
         </div>
       </div>
       <div class="cs-hud-body" id="cs-hud-body">
-        <button class="cs-hud-auto${auto ? ' cs-hud-auto--on' : ''}" id="cs-auto-btn">AUTO: ${auto ? 'ON' : 'OFF'}</button>
+        <div class="cs-hud-toolbar">
+          <button class="cs-hud-auto${auto ? ' cs-hud-auto--on' : ''}" id="cs-auto-btn">AUTO: ${auto ? 'ON' : 'OFF'}</button>
+          <input class="cs-hud-search" id="cs-search" type="text" placeholder="Filter bots…" value="${escHtml(searchQuery)}">
+        </div>
+        <div class="cs-captures-list" id="cs-captures-list">${capturesHtml}</div>
       </div>
-      <div class="cs-hud-footer" id="cs-hud-footer">
-        <button class="cs-hud-action cs-hud-action--primary" id="cs-export-btn"${count === 0 ? ' disabled' : ''}>Export queue</button>
-        <button class="cs-hud-action cs-hud-action--danger" id="cs-clear-btn"${count === 0 ? ' disabled' : ''}>Clear</button>
+      <div class="cs-hud-footer${selectMode ? ' cs-hud-footer--select' : ''}" id="cs-hud-footer">
+        ${footerInner}
       </div>
     </div>
   `
 
+  // Header buttons
   hudEl.querySelector('#cs-hud-collapse').addEventListener('click', () => {
     dismissAllToasts()
     hudExpanded = false
     confirmingAction = false
+    selectMode = false
+    selectedIds.clear()
+    expandedCaptureId = null
+    searchQuery = ''
     updateHUD()
   })
-
   hudEl.querySelector('#cs-hud-hide').addEventListener('click', hideHUD)
-
   hudEl.querySelector('#cs-auto-btn').addEventListener('click', () => setAutoCapture(!auto))
 
+  // Search — live filter, no re-render (preserves input focus while typing)
+  const searchInput = hudEl.querySelector('#cs-search')
+  searchInput.addEventListener('input', () => {
+    searchQuery = searchInput.value
+    const term = searchQuery.toLowerCase()
+    hudEl.querySelectorAll('.cs-capture-row').forEach(row => {
+      row.style.display = (row.dataset.botName || '').includes(term) ? '' : 'none'
+    })
+  })
+
+  // Apply filter on re-renders triggered by other events (new capture, remove, etc.)
+  if (searchQuery) {
+    const term = searchQuery.toLowerCase()
+    hudEl.querySelectorAll('.cs-capture-row').forEach(row => {
+      row.style.display = (row.dataset.botName || '').includes(term) ? '' : 'none'
+    })
+  }
+
+  // Capture rows — click to expand preview, × to remove, checkbox for select mode
+  hudEl.querySelectorAll('.cs-capture-row').forEach(row => {
+    const ts  = row.dataset.csTs
+    const cap = q.find(c => c.capturedAt === ts)
+
+    row.querySelector('.cs-cap-row-main')?.addEventListener('click', e => {
+      if (e.target.closest('.cs-cap-remove, .cs-cap-checkbox')) return
+      if (selectMode) {
+        if (selectedIds.has(ts)) selectedIds.delete(ts)
+        else selectedIds.add(ts)
+        updateHUD()
+        return
+      }
+      expandedCaptureId = expandedCaptureId === ts ? null : ts
+      updateHUD()
+    })
+
+    row.querySelector('.cs-cap-remove')?.addEventListener('click', e => {
+      e.stopPropagation()
+      if (!cap) return
+      removeCapture(cap)
+      showToast(`Removed <b>${escHtml(cap.name)}</b>. <button class="cs-toast-undo-readd" data-toast-action="readd" data-key="${escHtml(ts)}">Undo</button>`)
+    })
+
+    row.querySelector('.cs-cap-checkbox')?.addEventListener('change', e => {
+      if (e.target.checked) selectedIds.add(ts)
+      else selectedIds.delete(ts)
+      updateHUD()
+    })
+  })
+
+  // Footer — normal mode
   hudEl.querySelector('#cs-export-btn')?.addEventListener('click', () => {
-    const q = getQueue()
-    if (!q.length) return
+    if (!count) return
     GM_setClipboard(JSON.stringify({ captures: q }, null, 2), 'text')
     confirmingAction = true
     const footer = hudEl.querySelector('#cs-hud-footer')
@@ -900,6 +1103,46 @@ function updateHUD() {
     `
     footer.querySelector('#cs-clear-yes').addEventListener('click', () => { confirmingAction = false; clearQueue(); updateHUD() })
     footer.querySelector('#cs-clear-no').addEventListener('click', () => { confirmingAction = false; updateHUD() })
+  })
+
+  hudEl.querySelector('#cs-select-btn')?.addEventListener('click', () => {
+    selectMode = true
+    selectedIds.clear()
+    updateHUD()
+  })
+
+  // Footer — select mode
+  hudEl.querySelector('#cs-select-all-btn')?.addEventListener('click', () => {
+    if (selectedIds.size === count) selectedIds.clear()
+    else q.forEach(c => selectedIds.add(c.capturedAt))
+    updateHUD()
+  })
+
+  hudEl.querySelector('#cs-select-cancel-btn')?.addEventListener('click', () => {
+    selectMode = false
+    selectedIds.clear()
+    updateHUD()
+  })
+
+  hudEl.querySelector('#cs-remove-selected-btn')?.addEventListener('click', () => {
+    const toRemove = q.filter(c => selectedIds.has(c.capturedAt))
+    if (!toRemove.length) return
+    const n = toRemove.length
+    selectMode = false
+    selectedIds.clear()
+    const bulkKey = removeCapturesBulk(toRemove)
+    showToast(`Removed ${n} capture${n !== 1 ? 's' : ''}. <button class="cs-toast-undo-readd" data-toast-action="readd-bulk" data-key="${escHtml(bulkKey)}">Undo</button>`)
+  })
+
+  hudEl.querySelector('#cs-export-selected-btn')?.addEventListener('click', () => {
+    const toExport = q.filter(c => selectedIds.has(c.capturedAt))
+    if (!toExport.length) return
+    GM_setClipboard(JSON.stringify({ captures: toExport }, null, 2), 'text')
+    const n = toExport.length
+    selectMode = false
+    selectedIds.clear()
+    updateHUD()
+    showToast(`Copied ${n} capture${n !== 1 ? 's' : ''} to clipboard.`)
   })
 
   // Apply persisted size and attach resize grip after panel DOM is ready
@@ -1106,13 +1349,150 @@ function injectStyles() {
     .cs-hud-icon-btn:disabled { opacity: 0.3; cursor: default; }
     .cs-hud-icon-btn:disabled:hover { color: #78716c; background: none; }
     .cs-hud-body {
-      padding: 10px 12px;
+      padding: 8px 12px 6px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
       flex: 1;
-      overflow-y: auto;
+      min-height: 0;
+      overflow: hidden;
     }
+    .cs-hud-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+    .cs-hud-search {
+      flex: 1;
+      min-width: 0;
+      background: #111;
+      border: 1px solid #44403c;
+      border-radius: 6px;
+      color: #d6d3d1;
+      font-size: 11px;
+      padding: 4px 8px;
+      outline: none;
+      font-family: system-ui, sans-serif;
+    }
+    .cs-hud-search::placeholder { color: #57534e; }
+    .cs-hud-search:focus { border-color: #78716c; }
+    .cs-captures-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
+    }
+    .cs-captures-list::-webkit-scrollbar { width: 4px; }
+    .cs-captures-list::-webkit-scrollbar-track { background: transparent; }
+    .cs-captures-list::-webkit-scrollbar-thumb { background: #44403c; border-radius: 2px; }
+    .cs-captures-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 24px 16px;
+      color: #57534e;
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+    .cs-capture-row { border-radius: 6px; }
+    .cs-capture-row--selected { background: rgba(251,191,36,0.07); }
+    .cs-cap-row-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 4px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .cs-cap-row-main:hover { background: rgba(255,255,255,0.04); }
+    .cs-cap-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      flex-shrink: 0;
+    }
+    .cs-cap-avatar-fallback {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #292524;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #78716c;
+      flex-shrink: 0;
+    }
+    .cs-cap-info { flex: 1; min-width: 0; }
+    .cs-cap-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: #e7e5e4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cs-cap-meta {
+      font-size: 10px;
+      color: #78716c;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cs-cap-deltas { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+    .cs-cap-delta { font-size: 10px; color: #34d399; font-weight: 500; }
+    .cs-cap-remove {
+      background: none;
+      border: none;
+      color: #57534e;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 2px 4px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      transition: color 0.12s, background 0.12s;
+    }
+    .cs-cap-remove:hover { color: #fb7185; background: rgba(251,113,133,0.12); }
+    .cs-cap-checkbox {
+      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+      accent-color: #fbbf24;
+    }
+    .cs-cap-preview {
+      background: #111;
+      border-top: 1px solid #292524;
+      padding: 8px 10px;
+      overflow-x: auto;
+      border-radius: 0 0 6px 6px;
+    }
+    .cs-cap-preview pre {
+      margin: 0;
+      font-size: 10px;
+      color: #78716c;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-family: monospace;
+      line-height: 1.4;
+    }
+    .cs-hud-footer--select { flex-direction: column; gap: 4px; align-items: stretch; }
+    .cs-hud-select-row { display: flex; align-items: center; gap: 6px; }
+    .cs-hud-select-count { flex: 1; font-size: 11px; color: #a8a29e; }
+    .cs-hud-select-actions { display: flex; gap: 6px; }
+    .cs-hud-select-actions .cs-hud-action { flex: 1; }
     .cs-hud-auto {
       display: inline-block;
       padding: 3px 8px;
@@ -1230,7 +1610,7 @@ function injectStyles() {
       to   { opacity: 1; transform: none; }
     }
     .charsnap-toast b { color: #e7e5e4; font-weight: 600; }
-    .cs-toast-undo {
+    .cs-toast-undo, .cs-toast-undo-readd {
       background: none;
       border: none;
       color: #fbbf24;
@@ -1240,7 +1620,7 @@ function injectStyles() {
       padding: 0;
       margin-left: 6px;
     }
-    .cs-toast-undo:hover { text-decoration: underline; }
+    .cs-toast-undo:hover, .cs-toast-undo-readd:hover { text-decoration: underline; }
   `)
 }
 
@@ -1260,4 +1640,4 @@ document.addEventListener('keydown', e => {
     applyPillPos()
   }
 }, true)
-console.log('[CharSnap Capture] v2.0 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')
+console.log('[CharSnap Capture] v2.1 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')

@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-05-20 (Userscript v2.1 — captures list, per-row remove, inline preview, search, multi-select)
+
+### Additions
+- **Userscript v2.1 — captures list:** the HUD body now renders all queued captures as a scrollable list. Each row shows the bot's avatar (letter-initials fallback), name, and a secondary line with relative timestamp, scope, and compact stat summary (e.g. `3.1M msgs · 8.9K threads · 1.3K favs`). If the same bot appears multiple times in the queue, subsequent entries show positive deltas in green (e.g. `+24K msgs`).
+- **Userscript v2.1 — per-row remove:** each capture row has a `×` button that removes that single capture from the queue. A toast fires immediately: "Removed [name]. Undo" — clicking Undo re-inserts the capture. Undo window is 8 seconds (matches toast duration).
+- **Userscript v2.1 — inline preview:** clicking anywhere on a row (except the × button or checkbox) expands an inline JSON preview directly below that row, pushing following rows down. Click again to collapse. No modal involved.
+- **Userscript v2.1 — search/filter:** a text input in the toolbar (next to AUTO) filters the list in real-time by bot name substring (case-insensitive). Filter state persists across HUD re-renders so typing is never interrupted by new captures arriving.
+- **Userscript v2.1 — multi-select mode:** a Select button in the footer (visible when queue is non-empty) enables checkboxes on every row. In select mode: clicking a row toggles its checkbox; the footer shows count selected, All/None toggle, Remove, Export, and Cancel. Remove removes all checked captures with a single "Removed N captures. Undo" toast (also undoable). Export copies only checked captures to clipboard as `{ captures: [...] }` — same shape as the app's batch import.
+- **Userscript v2.1 — empty state:** when the queue is empty, the capture list area shows a centered camera icon and instruction text.
+
+---
+
 ## 2026-05-20 (Userscript v2.0 — HUD shell overhaul, part 1: three-state model + header/footer)
 
 ### Additions

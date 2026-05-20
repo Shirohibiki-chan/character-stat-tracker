@@ -128,6 +128,11 @@ All resolved as of 2026-05-16–17:
 3. **Theme follow-up** — 5 additional themes (Light, Yume Kawaii, Ocean, Dark Academia, Synthwave); requires theme-switcher UI; deferred
 4. **Design sandbox** — moved to a separate repo for usage-budget isolation; no longer present in this codebase.
 
+## Recently Shipped (2026-05-20)
+
+- Dashboard scope-contamination fix: all stat/delta/ranking computations now read from Total-scope snapshots only; mixed-scope data no longer produces wrong totals or absurd values in stat cards
+- Import match "Closest match" ranking now compares against Total-scope message counts only
+
 ## Recently Shipped (2026-05-19)
 
 - Import match dropdown redesign (custom dropdown with PFP thumbnails, metadata rows, type-ahead filter, smart ranking by message-count proximity, "Closest match" badge)

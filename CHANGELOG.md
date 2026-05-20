@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-05-20 (Userscript v2.0 — HUD shell overhaul, part 1: three-state model + header/footer)
+
+### Additions
+- **Userscript v2.0 — three-state HUD model:** the HUD now has three explicit states with clean transitions — Pill (collapsed badge), Expanded (full panel), and Hidden (restore-pill only). Previously collapsing from expanded to pill was broken; that path now works reliably in both directions.
+- **Userscript v2.0 — new header layout:** expanded panel header shows queue count text on the left and three icon buttons on the right — collapse (chevron, returns to pill), settings (gear, wired up in part 3), and hide (×, triggers the v1.11 hide/restore-pill flow). A decorative dots-grid icon sits between the title and the icon buttons as a drag-handle affordance.
+- **Userscript v2.0 — sticky footer action bar:** Export queue and Clear buttons moved from the body into a dedicated sticky footer bar at the bottom of the panel, separated from the scrollable body. Confirm states (Clear? / Copied — clear now?) now appear in the footer rather than replacing body content.
+- **Userscript v2.0 — default expanded size:** 360×480 px (was viewport-eating). Min size updated to 280×360. If no saved size exists, the HUD opens at exactly 360×480.
+
+### Adjustments
+- Removed the "Reset position" button from the HUD body — that action moves to the settings panel in part 3.
+- "0 captures" label updated to "No captures" in both pill and expanded header.
+
+---
+
 ## 2026-05-20 (Fix: userscript v1.20 — toast flashing and floating above capture box)
 
 ### Fixes

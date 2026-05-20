@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      1.20
+// @version      2.0
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -474,7 +474,7 @@ function applyPillPos() {
 // ── HUD size persistence ──────────────────────────────────────────────────────
 
 const HUD_MIN_W = 280
-const HUD_MIN_H = 200
+const HUD_MIN_H = 360
 
 function loadHudSize() {
   try { return JSON.parse(GM_getValue(HUD_SIZE_KEY, null)) } catch { return null }
@@ -491,8 +491,8 @@ function applyHudSize() {
     hudEl.style.setProperty('width',  size.w + 'px', 'important')
     hudEl.style.setProperty('height', size.h + 'px', 'important')
   } else {
-    hudEl.style.removeProperty('width')
-    hudEl.style.removeProperty('height')
+    hudEl.style.setProperty('width',  '360px', 'important')
+    hudEl.style.setProperty('height', '480px', 'important')
   }
 }
 
@@ -811,9 +811,15 @@ function renderRestorePill() {
 }
 
 function hudLabel(count) {
-  if (count === 0) return '📊 0 captures'
+  if (count === 0) return '📊 No captures'
   return `📊 ${count} capture${count !== 1 ? 's' : ''} queued`
 }
+
+// SVG icon strings used in the expanded header
+const SVG_DOTS     = '<svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor"><circle cx="2.5" cy="2.5" r="1.2"/><circle cx="7.5" cy="2.5" r="1.2"/><circle cx="2.5" cy="7" r="1.2"/><circle cx="7.5" cy="7" r="1.2"/><circle cx="2.5" cy="11.5" r="1.2"/><circle cx="7.5" cy="11.5" r="1.2"/></svg>'
+const SVG_COLLAPSE = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
+const SVG_SETTINGS = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'
+const SVG_CLOSE    = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
 
 function updateHUD() {
   if (!hudEl) return
@@ -841,29 +847,24 @@ function updateHUD() {
     <div class="cs-hud-panel">
       <div class="cs-hud-header">
         <span class="cs-hud-title">${hudLabel(count)}</span>
-        <div class="cs-hud-header-btns">
-          <button class="cs-hud-collapse" id="cs-hud-close" title="Collapse to pill">&#8722;</button>
-          <button class="cs-hud-hide-btn" id="cs-hud-hide" title="Hide (restore pill appears in corner)">&times;</button>
+        <div class="cs-hud-header-right">
+          <span class="cs-hud-drag-dots" aria-hidden="true">${SVG_DOTS}</span>
+          <button class="cs-hud-icon-btn" id="cs-hud-collapse" title="Collapse to pill">${SVG_COLLAPSE}</button>
+          <button class="cs-hud-icon-btn" id="cs-hud-settings" title="Settings (coming soon)" disabled>${SVG_SETTINGS}</button>
+          <button class="cs-hud-icon-btn" id="cs-hud-hide" title="Hide">${SVG_CLOSE}</button>
         </div>
       </div>
       <div class="cs-hud-body" id="cs-hud-body">
-        <button class="cs-hud-auto${auto ? ' cs-hud-auto--on' : ''}" id="cs-auto-btn">
-          Auto: ${auto ? 'ON' : 'OFF'}
-        </button>
-        <div class="cs-hud-actions">
-          <button class="cs-hud-action cs-hud-action--primary" id="cs-export-btn"${count === 0 ? ' disabled' : ''}>
-            Export queue
-          </button>
-          <button class="cs-hud-action cs-hud-action--danger" id="cs-clear-btn"${count === 0 ? ' disabled' : ''}>
-            Clear
-          </button>
-        </div>
-        <button class="cs-hud-action cs-hud-action--muted" id="cs-reset-pos">Reset position</button>
+        <button class="cs-hud-auto${auto ? ' cs-hud-auto--on' : ''}" id="cs-auto-btn">AUTO: ${auto ? 'ON' : 'OFF'}</button>
+      </div>
+      <div class="cs-hud-footer" id="cs-hud-footer">
+        <button class="cs-hud-action cs-hud-action--primary" id="cs-export-btn"${count === 0 ? ' disabled' : ''}>Export queue</button>
+        <button class="cs-hud-action cs-hud-action--danger" id="cs-clear-btn"${count === 0 ? ' disabled' : ''}>Clear</button>
       </div>
     </div>
   `
 
-  hudEl.querySelector('#cs-hud-close').addEventListener('click', () => {
+  hudEl.querySelector('#cs-hud-collapse').addEventListener('click', () => {
     dismissAllToasts()
     hudExpanded = false
     confirmingAction = false
@@ -879,36 +880,26 @@ function updateHUD() {
     if (!q.length) return
     GM_setClipboard(JSON.stringify({ captures: q }, null, 2), 'text')
     confirmingAction = true
-    const body = hudEl.querySelector('#cs-hud-body')
-    body.innerHTML = `
-      <p class="cs-hud-msg">Queue copied to clipboard.</p>
-      <p class="cs-hud-sub">Clear the queue now?</p>
-      <div class="cs-hud-actions">
-        <button class="cs-hud-action cs-hud-action--danger-confirm" id="cs-clear-yes">Yes, clear</button>
-        <button class="cs-hud-action" id="cs-clear-no">Keep</button>
-      </div>
+    const footer = hudEl.querySelector('#cs-hud-footer')
+    footer.innerHTML = `
+      <span class="cs-hud-confirm-msg">Copied! Clear queue?</span>
+      <button class="cs-hud-action cs-hud-action--danger-confirm cs-hud-action--sm" id="cs-clear-yes">Yes</button>
+      <button class="cs-hud-action cs-hud-action--sm" id="cs-clear-no">Keep</button>
     `
-    body.querySelector('#cs-clear-yes').addEventListener('click', () => { confirmingAction = false; clearQueue(); updateHUD() })
-    body.querySelector('#cs-clear-no').addEventListener('click', () => { confirmingAction = false; updateHUD() })
+    footer.querySelector('#cs-clear-yes').addEventListener('click', () => { confirmingAction = false; clearQueue(); updateHUD() })
+    footer.querySelector('#cs-clear-no').addEventListener('click', () => { confirmingAction = false; updateHUD() })
   })
 
   hudEl.querySelector('#cs-clear-btn')?.addEventListener('click', () => {
     confirmingAction = true
-    const body = hudEl.querySelector('#cs-hud-body')
-    body.innerHTML = `
-      <p class="cs-hud-msg">Clear all ${count} capture${count !== 1 ? 's' : ''}?</p>
-      <div class="cs-hud-actions">
-        <button class="cs-hud-action cs-hud-action--danger-confirm" id="cs-clear-yes">Yes, clear</button>
-        <button class="cs-hud-action" id="cs-clear-no">Cancel</button>
-      </div>
+    const footer = hudEl.querySelector('#cs-hud-footer')
+    footer.innerHTML = `
+      <span class="cs-hud-confirm-msg">Clear ${count} capture${count !== 1 ? 's' : ''}?</span>
+      <button class="cs-hud-action cs-hud-action--danger-confirm cs-hud-action--sm" id="cs-clear-yes">Yes</button>
+      <button class="cs-hud-action cs-hud-action--sm" id="cs-clear-no">Cancel</button>
     `
-    body.querySelector('#cs-clear-yes').addEventListener('click', () => { confirmingAction = false; clearQueue(); updateHUD() })
-    body.querySelector('#cs-clear-no').addEventListener('click', () => { confirmingAction = false; updateHUD() })
-  })
-
-  hudEl.querySelector('#cs-reset-pos')?.addEventListener('click', () => {
-    GM_setValue(PILL_POS_KEY, null)
-    applyPillPos()
+    footer.querySelector('#cs-clear-yes').addEventListener('click', () => { confirmingAction = false; clearQueue(); updateHUD() })
+    footer.querySelector('#cs-clear-no').addEventListener('click', () => { confirmingAction = false; updateHUD() })
   })
 
   // Apply persisted size and attach resize grip after panel DOM is ready
@@ -1046,13 +1037,13 @@ function injectStyles() {
     .cs-hud-pill--empty { color: #57534e; border-color: #292524; }
     .cs-hud-pill--empty:hover { background: #1f1d1c; border-color: #3c3837; color: #78716c; }
 
-    /* Expanded panel — flex column so body can scroll when HUD is resized short */
+    /* Expanded panel — flex column so body scrolls when HUD is resized short */
     .cs-hud-panel {
       background: #1c1917;
       border: 1px solid #44403c;
       border-radius: 12px;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-      min-width: 210px;
+      min-width: 280px;
       overflow: hidden;
       position: relative;
       display: flex;
@@ -1073,29 +1064,49 @@ function injectStyles() {
       font-weight: 500;
       font-size: 12px;
       white-space: nowrap;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .cs-hud-header-btns {
+    .cs-hud-header-right {
       display: flex;
       align-items: center;
       gap: 2px;
       margin-left: 8px;
+      flex-shrink: 0;
     }
-    /* Collapse (−) and Hide (×) buttons in header */
-    .cs-hud-collapse,
-    .cs-hud-hide-btn {
+    /* Decorative drag handle in header — pointer-events none so it doesn't eat clicks */
+    .cs-hud-drag-dots {
+      color: #3c3837;
+      display: flex;
+      align-items: center;
+      margin-right: 4px;
+      pointer-events: none;
+      line-height: 0;
+    }
+    /* Icon buttons in header (collapse, settings, hide) */
+    .cs-hud-icon-btn {
       color: #78716c;
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 18px;
-      line-height: 1;
-      padding: 0 4px;
-      transition: color 0.15s;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      padding: 0;
+      line-height: 0;
+      transition: color 0.15s, background 0.15s;
+      flex-shrink: 0;
     }
-    .cs-hud-collapse:hover,
-    .cs-hud-hide-btn:hover { color: #d6d3d1; }
+    .cs-hud-icon-btn:hover { color: #d6d3d1; background: rgba(255,255,255,0.06); }
+    .cs-hud-icon-btn:disabled { opacity: 0.3; cursor: default; }
+    .cs-hud-icon-btn:disabled:hover { color: #78716c; background: none; }
     .cs-hud-body {
-      padding: 10px 12px 20px; /* bottom padding leaves room for resize grip */
+      padding: 10px 12px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -1124,7 +1135,25 @@ function injectStyles() {
       border-color: rgba(52, 211, 153, 0.3);
     }
     .cs-hud-auto--on:hover { background: rgba(52, 211, 153, 0.18) !important; }
-    .cs-hud-actions { display: flex; gap: 6px; }
+    /* Sticky footer — Export and Clear live here; also hosts confirm state */
+    .cs-hud-footer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-top: 1px solid #292524;
+      flex-shrink: 0;
+    }
+    .cs-hud-footer .cs-hud-action { flex: 1; }
+    .cs-hud-confirm-msg {
+      font-size: 11px;
+      color: #a8a29e;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cs-hud-action--sm { flex: none !important; padding: 4px 10px; }
     .cs-hud-action {
       flex: 1;
       padding: 5px 10px;
@@ -1154,15 +1183,6 @@ function injectStyles() {
       border-color: rgba(251, 113, 133, 0.3);
     }
     .cs-hud-action--danger-confirm:hover { background: rgba(251, 113, 133, 0.25); }
-    .cs-hud-msg { color: #d6d3d1; font-size: 12px; margin: 0; }
-    .cs-hud-sub { color: #a8a29e; font-size: 11px; margin: 0; }
-    .cs-hud-action--muted {
-      color: #57534e;
-      font-size: 10px;
-      border-color: transparent;
-      background: transparent;
-    }
-    .cs-hud-action--muted:hover:not(:disabled) { background: #1f1d1c; color: #78716c; border-color: #292524; }
 
     /* ── Resize grip (bottom-right corner of expanded panel) ── */
     .cs-resize-grip {
@@ -1240,4 +1260,4 @@ document.addEventListener('keydown', e => {
     applyPillPos()
   }
 }, true)
-console.log('[CharSnap Capture] v1.20 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')
+console.log('[CharSnap Capture] v2.0 | Ctrl+Shift+Alt+R (Cmd on Mac) → reset pill position')

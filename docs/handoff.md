@@ -138,6 +138,10 @@ All resolved as of 2026-05-16–17:
 3. **Theme follow-up** — 5 additional themes (Light, Yume Kawaii, Ocean, Dark Academia, Synthwave); requires theme-switcher UI; deferred
 4. **Design sandbox** — moved to a separate repo for usage-budget isolation; no longer present in this codebase.
 
+## Recently Shipped (2026-05-20 — v2.0 part 1)
+
+- Userscript v2.0: three-state HUD model (Pill / Expanded / Hidden), new header with icon buttons (collapse, settings placeholder, hide), sticky footer action bar with Export + Clear, confirm states moved to footer, "Reset position" removed from body (moves to settings in part 3), default expanded size 360×480, min size 280×360
+
 ## Recently Shipped (2026-05-20)
 
 - Zero-stat import fix: captures with all-zero stats (brand-new bots) no longer silently rejected by the JSON parser

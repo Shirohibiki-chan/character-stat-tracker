@@ -56,6 +56,16 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                 if (m.key === 'messages' && hasBreakdown) {
                   return [header, (
                     <SortHeader
+                      key="messagesSolo"
+                      className="text-right"
+                      label="Solo"
+                      active={sortBy === 'messagesSolo'}
+                      dir={sortDir}
+                      onClick={() => toggleSort('messagesSolo')}
+                      style={{ background: msgMetric?.headerTint }}
+                    />
+                  ), (
+                    <SortHeader
                       key="messagesGroup"
                       className="text-right"
                       label="Group"
@@ -84,7 +94,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
           <tbody>
             {sorted.length === 0 && (
               <tr>
-                <td colSpan={(selectMode ? 8 : 7) + (hasBreakdown ? 1 : 0)} className="text-center py-12 text-text-muted text-sm">
+                <td colSpan={(selectMode ? 8 : 7) + (hasBreakdown ? 2 : 0)} className="text-center py-12 text-text-muted text-sm">
                   No bots match your filters.
                 </td>
               </tr>
@@ -190,21 +200,32 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                       </td>
                     )
                     if (m.key === 'messages' && hasBreakdown) {
+                      const subStyle = {
+                        fontFamily: 'var(--table-nums-font)',
+                        fontWeight: 'var(--table-nums-weight)',
+                        fontSize: 'var(--table-size)',
+                        color: 'var(--color-table-nums)',
+                      }
                       return [cell, (
+                        <td
+                          key="messagesSolo"
+                          className="py-3 px-3 text-right"
+                          style={{ background: msgMetric?.rowTint }}
+                        >
+                          <div className="leading-none" style={subStyle}>
+                            {bot.messagesSolo != null ? fmt(bot.messagesSolo) : '—'}
+                          </div>
+                          {bot.deltaMessagesSolo > 0 && (
+                            <div className="text-[10px] num" style={{ color: msgMetric?.color }}>+{fmt(bot.deltaMessagesSolo)}</div>
+                          )}
+                        </td>
+                      ), (
                         <td
                           key="messagesGroup"
                           className="py-3 px-3 text-right"
                           style={{ background: msgMetric?.rowTint }}
                         >
-                          <div
-                            className="leading-none"
-                            style={{
-                              fontFamily: 'var(--table-nums-font)',
-                              fontWeight: 'var(--table-nums-weight)',
-                              fontSize: 'var(--table-size)',
-                              color: 'var(--color-table-nums)',
-                            }}
-                          >
+                          <div className="leading-none" style={subStyle}>
                             {bot.messagesGroup != null ? fmt(bot.messagesGroup) : '—'}
                           </div>
                           {bot.deltaMessagesGroup > 0 && (

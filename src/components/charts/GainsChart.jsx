@@ -141,12 +141,12 @@ export default function GainsChart({ bots, onViewBot }) {
                   return (
                     <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
                       <div className="font-bold text-sm mb-1 truncate max-w-[200px]">{d.name}</div>
-                      <div className="text-[10px] text-text-muted mb-1.5">
+                      <div className="text-xs text-text-muted mb-1.5">
                         {fmtDate(d.fromDate)} → {fmtDate(d.toDate)}
                       </div>
                       <div className="flex justify-between gap-6 text-xs">
                         <span className="text-text-muted">{m?.label} gain</span>
-                        <span className="num" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
+                        <span className="num font-semibold" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
                       </div>
                     </div>
                   )

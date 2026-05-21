@@ -118,13 +118,13 @@ export default function TagsChart({ bots, onTagClick }) {
                   return (
                     <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
                       <div className="font-bold text-sm mb-1">#{d.tag}</div>
-                      <div className="text-[10px] text-text-muted mb-1.5">
+                      <div className="text-xs text-text-muted mb-1.5">
                         {d.botCount} {d.botCount === 1 ? 'bot' : 'bots'}
                       </div>
                       {METRICS.map(mx => (
                         <div key={mx.key} className="flex justify-between gap-6 text-xs">
                           <span className="text-text-muted">{mx.label}</span>
-                          <span className="num" style={{ color: mx.color }}>{fmtFull(d[mx.key] || 0)}</span>
+                          <span className="num font-semibold" style={{ color: mx.color }}>{fmtFull(d[mx.key] || 0)}</span>
                         </div>
                       ))}
                     </div>

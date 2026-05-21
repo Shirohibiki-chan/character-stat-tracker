@@ -18,11 +18,11 @@ function ChartTooltip({ active, payload }) {
   const d = payload[0].payload
   return (
     <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
-      <div className="text-xs text-text-muted mb-1">{d.dateLabel}</div>
+      <div className="text-xs text-text-secondary font-medium mb-1">{d.dateLabel}</div>
       {METRICS.map(m => (
         <div key={m.key} className="flex justify-between gap-6 text-xs">
-          <span className="text-text-muted">{m.label}</span>
-          <span className="num" style={{ color: m.color }}>{fmtFull(d[m.key])}</span>
+          <span className="text-text-secondary font-medium">{m.label}</span>
+          <span className="num font-semibold" style={{ color: m.color }}>{fmtFull(d[m.key])}</span>
         </div>
       ))}
     </div>
@@ -325,7 +325,7 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
           {/* Growth chart */}
           {chartSnaps.length >= 2 && (
             <div className="mb-6 border border-border rounded-lg p-4 bg-surface">
-              <div className="flex items-center gap-2 text-sm text-text-secondary mb-3">
+              <div className="flex items-center gap-2 text-sm text-text-secondary font-semibold mb-3">
                 <TrendingUp size={16} className="text-accent opacity-60" />
                 Growth over time
               </div>
@@ -339,23 +339,23 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                       domain={['dataMin', 'dataMax']}
                       tickFormatter={t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       stroke="var(--color-text-muted)"
-                      style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                      style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
                     />
                     <YAxis
                       yAxisId="left"
                       tickFormatter={fmt}
                       stroke="var(--color-text-muted)"
-                      style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                      style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
                     />
                     <YAxis
                       yAxisId="right"
                       orientation="right"
                       tickFormatter={fmt}
                       stroke="var(--color-text-muted)"
-                      style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                      style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
                     />
                     <Tooltip content={<ChartTooltip />} />
-                    <Legend wrapperStyle={{ fontSize: 11 }} />
+                    <Legend wrapperStyle={{ fontSize: 11, fontWeight: 700 }} />
                     {METRICS.map(m => (
                       <Line
                         key={m.key}
@@ -380,7 +380,7 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
           {/* Snapshot list */}
           <div className="border border-border rounded-lg bg-surface">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
+              <div className="flex items-center gap-2 text-sm text-text-secondary font-semibold">
                 <ClipboardPlus size={14} className="text-accent opacity-60" />
                 Snapshots ({sortedSnaps.length})
               </div>
@@ -457,11 +457,11 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
               <tbody>
                 {[...sortedSnaps].reverse().map(s => (
                   <tr key={s.date} className="border-b border-border-subtle hover:bg-surface-alt/50">
-                    <td className="py-2 px-4 text-xs text-text-secondary">{fmtDate(s.date)}</td>
-                    <td className="py-2 px-3 text-right num text-sm text-text-value">{fmt(s.chats)}</td>
-                    <td className="py-2 px-3 text-right num text-sm text-text-value">{fmt(s.messages)}</td>
-                    <td className="py-2 px-3 text-right num text-sm text-text-value">{fmt(s.favorites)}</td>
-                    <td className="py-2 px-3 text-right text-[10px] text-text-muted">{s.scope || ''}</td>
+                    <td className="py-2 px-4 text-xs text-text-secondary font-semibold">{fmtDate(s.date)}</td>
+                    <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.chats)}</td>
+                    <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.messages)}</td>
+                    <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.favorites)}</td>
+                    <td className="py-2 px-3 text-right text-[10px] text-text-secondary font-medium">{s.scope || ''}</td>
                     <td className="py-2 px-3 text-right">
                       {confirmDeleteSnap === s.date ? (
                         <div className="flex items-center gap-1 justify-end">

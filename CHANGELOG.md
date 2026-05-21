@@ -13,6 +13,7 @@
 - **Bar chart colors:** each bot's bars now use their aura ring color (hash-based), so you can identify bots at a glance. Tags chart bars are colored the same way by tag name. Bar colors use a darker variant of each hue so they're not eye-straining on a dark background.
 - **Bar chart bot names:** Y-axis labels are now larger (13px) and bolder so names are easier to read; wider label column (160px) prevents long names from being clipped. Tag names on the Tags chart were missing entirely — fixed.
 - **Bar chart value labels:** the numbers shown to the right of each bar are now bold.
+- **Bot detail modal readability:** snapshot table dates, numbers, and scope text are now bolder; chart axis numbers and legend are bolder; tooltip label text is bolder and brighter; section headers are bolder.
 
 ---
 

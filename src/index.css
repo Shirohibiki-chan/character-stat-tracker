@@ -151,5 +151,7 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.08); }
 ::selection { background: rgba(75, 168, 196, 0.20); color: var(--color-text-primary); }
 input::placeholder, textarea::placeholder { color: var(--color-text-muted); }
 
-.recharts-surface { outline: none; }
-.recharts-wrapper:focus { outline: none; }
+.recharts-surface,
+.recharts-surface:focus,
+.recharts-wrapper:focus,
+.recharts-wrapper svg *:focus { outline: none; }

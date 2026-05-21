@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-05-20
+
+### Fixes
+- **Chart focus outline:** clicking bars on the Ranking, History, Gains, and Tags charts no longer shows a white box outline.
+
+---
+
 ## 2026-05-20 (App — settings panel)
 
 ### Additions

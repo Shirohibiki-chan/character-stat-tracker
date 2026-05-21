@@ -2,6 +2,10 @@
 
 ## 2026-05-21
 
+### Fixes
+- **Deleting a snapshot wiped all snapshots from the same date:** snapshots were identified by their date string, so any two with the same date would both be deleted. Snapshots now have their own unique ID; deleting one only removes that exact snapshot.
+- **Group chat % removed from bot table:** the `X% grp` sub-line added in the last release was showing under the message count in a way that pushed out the `+N` delta. Removed until a better placement is decided.
+
 ### Additions
 - **Solo/group split in History chart:** when "Messages" is selected in the History (top gainers) chart, a Total / Solo / Group toggle appears (only if your userscript has captured breakdown data). Switching to Solo or Group re-ranks bots by that component of their message gain.
 - **Group chat % in bot table:** the Messages column now shows a `X% grp` sub-line when your userscript has captured the breakdown, so you can see at a glance which bots are most active in group chats.

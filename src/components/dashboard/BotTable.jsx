@@ -169,11 +169,6 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                         {delta > 0 && (
                           <div className="text-[10px] num" style={{ color: m.color }}>+{fmt(delta)}</div>
                         )}
-                        {m.key === 'messages' && bot.latest?.messagesGroup != null && bot.latest.messages > 0 && (
-                          <div className="text-[10px] num text-text-muted">
-                            {Math.round((bot.latest.messagesGroup / bot.latest.messages) * 100)}% grp
-                          </div>
-                        )}
                       </td>
                     )
                   })}

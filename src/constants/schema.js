@@ -14,6 +14,7 @@ export function createBot(overrides = {}) {
 
 export function createSnapshot(overrides = {}) {
   return {
+    id: crypto.randomUUID(),
     date: new Date().toISOString(),
     chats: 0,
     messages: 0,

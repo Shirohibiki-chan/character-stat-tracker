@@ -12,6 +12,10 @@
 - **Settings icon:** changed to a plain gear (was a different settings-style icon).
 - **Snapshot icon:** table snapshot button and bot detail Snapshots section header no longer use the camera icon (reserved for changing PFP); now shows a clipboard-plus icon.
 - **Lander flash on refresh:** the empty/onboarding screen no longer flickers on load for users who already have bots; the app now waits for IndexedDB to finish loading before deciding what to show.
+- **Theme/compact color flash:** settings (theme, compact mode) are now applied before React renders via an inline script in the page head, eliminating the flash of default styles on load.
+
+### Additions
+- **Logo → lander:** clicking the "CharSnap stats" wordmark when you have bots shows the feature overview / how-to-start screen. Click it again, or use Import / Add bot from that screen, to return to the dashboard.
 
 ---
 

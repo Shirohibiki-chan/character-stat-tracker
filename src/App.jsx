@@ -43,6 +43,7 @@ export default function App() {
   const { page, setPage, pageSize, setPageSize, viewMode, setViewMode, totalPages, paginated } = usePagination(sorted)
 
   const [activeView, setActiveView] = useState(defaultView)
+  const [showLander, setShowLander] = useState(false)
   const [showImport, setShowImport] = useState(false)
   const [showBackup, setShowBackup] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
@@ -135,15 +136,20 @@ export default function App() {
         {/* Header */}
         <header className="flex items-end justify-between mb-10 pb-6 border-b border-border flex-wrap gap-4">
           <div>
-            <div className="text-[11px] tracking-[0.25em] text-accent-faint-text uppercase mb-2 font-bold">
-              Creator dashboard
-            </div>
-            <h1
-              className="leading-none"
-              style={{ fontFamily: 'var(--wordmark-font)', fontWeight: 'var(--wordmark-weight)', fontSize: 'var(--wordmark-size)' }}
+            <div
+              onClick={() => initialized && totalBotCount > 0 && setShowLander(v => !v)}
+              className={initialized && totalBotCount > 0 ? 'cursor-pointer w-fit hover:opacity-75 transition-opacity' : undefined}
             >
-              CharSnap <span className="italic text-accent">stats</span>
-            </h1>
+              <div className="text-[11px] tracking-[0.25em] text-accent-faint-text uppercase mb-2 font-bold">
+                Creator dashboard
+              </div>
+              <h1
+                className="leading-none"
+                style={{ fontFamily: 'var(--wordmark-font)', fontWeight: 'var(--wordmark-weight)', fontSize: 'var(--wordmark-size)' }}
+              >
+                CharSnap <span className="italic text-accent">stats</span>
+              </h1>
+            </div>
             <p className="text-text-tertiary text-sm mt-3">
               {totalBotCount} {totalBotCount === 1 ? 'bot' : 'bots'} tracked
             </p>
@@ -189,8 +195,11 @@ export default function App() {
           </div>
         </header>
 
-        {!initialized ? null : totalBotCount === 0 ? (
-          <EmptyState onAdd={() => setAdding(true)} onImport={() => setShowImport(true)} />
+        {!initialized ? null : (totalBotCount === 0 || showLander) ? (
+          <EmptyState
+            onAdd={() => { setShowLander(false); setAdding(true) }}
+            onImport={() => { setShowLander(false); setShowImport(true) }}
+          />
         ) : (
           <>
             <OnboardingBanner onImport={() => setShowImport(true)} />

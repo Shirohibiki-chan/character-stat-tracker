@@ -7,6 +7,11 @@
 - **"Today" delta on stat cards:** each stat card now also shows a daily gain since midnight UTC, matching CharSnap's daily reset.
 - **White flash on initial load:** the app no longer briefly flashes a white screen before the dark background loads.
 - **"1000K" / "1000M" display bug:** numbers near a tier boundary (e.g. 999,972) now correctly round up to the next unit (1.0M / 1.0B) instead of showing "1000K" or "1000M".
+- **Bar chart labels disappearing when a modal opens:** labels to the right of bars no longer vanish when a modal with a backdrop blur is open.
+
+### Adjustments
+- **Bar chart colors:** each bot's bars now use their aura ring color (the same hash-based color as the PFP ring), so you can identify bots at a glance across Ranking, Gains, and History charts. Tags chart bars are colored the same way by tag name.
+- **Bar chart bot names:** Y-axis labels are now larger (13px) and bolder so names are easier to read.
 
 ---
 

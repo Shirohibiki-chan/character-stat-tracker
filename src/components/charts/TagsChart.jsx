@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react'
 import { Tag } from 'lucide-react'
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, ResponsiveContainer,
+  BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, ResponsiveContainer,
 } from 'recharts'
 import { METRICS } from '../../constants/metrics.js'
+import { getAura } from '../../constants/auras.js'
 import { fmt, fmtFull } from '../../constants/format.js'
 
 function computeTagAggregates(bots, metric) {
@@ -39,8 +40,10 @@ function ClickableTick({ x, y, value, onTagClick }) {
         y={0}
         dy={4}
         textAnchor="end"
-        fill="var(--color-text-secondary)"
-        style={{ fontSize: 12, fontFamily: 'Quicksand, system-ui, sans-serif' }}
+        fill="var(--color-text-primary)"
+        fontWeight={600}
+        fontSize={13}
+        fontFamily="Poppins, system-ui, sans-serif"
       >
         {value}
       </text>
@@ -93,7 +96,7 @@ export default function TagsChart({ bots, onTagClick }) {
       <div className="p-5">
         <div style={{ height: chartHeight }}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} layout="vertical" margin={{ top: 5, right: 55, left: 0, bottom: 5 }}>
+            <BarChart data={data} layout="vertical" margin={{ top: 5, right: 70, left: 0, bottom: 5 }}>
               <CartesianGrid horizontal={false} stroke="var(--color-border-subtle)" />
               <XAxis
                 type="number"
@@ -106,8 +109,7 @@ export default function TagsChart({ bots, onTagClick }) {
               <YAxis
                 type="category"
                 dataKey="name"
-                stroke="var(--color-text-secondary)"
-                width={100}
+                width={130}
                 axisLine={false}
                 tickLine={false}
                 tick={props => <ClickableTick {...props} onTagClick={onTagClick} />}
@@ -135,11 +137,11 @@ export default function TagsChart({ bots, onTagClick }) {
               />
               <Bar
                 dataKey="_val"
-                fill={m?.color}
                 radius={[0, 3, 3, 0]}
                 onClick={onTagClick ? d => onTagClick(d.tag) : undefined}
                 className={onTagClick ? 'cursor-pointer' : undefined}
               >
+                {data.map(d => <Cell key={d.tag} fill={getAura(d.tag)} />)}
                 <LabelList
                   dataKey="_val"
                   position="right"

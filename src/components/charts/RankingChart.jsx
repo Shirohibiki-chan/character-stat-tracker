@@ -73,7 +73,7 @@ export default function RankingChart({ bots, onViewBot }) {
                 type="number"
                 tickFormatter={fmt}
                 stroke="var(--color-text-muted)"
-                style={{ fontSize: 12, fontFamily: 'Inter, system-ui, sans-serif' }}
+                style={{ fontSize: 12, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
                 axisLine={{ stroke: 'var(--color-border)' }}
                 tickLine={{ stroke: 'var(--color-border)' }}
               />
@@ -83,7 +83,7 @@ export default function RankingChart({ bots, onViewBot }) {
                 width={160}
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: 'var(--color-text-primary)', fontWeight: 700, fontSize: 14, fontFamily: 'Poppins, system-ui, sans-serif' }}
+                tick={{ fill: 'var(--color-text-primary)', fontWeight: 700, fontSize: 13, fontFamily: 'Poppins, system-ui, sans-serif' }}
               />
               <Tooltip
                 cursor={{ fill: 'rgba(255, 255, 255, 0.03)' }}
@@ -95,7 +95,7 @@ export default function RankingChart({ bots, onViewBot }) {
                       <div className="font-bold text-base mb-1.5 truncate max-w-[220px]">{d.name}</div>
                       {METRICS.map(mx => (
                         <div key={mx.key} className="flex justify-between gap-6 text-sm">
-                          <span className="text-text-muted">{mx.label}</span>
+                          <span className="text-text-secondary font-medium">{mx.label}</span>
                           <span className="num font-semibold" style={{ color: mx.color }}>{fmtFull(d[mx.key] || 0)}</span>
                         </div>
                       ))}
@@ -114,7 +114,7 @@ export default function RankingChart({ bots, onViewBot }) {
                   dataKey="_val"
                   position="right"
                   formatter={fmt}
-                  style={{ fill: 'var(--color-text-secondary)', fontSize: 13, fontWeight: 600, fontFamily: 'Inter, system-ui, sans-serif' }}
+                  style={{ fill: 'var(--color-text-primary)', fontSize: 13, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
                 />
               </Bar>
             </BarChart>

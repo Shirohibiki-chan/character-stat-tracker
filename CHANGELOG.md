@@ -1,31 +1,28 @@
 # Changelog
 
-## [Unreleased]
+## 2026-05-21
 
 ### Additions
+- **Solo/group split in History chart:** when "Messages" is selected in the History (top gainers) chart, a Total / Solo / Group toggle appears (only if your userscript has captured breakdown data). Switching to Solo or Group re-ranks bots by that component of their message gain.
+- **Group chat % in bot table:** the Messages column now shows a `X% grp` sub-line when your userscript has captured the breakdown, so you can see at a glance which bots are most active in group chats.
+- **Group chat breakdown in bot detail:** the Messages card in the bot detail popup now shows a `(X solo + Y grp)` sub-line when your userscript has captured the breakdown data.
 - **Scatter plot view:** new "Scatter" tab plots every bot as a dot — pick any two metrics for the X and Y axes. Dashed lines mark the averages, dividing bots into four zones (e.g. high messages + high favorites = popular and loved). Click any dot to open that bot's detail.
 - **Treemap view:** new "Treemap" tab fills the screen with one box per bot, sized by the selected metric, so you can see at a glance which bots dominate your collection. Click any box to open that bot's detail.
+- **"This week" resets on Monday 0 UTC:** stat card weekly deltas now use Monday midnight UTC (matching CharSnap's reset time) instead of a rolling 7-day window.
+- **"Today" delta on stat cards:** each stat card now also shows a daily gain since midnight UTC, matching CharSnap's daily reset.
+- **Overlay chart Top N filter:** the multi-bot growth chart now defaults to showing the top 10 bots by the selected metric instead of all of them. A 10 / 15 / 25 / All picker in the header controls how many are shown. Switching metric re-ranks automatically.
 
 ### Fixes
 - **Body font not loading:** Quicksand (the intended body font) was missing from the Google Fonts import, causing all UI text to fall back to the system font. Text now renders in Quicksand as designed.
 - **Chart header text thin:** section titles and all control button labels on every chart are now bolder (section titles: bold; button labels: semibold). Overlay legend bot names are also semibold.
 - **Bot names wrapping on bar charts:** names longer than 22 characters are now truncated with an ellipsis on the Y-axis of all bar charts so no name ever wraps to two lines. Label column widened to fit.
 - **Overlay chart legend cramped:** the bot name legend below the overlay chart no longer sits in a tiny scrollable box; names now wrap freely.
-
-### Adjustments
-- **Overlay chart Top N is now remembered:** your last-used Top N setting (10 / 15 / 25 / All) is saved across page reloads.
-
-### Additions
-- **"This week" resets on Monday 0 UTC:** stat card weekly deltas now use Monday midnight UTC (matching CharSnap's reset time) instead of a rolling 7-day window.
-- **"Today" delta on stat cards:** each stat card now also shows a daily gain since midnight UTC, matching CharSnap's daily reset.
 - **White flash on initial load:** the app no longer briefly flashes a white screen before the dark background loads.
 - **"1000K" / "1000M" display bug:** numbers near a tier boundary (e.g. 999,972) now correctly round up to the next unit (1.0M / 1.0B) instead of showing "1000K" or "1000M".
 - **Bar chart labels disappearing when a modal opens:** labels to the right of bars no longer vanish when a modal with a backdrop blur is open.
 
-### Additions
-- **Overlay chart Top N filter:** the multi-bot growth chart now defaults to showing the top 10 bots by the selected metric instead of all of them. A 10 / 15 / 25 / All picker in the header controls how many are shown. Switching metric re-ranks automatically.
-
 ### Adjustments
+- **Overlay chart Top N is now remembered:** your last-used Top N setting (10 / 15 / 25 / All) is saved across page reloads.
 - **Bar chart colors:** each bot's bars now use their aura ring color (hash-based), so you can identify bots at a glance. Tags chart bars are colored the same way by tag name. Bar colors use a darker variant of each hue so they're not eye-straining on a dark background.
 - **Bar chart bot names:** Y-axis labels are now larger (13px) and bolder so names are easier to read; wider label column prevents long names from being clipped. Tag names on the Tags chart were missing entirely — fixed. Names longer than 22 characters are now truncated with an ellipsis so they never wrap to two lines.
 - **Bar chart value labels:** the numbers shown to the right of each bar are now bold.

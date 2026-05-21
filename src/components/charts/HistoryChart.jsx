@@ -52,12 +52,22 @@ function computeHistory(bots, metric, targetDate) {
 export default function HistoryChart({ bots, onViewBot }) {
   const [targetDate, setTargetDate] = useState(() => latestTotalDate(bots))
   const [metric, setMetric] = useState('messages')
+  const [subMetric, setSubMetric] = useState('total')
 
   const m = METRICS.find(mx => mx.key === metric)
 
+  const hasBreakdown = useMemo(
+    () => bots.some(b => (b.snapshots || []).some(s => s.messagesGroup != null)),
+    [bots]
+  )
+
+  const effectiveMetric = metric === 'messages' && subMetric !== 'total'
+    ? (subMetric === 'group' ? 'messagesGroup' : 'messagesSolo')
+    : metric
+
   const data = useMemo(
-    () => computeHistory(bots, metric, targetDate),
-    [bots, metric, targetDate]
+    () => computeHistory(bots, effectiveMetric, targetDate),
+    [bots, effectiveMetric, targetDate]
   )
 
   const chartHeight = Math.max(300, data.length * 32 + 40)
@@ -67,14 +77,14 @@ export default function HistoryChart({ bots, onViewBot }) {
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
         <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
           <Calendar size={16} className="text-accent opacity-60" />
-          Top gainers on {fmtDate(targetDate)} · {m?.label}
+          Top gainers on {fmtDate(targetDate)} · {effectiveMetric === 'messagesGroup' ? 'Messages (group)' : effectiveMetric === 'messagesSolo' ? 'Messages (solo)' : m?.label}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
             {METRICS.map(mx => (
               <button
                 key={mx.key}
-                onClick={() => setMetric(mx.key)}
+                onClick={() => { setMetric(mx.key); if (mx.key !== 'messages') setSubMetric('total') }}
                 className={`px-2.5 py-1 text-xs font-semibold rounded transition ${metric === mx.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
                 style={metric === mx.key ? { boxShadow: `inset 0 0 0 1px ${mx.color}40` } : {}}
               >
@@ -82,6 +92,20 @@ export default function HistoryChart({ bots, onViewBot }) {
               </button>
             ))}
           </div>
+          {metric === 'messages' && hasBreakdown && (
+            <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
+              {['total', 'solo', 'group'].map(s => (
+                <button
+                  key={s}
+                  onClick={() => setSubMetric(s)}
+                  className={`px-2.5 py-1 text-xs font-semibold rounded transition ${subMetric === s ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                  style={subMetric === s ? { boxShadow: `inset 0 0 0 1px ${m?.color}40` } : {}}
+                >
+                  {s[0].toUpperCase() + s.slice(1)}
+                </button>
+              ))}
+            </div>
+          )}
           <input
             type="date"
             value={targetDate}
@@ -135,7 +159,9 @@ export default function HistoryChart({ bots, onViewBot }) {
                           {fmtDate(d.prevSnapDate)} → {fmtDate(d.snapDate)}
                         </div>
                         <div className="flex justify-between gap-6 text-sm">
-                          <span className="text-text-secondary font-medium">{m?.label} gained</span>
+                          <span className="text-text-secondary font-medium">
+                            {effectiveMetric === 'messagesGroup' ? 'Group msgs gained' : effectiveMetric === 'messagesSolo' ? 'Solo msgs gained' : `${m?.label} gained`}
+                          </span>
                           <span className="num font-semibold" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
                         </div>
                       </div>

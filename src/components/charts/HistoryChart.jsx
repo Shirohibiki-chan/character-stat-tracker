@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react'
 import { Calendar } from 'lucide-react'
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, ResponsiveContainer,
+  BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, ResponsiveContainer,
 } from 'recharts'
 import { METRICS } from '../../constants/metrics.js'
+import { getAura } from '../../constants/auras.js'
 import { fmt, fmtFull, fmtDate } from '../../constants/format.js'
 
 function latestTotalDate(bots) {
@@ -103,7 +104,7 @@ export default function HistoryChart({ bots, onViewBot }) {
         <div className="p-5">
           <div style={{ height: chartHeight }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data} layout="vertical" margin={{ top: 5, right: 55, left: 0, bottom: 5 }}>
+              <BarChart data={data} layout="vertical" margin={{ top: 5, right: 70, left: 0, bottom: 5 }}>
                 <CartesianGrid horizontal={false} stroke="var(--color-border-subtle)" />
                 <XAxis
                   type="number"
@@ -116,12 +117,10 @@ export default function HistoryChart({ bots, onViewBot }) {
                 <YAxis
                   type="category"
                   dataKey="name"
-                  stroke="var(--color-text-secondary)"
-                  width={100}
-                  style={{ fontSize: 12, fontFamily: 'Quicksand, system-ui, sans-serif' }}
+                  width={130}
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: 'var(--color-text-secondary)' }}
+                  tick={{ fill: 'var(--color-text-primary)', fontWeight: 600, fontSize: 13, fontFamily: 'Poppins, system-ui, sans-serif' }}
                 />
                 <Tooltip
                   cursor={{ fill: 'rgba(255, 255, 255, 0.03)' }}
@@ -144,11 +143,11 @@ export default function HistoryChart({ bots, onViewBot }) {
                 />
                 <Bar
                   dataKey="_val"
-                  fill={m?.color}
                   radius={[0, 3, 3, 0]}
                   onClick={d => onViewBot?.(d.id)}
                   className="cursor-pointer"
                 >
+                  {data.map(d => <Cell key={d.id} fill={getAura(d.id)} />)}
                   <LabelList
                     dataKey="_val"
                     position="right"

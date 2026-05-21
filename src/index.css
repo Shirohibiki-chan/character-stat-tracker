@@ -155,3 +155,7 @@ input::placeholder, textarea::placeholder { color: var(--color-text-muted); }
 .recharts-surface:focus,
 .recharts-wrapper:focus,
 .recharts-wrapper svg *:focus { outline: none; }
+
+/* Prevent backdrop-filter compositing from clipping bar labels in chart margins */
+.recharts-wrapper,
+.recharts-surface { overflow: visible !important; }

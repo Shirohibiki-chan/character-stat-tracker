@@ -3,7 +3,7 @@
 ## 2026-05-21
 
 ### Additions
-- **Group column in bot table:** a "Group" column appears next to Messages whenever any of your bots has group chat breakdown data captured. Shows the raw group message count and the gain since the previous snapshot. Fully sortable. Hidden entirely when no breakdown data exists.
+- **Solo and Group columns in bot table:** when any of your bots has group chat breakdown data, two columns appear next to Messages — Solo and Group — showing the split counts and gains since the previous snapshot. Both are sortable. The columns are hidden entirely when no breakdown data exists.
 
 ### Fixes
 - **Deleting a snapshot wiped all snapshots from the same date:** snapshots were identified by their date string, so any two with the same date would both be deleted. Snapshots now have their own unique ID; deleting one only removes that exact snapshot.

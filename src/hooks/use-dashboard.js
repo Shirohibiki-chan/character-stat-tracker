@@ -23,6 +23,10 @@ function enrichBot(bot) {
     deltaChats: prev != null ? (latest?.chats ?? 0) - (prev.chats ?? 0) : null,
     deltaMessages: prev != null ? (latest?.messages ?? 0) - (prev.messages ?? 0) : null,
     deltaFavorites: prev != null ? (latest?.favorites ?? 0) - (prev.favorites ?? 0) : null,
+    messagesGroup: latest?.messagesGroup ?? null,
+    deltaMessagesGroup: (prev?.messagesGroup != null && latest?.messagesGroup != null)
+      ? latest.messagesGroup - prev.messagesGroup
+      : null,
     snapshotCount: snaps.length,
     lastCapturedAt: snaps.length ? snaps[snaps.length - 1].date : null,
   }

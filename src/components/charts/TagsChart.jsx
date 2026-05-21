@@ -53,7 +53,7 @@ export default function TagsChart({ bots, onTagClick }) {
   return (
     <section className="border border-border rounded-lg bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm text-text-secondary">
+        <div className="flex items-center gap-2 text-sm font-semibold text-text-secondary">
           <Tag size={16} className="text-accent opacity-60" />
           Tag totals · {m?.label}
         </div>
@@ -86,9 +86,10 @@ export default function TagsChart({ bots, onTagClick }) {
               <YAxis
                 type="category"
                 dataKey="name"
-                width={160}
+                width={180}
                 axisLine={false}
                 tickLine={false}
+                tickFormatter={n => n.length > 22 ? n.slice(0, 21) + '…' : n}
                 tick={{ fill: 'var(--color-text-primary)', fontWeight: 700, fontSize: 13, fontFamily: 'Poppins, system-ui, sans-serif' }}
                 onClick={onTagClick ? e => onTagClick(e.value) : undefined}
                 style={{ cursor: onTagClick ? 'pointer' : 'default' }}

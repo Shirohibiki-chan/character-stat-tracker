@@ -37,6 +37,24 @@ Phases 0–7 from `docs/plan.md` are complete. Polish roadmap (this doc) is most
 - `src/App.jsx` — 6 new chart imports + render blocks.
 - PR B (upgrades to Scatter/Tags/Timeline) and PR C (bot detail report card) still pending.
 
+## Phase 8 App Changes (2026-05-21 — PR B: chart upgrades)
+
+- **Scatter → Bubble chart** (`ScatterPlot.jsx`):
+  - Added "Size" axis picker — bubble radius proportional to any of the 3 metrics (4–20px range).
+  - Added "By bot / By tag" color toggle — recolors bubbles by each bot's first tag instead of aura.
+  - Tooltip shows tag when present; footer text names the active size metric.
+  - Removed `<Cell>` in favor of a custom `shape` renderer (SVG `<circle>` with transparent hit area).
+- **Tags → Detail mode** (`TagsChart.jsx`):
+  - New "Summary / Detail" toggle in header. Summary = existing bar chart; Detail = card grid.
+  - Each detail card: tag name (colored by bar color), bot count, total + avg-per-bot stats (messages, threads, favorites), 30-day message gain (green, only shown when > 0), and a 100×100 mini spider chart of the average normalized stat profile across all bots in the tag.
+  - Spider normalization uses global maxima across all eligible bots, so shapes are comparable across tags.
+  - Metric picker in header sorts both Summary and Detail views by that metric.
+  - Mini spider is a local copy of the SpiderChart `MiniSpider` function, with an optional `showLabels` prop (labels hidden for size=100 cards).
+- **Timeline → Cohort mode** (`OverlayChart.jsx`):
+  - New "Calendar / Cohort" toggle. Calendar = existing date-based X axis. Cohort = X axis shows "Day N" (days since each bot's first Total-scope snapshot).
+  - In Cohort mode the data is rebuilt with per-bot day offsets so lines are aligned to their own start dates rather than calendar dates. Tooltip shows "Day N" label. X axis scale switches to `linear`.
+  - PR C (bot detail report card) still pending.
+
 ## Recent App Changes (2026-05-21)
 
 - **Spider chart:** Treemap tab replaced with Spider. Gallery mode shows a mini-spider per bot (grid); Single mode overlays up to 4 bots on one radar with 6 axes (solo msgs, group msgs, threads, favorites, avg msgs/day, favs per 1K). Selected bots persist across tab navigation via state lifted to App.jsx. `TreemapChart.jsx` is no longer imported or used (file remains on disk but is dead code — can be deleted).

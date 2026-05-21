@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-05-21 — Phase 8 (part 2)
+
+### Additions
+- **Scatter → Bubble chart:** the Scatter tab now has a "Size" axis picker. Bubble radius is proportional to whichever metric you pick (Messages, Threads, or Favorites), scaled to a readable range so all dots stay visible. A new **By bot / By tag** color toggle lets you recolor the bubbles by each bot's first tag instead of its default aura — handy for spotting tag-level clusters. The tooltip now shows the bot's tag when one is set.
+- **Tags → Detail mode:** the Tags tab now has a "Summary / Detail" toggle. Summary is the existing bar chart. Detail renders one card per tag, each showing total and avg-per-bot counts for all three metrics, the combined 30-day message gain, and a mini spider chart of the average stat profile across all bots in that tag.
+- **Timeline → Cohort mode:** the Timeline tab now has a "Calendar / Cohort" toggle. In Cohort mode the X-axis switches from calendar dates to "days since first capture" per bot, so you can compare growth trajectories regardless of when each bot was first added.
+
 ## 2026-05-21 — Phase 8 (part 1)
 
 ### Additions

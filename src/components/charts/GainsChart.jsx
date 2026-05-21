@@ -155,6 +155,7 @@ export default function GainsChart({ bots, onViewBot }) {
               <Bar
                 dataKey="_val"
                 radius={[0, 3, 3, 0]}
+                isAnimationActive={false}
                 onClick={d => onViewBot?.(d.id)}
                 className="cursor-pointer"
               >

@@ -117,6 +117,7 @@ export default function TagsChart({ bots, onTagClick }) {
               <Bar
                 dataKey="_val"
                 radius={[0, 3, 3, 0]}
+                isAnimationActive={false}
                 onClick={onTagClick ? d => onTagClick(d.tag) : undefined}
                 className={onTagClick ? 'cursor-pointer' : undefined}
               >

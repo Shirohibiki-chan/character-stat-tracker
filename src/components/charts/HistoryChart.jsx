@@ -60,7 +60,7 @@ export default function HistoryChart({ bots, onViewBot }) {
     [bots, metric, targetDate]
   )
 
-  const chartHeight = Math.max(300, data.length * 28 + 40)
+  const chartHeight = Math.max(300, data.length * 32 + 40)
 
   return (
     <section className="border border-border rounded-lg bg-surface">
@@ -104,13 +104,13 @@ export default function HistoryChart({ bots, onViewBot }) {
         <div className="p-5">
           <div style={{ height: chartHeight }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data} layout="vertical" margin={{ top: 5, right: 70, left: 0, bottom: 5 }}>
+              <BarChart data={data} layout="vertical" margin={{ top: 5, right: 80, left: 0, bottom: 5 }}>
                 <CartesianGrid horizontal={false} stroke="var(--color-border-subtle)" />
                 <XAxis
                   type="number"
                   tickFormatter={n => '+' + fmt(n)}
                   stroke="var(--color-text-muted)"
-                  style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                  style={{ fontSize: 12, fontFamily: 'Inter, system-ui, sans-serif' }}
                   axisLine={{ stroke: 'var(--color-border)' }}
                   tickLine={{ stroke: 'var(--color-border)' }}
                 />
@@ -120,7 +120,7 @@ export default function HistoryChart({ bots, onViewBot }) {
                   width={160}
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: 'var(--color-text-primary)', fontWeight: 600, fontSize: 13, fontFamily: 'Poppins, system-ui, sans-serif' }}
+                  tick={{ fill: 'var(--color-text-primary)', fontWeight: 700, fontSize: 14, fontFamily: 'Poppins, system-ui, sans-serif' }}
                 />
                 <Tooltip
                   cursor={{ fill: 'rgba(255, 255, 255, 0.03)' }}
@@ -129,11 +129,11 @@ export default function HistoryChart({ bots, onViewBot }) {
                     const d = payload[0].payload
                     return (
                       <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
-                        <div className="font-bold text-sm mb-1 truncate max-w-[200px]">{d.name}</div>
+                        <div className="font-bold text-base mb-1 truncate max-w-[220px]">{d.name}</div>
                         <div className="text-xs text-text-muted mb-1.5">
                           {fmtDate(d.prevSnapDate)} → {fmtDate(d.snapDate)}
                         </div>
-                        <div className="flex justify-between gap-6 text-xs">
+                        <div className="flex justify-between gap-6 text-sm">
                           <span className="text-text-muted">{m?.label} gain</span>
                           <span className="num font-semibold" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
                         </div>
@@ -152,7 +152,7 @@ export default function HistoryChart({ bots, onViewBot }) {
                     dataKey="_val"
                     position="right"
                     formatter={n => '+' + fmt(n)}
-                    style={{ fill: 'var(--color-text-secondary)', fontSize: 11, fontWeight: 600, fontFamily: 'Inter, system-ui, sans-serif' }}
+                    style={{ fill: 'var(--color-text-secondary)', fontSize: 13, fontWeight: 600, fontFamily: 'Inter, system-ui, sans-serif' }}
                   />
                 </Bar>
               </BarChart>

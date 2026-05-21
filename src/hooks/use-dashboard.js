@@ -68,7 +68,14 @@ export function useDashboard(bots) {
   }, [filtered, sortBy, sortDir])
 
   const totals = useMemo(() => {
-    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+    const now = new Date()
+    const dayOfWeek = now.getDay() // 0 = Sun, 1 = Mon …
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+    const weekStart = new Date(now)
+    weekStart.setHours(0, 0, 0, 0)
+    weekStart.setDate(weekStart.getDate() - daysSinceMonday)
+    const weekStartMs = weekStart.getTime()
+
     return filtered.reduce((acc, b) => {
       // Use Total-scope snapshots so weekly gain compares cumulative values only.
       const totalSnaps = b._totalSnaps
@@ -76,7 +83,7 @@ export function useDashboard(bots) {
       let baseline = null
       if (totalSnaps.length >= 2) {
         for (let i = totalSnaps.length - 2; i >= 0; i--) {
-          if (new Date(totalSnaps[i].date).getTime() <= weekAgo) { baseline = totalSnaps[i]; break }
+          if (new Date(totalSnaps[i].date).getTime() < weekStartMs) { baseline = totalSnaps[i]; break }
         }
         if (!baseline) baseline = totalSnaps[0]
       }
@@ -88,7 +95,7 @@ export function useDashboard(bots) {
         deltaChats:     acc.deltaChats     + gain('chats'),
         deltaMessages:  acc.deltaMessages  + gain('messages'),
         deltaFavorites: acc.deltaFavorites + gain('favorites'),
-        newBots: acc.newBots + (totalSnaps.length > 0 && new Date(totalSnaps[0].date).getTime() > weekAgo ? 1 : 0),
+        newBots: acc.newBots + (totalSnaps.length > 0 && new Date(totalSnaps[0].date).getTime() >= weekStartMs ? 1 : 0),
       }
     }, { chats: 0, messages: 0, favorites: 0, deltaChats: 0, deltaMessages: 0, deltaFavorites: 0, newBots: 0 })
   }, [filtered])

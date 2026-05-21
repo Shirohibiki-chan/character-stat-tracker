@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixes
+- **"This week" resets on Monday:** stat card deltas now use a calendar week (Monday midnight local time) instead of a rolling 7-day window. Numbers reset cleanly each Monday.
+
 ---
 
 ## 2026-05-20

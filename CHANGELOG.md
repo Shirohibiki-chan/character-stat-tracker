@@ -6,6 +6,7 @@
 - **"This week" resets on Monday 0 UTC:** stat card weekly deltas now use Monday midnight UTC (matching CharSnap's reset time) instead of a rolling 7-day window.
 - **"Today" delta on stat cards:** each stat card now also shows a daily gain since midnight UTC, matching CharSnap's daily reset.
 - **White flash on initial load:** the app no longer briefly flashes a white screen before the dark background loads.
+- **"1000K" / "1000M" display bug:** numbers near a tier boundary (e.g. 999,972) now correctly round up to the next unit (1.0M / 1.0B) instead of showing "1000K" or "1000M".
 
 ---
 

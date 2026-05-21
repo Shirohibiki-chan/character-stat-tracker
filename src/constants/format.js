@@ -4,9 +4,9 @@
 export function fmt(n) {
   if (n == null || Number.isNaN(n)) return '—'
   const abs = Math.abs(n)
-  if (abs >= 1e9) return parseFloat((n / 1e9).toFixed(1)) + 'B'
-  if (abs >= 1e6) return parseFloat((n / 1e6).toFixed(1)) + 'M'
-  if (abs >= 1e3) return parseFloat((n / 1e3).toFixed(1)) + 'K'
+  if (abs >= 999_950_000) return parseFloat((n / 1e9).toFixed(1)) + 'B'
+  if (abs >= 999_950)     return parseFloat((n / 1e6).toFixed(1)) + 'M'
+  if (abs >= 1e3)         return parseFloat((n / 1e3).toFixed(1)) + 'K'
   return String(n)
 }
 

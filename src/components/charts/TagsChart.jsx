@@ -79,7 +79,7 @@ export default function TagsChart({ bots, onTagClick }) {
                 type="number"
                 tickFormatter={fmt}
                 stroke="var(--color-text-muted)"
-                style={{ fontSize: 12, fontFamily: 'Inter, system-ui, sans-serif' }}
+                style={{ fontSize: 12, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
                 axisLine={{ stroke: 'var(--color-border)' }}
                 tickLine={{ stroke: 'var(--color-border)' }}
               />
@@ -89,7 +89,7 @@ export default function TagsChart({ bots, onTagClick }) {
                 width={160}
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: 'var(--color-text-primary)', fontWeight: 700, fontSize: 14, fontFamily: 'Poppins, system-ui, sans-serif' }}
+                tick={{ fill: 'var(--color-text-primary)', fontWeight: 700, fontSize: 13, fontFamily: 'Poppins, system-ui, sans-serif' }}
                 onClick={onTagClick ? e => onTagClick(e.value) : undefined}
                 style={{ cursor: onTagClick ? 'pointer' : 'default' }}
               />
@@ -125,7 +125,7 @@ export default function TagsChart({ bots, onTagClick }) {
                   dataKey="_val"
                   position="right"
                   formatter={fmt}
-                  style={{ fill: 'var(--color-text-secondary)', fontSize: 13, fontWeight: 600, fontFamily: 'Inter, system-ui, sans-serif' }}
+                  style={{ fill: 'var(--color-text-primary)', fontSize: 13, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
                 />
               </Bar>
             </BarChart>

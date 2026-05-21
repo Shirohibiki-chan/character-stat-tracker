@@ -80,9 +80,10 @@ export default function RankingChart({ bots, onViewBot }) {
               <YAxis
                 type="category"
                 dataKey="name"
-                width={160}
+                width={180}
                 axisLine={false}
                 tickLine={false}
+                tickFormatter={n => n.length > 22 ? n.slice(0, 21) + '…' : n}
                 tick={{ fill: 'var(--color-text-primary)', fontWeight: 700, fontSize: 13, fontFamily: 'Poppins, system-ui, sans-serif' }}
               />
               <Tooltip

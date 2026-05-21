@@ -4,7 +4,7 @@ import {
   BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, ResponsiveContainer,
 } from 'recharts'
 import { METRICS } from '../../constants/metrics.js'
-import { getAura } from '../../constants/auras.js'
+import { getBarColor } from '../../constants/auras.js'
 import { fmt, fmtFull } from '../../constants/format.js'
 
 function computeTagAggregates(bots, metric) {
@@ -30,24 +30,20 @@ function computeTagAggregates(bots, metric) {
 
 function ClickableTick({ x, y, value, onTagClick }) {
   return (
-    <g
-      transform={`translate(${x},${y})`}
+    <text
+      x={x}
+      y={y}
+      dy={4}
+      textAnchor="end"
+      fill="var(--color-text-primary)"
+      fontWeight={600}
+      fontSize={13}
+      fontFamily="Poppins, system-ui, sans-serif"
       onClick={() => onTagClick?.(value)}
       style={{ cursor: onTagClick ? 'pointer' : 'default' }}
     >
-      <text
-        x={0}
-        y={0}
-        dy={4}
-        textAnchor="end"
-        fill="var(--color-text-primary)"
-        fontWeight={600}
-        fontSize={13}
-        fontFamily="Poppins, system-ui, sans-serif"
-      >
-        {value}
-      </text>
-    </g>
+      {value}
+    </text>
   )
 }
 
@@ -141,7 +137,7 @@ export default function TagsChart({ bots, onTagClick }) {
                 onClick={onTagClick ? d => onTagClick(d.tag) : undefined}
                 className={onTagClick ? 'cursor-pointer' : undefined}
               >
-                {data.map(d => <Cell key={d.tag} fill={getAura(d.tag)} />)}
+                {data.map(d => <Cell key={d.tag} fill={getBarColor(d.tag)} />)}
                 <LabelList
                   dataKey="_val"
                   position="right"

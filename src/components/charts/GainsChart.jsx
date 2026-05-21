@@ -4,7 +4,7 @@ import {
   BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, ResponsiveContainer,
 } from 'recharts'
 import { METRICS } from '../../constants/metrics.js'
-import { getAura } from '../../constants/auras.js'
+import { getBarColor } from '../../constants/auras.js'
 import { fmt, fmtFull, fmtDate } from '../../constants/format.js'
 
 const WINDOWS = [
@@ -158,7 +158,7 @@ export default function GainsChart({ bots, onViewBot }) {
                 onClick={d => onViewBot?.(d.id)}
                 className="cursor-pointer"
               >
-                {data.map(d => <Cell key={d.id} fill={getAura(d.id)} />)}
+                {data.map(d => <Cell key={d.id} fill={getBarColor(d.id)} />)}
                 <LabelList
                   dataKey="_val"
                   position="right"

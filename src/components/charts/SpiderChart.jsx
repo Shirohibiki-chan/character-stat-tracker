@@ -134,9 +134,13 @@ function BotPicker({ bots, value, onChange, placeholder, excludeIds = [] }) {
 
 // ─── Pure SVG mini radar (gallery cards) ────────────────────────────────────
 
+// Short axis labels — same order as AXES
+const MINI_LABELS = ['Solo', 'Group', 'Thrd', 'Favs', 'Avg/d', 'F/1K']
+
 function MiniSpider({ normValues, color }) {
   const N = AXES.length
-  const cx = 70, cy = 70, r = 50
+  // 160×160 viewBox gives enough room for axis labels around the outside
+  const cx = 80, cy = 80, r = 50, LABEL_R = 63
 
   function ang(i) {
     return (i / N) * 2 * Math.PI - Math.PI / 2
@@ -156,7 +160,7 @@ function MiniSpider({ normValues, color }) {
   }).join(' ')
 
   return (
-    <svg width="140" height="140" viewBox="0 0 140 140" aria-hidden="true">
+    <svg width="160" height="160" viewBox="0 0 160 160" aria-hidden="true">
       {[0.25, 0.5, 0.75, 1].map(level => (
         <polygon
           key={level}
@@ -198,6 +202,31 @@ function MiniSpider({ normValues, color }) {
             r={2.5}
             fill={color}
           />
+        )
+      })}
+      {/* Axis labels */}
+      {MINI_LABELS.map((label, i) => {
+        const a = ang(i)
+        const cosA = Math.cos(a)
+        const sinA = Math.sin(a)
+        const lx = cx + LABEL_R * cosA
+        const ly = cy + LABEL_R * sinA
+        const anchor = cosA > 0.4 ? 'start' : cosA < -0.4 ? 'end' : 'middle'
+        const dy = sinA < -0.3 ? '0em' : sinA > 0.3 ? '0.85em' : '0.35em'
+        return (
+          <text
+            key={i}
+            x={lx}
+            y={ly}
+            textAnchor={anchor}
+            dy={dy}
+            fontSize={8.5}
+            fontWeight={700}
+            fontFamily="Inter, system-ui, sans-serif"
+            fill="rgba(255,255,255,0.45)"
+          >
+            {label}
+          </text>
         )
       })}
     </svg>

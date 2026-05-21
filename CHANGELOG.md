@@ -3,6 +3,10 @@
 ## 2026-05-21
 
 ### Additions
+- **Spider chart view:** new "Spider" tab replaces Treemap with a radar/spider chart. Six axes per bot: Solo messages, Group messages, Threads, Favorites, Avg messages per day, and Favorites per 1K messages. All axes are normalized to the highest value in your current bot list, so shapes are visually comparable across bots. Two modes:
+  - **Gallery** (default) — one mini spider per bot in a responsive grid, sorted by total messages. Click any card to open bot details.
+  - **Single** — pick a primary bot, then add up to 3 comparison overlays. Each bot gets a distinct color; fills are semi-transparent so layered shapes stay readable. Hover any vertex to see that bot's raw value for that axis.
+  - Selected bots in Single mode are remembered when you switch tabs and come back.
 - **Date arrows on Top gainers chart:** ‹ and › arrow buttons now flank the date picker, so you can step through dates one day at a time without opening the calendar.
 
 ### Fixes

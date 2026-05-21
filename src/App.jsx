@@ -17,7 +17,7 @@ import GainsChart from './components/charts/GainsChart.jsx'
 import HistoryChart from './components/charts/HistoryChart.jsx'
 import TagsChart from './components/charts/TagsChart.jsx'
 import ScatterPlot from './components/charts/ScatterPlot.jsx'
-import TreemapChart from './components/charts/TreemapChart.jsx'
+import SpiderChart from './components/charts/SpiderChart.jsx'
 import AddBotModal from './components/modals/AddBotModal.jsx'
 import AddSnapshotModal from './components/modals/AddSnapshotModal.jsx'
 import EditBotModal from './components/modals/EditBotModal.jsx'
@@ -50,6 +50,8 @@ export default function App() {
   const [showBackup, setShowBackup] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [showChangelog, setShowChangelog] = useState(false)
+  const [spiderMode, setSpiderMode] = useState('gallery')
+  const [spiderSelectedIds, setSpiderSelectedIds] = useState([])
   const [adding, setAdding] = useState(false)
   const [detailBotId, setDetailBotId] = useState(null)
   const [editingBotId, setEditingBotId] = useState(null)
@@ -384,7 +386,16 @@ export default function App() {
             {activeView === 'history'  && <HistoryChart bots={sorted} onViewBot={setDetailBotId} />}
             {activeView === 'tags'     && <TagsChart bots={sorted} onTagClick={handleTagClick} />}
             {activeView === 'scatter'  && <ScatterPlot bots={sorted} onViewBot={setDetailBotId} />}
-            {activeView === 'treemap'  && <TreemapChart bots={sorted} onViewBot={setDetailBotId} />}
+            {activeView === 'spider'   && (
+              <SpiderChart
+                bots={sorted}
+                onViewBot={setDetailBotId}
+                mode={spiderMode}
+                setMode={setSpiderMode}
+                selectedIds={spiderSelectedIds}
+                setSelectedIds={setSpiderSelectedIds}
+              />
+            )}
           </>
         )}
 

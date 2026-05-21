@@ -14,7 +14,7 @@ const TOP_N = [
   { label: 'All', n: 0 },
 ]
 
-function buildData(bots, metric, relative, topN) {
+function buildData(bots, metric, relative, topN, cohortMode) {
   const allEligible = bots
     .map(bot => {
       const totalSnaps = (bot.snapshots || [])
@@ -33,19 +33,37 @@ function buildData(bots, metric, relative, topN) {
 
   if (eligible.length === 0) return { data: [], eligibleBots: [], totalEligible: 0 }
 
-  const dateSet = new Set()
+  const xSet = new Set()
   eligible.forEach(({ totalSnaps }) => {
-    totalSnaps.forEach(s => dateSet.add(new Date(s.date).getTime()))
+    if (cohortMode) {
+      const firstTs = new Date(totalSnaps[0].date).getTime()
+      totalSnaps.forEach(s => {
+        xSet.add(Math.round((new Date(s.date).getTime() - firstTs) / 86400000))
+      })
+    } else {
+      totalSnaps.forEach(s => xSet.add(new Date(s.date).getTime()))
+    }
   })
-  const dates = [...dateSet].sort((a, b) => a - b)
+  const xs = [...xSet].sort((a, b) => a - b)
 
-  const data = dates.map(ts => {
-    const entry = { date: ts }
+  const data = xs.map(x => {
+    const entry = { date: x }
     eligible.forEach(({ bot, totalSnaps }) => {
-      const snap = totalSnaps.find(s => new Date(s.date).getTime() === ts)
-      if (snap !== undefined) {
-        const base = relative ? (totalSnaps[0][metric] ?? 0) : 0
-        entry[bot.id] = (snap[metric] ?? 0) - base
+      if (cohortMode) {
+        const firstTs = new Date(totalSnaps[0].date).getTime()
+        const snap = totalSnaps.find(s =>
+          Math.round((new Date(s.date).getTime() - firstTs) / 86400000) === x
+        )
+        if (snap !== undefined) {
+          const base = relative ? (totalSnaps[0][metric] ?? 0) : 0
+          entry[bot.id] = (snap[metric] ?? 0) - base
+        }
+      } else {
+        const snap = totalSnaps.find(s => new Date(s.date).getTime() === x)
+        if (snap !== undefined) {
+          const base = relative ? (totalSnaps[0][metric] ?? 0) : 0
+          entry[bot.id] = (snap[metric] ?? 0) - base
+        }
       }
     })
     return entry
@@ -61,10 +79,12 @@ function buildData(bots, metric, relative, topN) {
   }
 }
 
-function OverlayTooltip({ active, payload, label, relative }) {
+function OverlayTooltip({ active, payload, label, relative, cohortMode }) {
   if (!active || !payload?.length) return null
 
-  const date = new Date(label).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  const date = cohortMode
+    ? `Day ${label}`
+    : new Date(label).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
   const present = payload
     .filter(p => p.value != null)
     .sort((a, b) => (b.value ?? 0) - (a.value ?? 0))
@@ -95,6 +115,7 @@ export default function OverlayChart({ bots, onViewBot }) {
     const n = saved ? Number(saved) : 10
     return TOP_N.some(t => t.n === n) ? n : 10
   })
+  const [cohortMode, setCohortMode] = useState(false)
 
   const handleSetTopN = (n) => {
     setTopN(n)
@@ -102,8 +123,8 @@ export default function OverlayChart({ bots, onViewBot }) {
   }
 
   const { data, eligibleBots, totalEligible } = useMemo(
-    () => buildData(bots, metric, relative, topN),
-    [bots, metric, relative, topN]
+    () => buildData(bots, metric, relative, topN, cohortMode),
+    [bots, metric, relative, topN, cohortMode]
   )
 
   const metricObj = METRICS.find(m => m.key === metric)
@@ -129,6 +150,7 @@ export default function OverlayChart({ bots, onViewBot }) {
             : `Top ${eligibleBots.length} of ${totalEligible}`
           } · {metricObj?.label}
           {relative && <span className="text-text-muted text-xs ml-1">(growth from first snapshot)</span>}
+          {cohortMode && !relative && <span className="text-text-muted text-xs ml-1">(days since first capture)</span>}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
@@ -158,6 +180,20 @@ export default function OverlayChart({ bots, onViewBot }) {
             </button>
           </div>
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
+            <button
+              onClick={() => setCohortMode(false)}
+              className={`px-2.5 py-1 text-xs font-semibold rounded transition ${!cohortMode ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+            >
+              Calendar
+            </button>
+            <button
+              onClick={() => setCohortMode(true)}
+              className={`px-2.5 py-1 text-xs font-semibold rounded transition ${cohortMode ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+            >
+              Cohort
+            </button>
+          </div>
+          <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
             {TOP_N.map(t => (
               <button
                 key={t.n}
@@ -179,12 +215,14 @@ export default function OverlayChart({ bots, onViewBot }) {
                 dataKey="date"
                 type="number"
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={ts => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                tickFormatter={cohortMode
+                  ? d => `Day ${d}`
+                  : ts => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 stroke="var(--color-text-muted)"
                 style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
                 axisLine={{ stroke: 'var(--color-border)' }}
                 tickLine={{ stroke: 'var(--color-border)' }}
-                scale="time"
+                scale={cohortMode ? 'linear' : 'time'}
               />
               <YAxis
                 tickFormatter={fmt}
@@ -196,7 +234,7 @@ export default function OverlayChart({ bots, onViewBot }) {
               />
               <Tooltip
                 content={(props) => (
-                  <OverlayTooltip {...props} eligibleBots={eligibleBots} relative={relative} />
+                  <OverlayTooltip {...props} eligibleBots={eligibleBots} relative={relative} cohortMode={cohortMode} />
                 )}
               />
               {eligibleBots.map(bot => (

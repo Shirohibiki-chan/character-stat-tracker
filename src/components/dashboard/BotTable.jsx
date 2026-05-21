@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Pencil, Camera, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
+import { Pencil, ClipboardPlus, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 import { METRICS } from '../../constants/metrics.js'
 import { getAura } from '../../constants/auras.js'
 import { fmt, fmtFull, fmtRelative } from '../../constants/format.js'
@@ -96,13 +96,17 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                       <span className="text-text-muted text-xs num w-6 shrink-0">{idx + 1}</span>
                       <div className="relative shrink-0">
                         {bot.avatar ? (
-                          <img
-                            src={bot.avatar}
-                            alt=""
-                            className="w-8 h-8 rounded-full object-cover"
+                          <div
+                            className="w-8 h-8 rounded-full overflow-hidden"
                             style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
-                            onError={e => { e.target.style.display = 'none' }}
-                          />
+                          >
+                            <img
+                              src={bot.avatar}
+                              alt=""
+                              className="w-full h-full object-cover"
+                              onError={e => { e.target.parentElement.style.display = 'none' }}
+                            />
+                          </div>
                         ) : (
                           <div
                             className="w-8 h-8 rounded-full flex items-center justify-center text-text-secondary text-xs font-bold"
@@ -227,7 +231,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                           className="p-1.5 text-text-muted hover:text-accent-light hover:bg-surface-alt rounded transition"
                           title="Add snapshot"
                         >
-                          <Camera size={13} />
+                          <ClipboardPlus size={13} />
                         </button>
                         <button
                           onClick={() => setConfirmDeleteId(bot.id)}

@@ -1,14 +1,16 @@
 import { fmt } from '../../constants/format.js'
 
-export default function StatCard({ label, value, card, icon: Icon, gradient, delta }) {
+export default function StatCard({ label, value, card, icon: Icon, gradient, delta, deltaDay }) {
   const bg           = card?.bg       ?? 'var(--color-surface)'
   const border       = card?.border   ?? 'var(--color-border)'
   const labelColor   = card?.label    ?? 'var(--color-text-tertiary)'
   const numberColor  = card?.number   ?? 'var(--color-text-primary)'
   const cardGradient = card?.gradient ?? gradient ?? null
 
-  const showDelta = delta != null && delta !== 0
-  const deltaColor = delta > 0 ? 'var(--color-positive)' : 'var(--color-negative)'
+  const showDelta    = delta    != null && delta    !== 0
+  const showDeltaDay = deltaDay != null && deltaDay !== 0
+  const deltaColor    = delta    > 0 ? 'var(--color-positive)' : 'var(--color-negative)'
+  const deltaDayColor = deltaDay > 0 ? 'var(--color-positive)' : 'var(--color-negative)'
 
   return (
     <div
@@ -56,6 +58,14 @@ export default function StatCard({ label, value, card, icon: Icon, gradient, del
             style={{ fontFamily: 'var(--table-text-font)', color: deltaColor }}
           >
             {delta > 0 ? '+' : ''}{fmt(delta)} this week
+          </div>
+        )}
+        {showDeltaDay && (
+          <div
+            className="text-[11px] font-semibold mt-0.5"
+            style={{ fontFamily: 'var(--table-text-font)', color: deltaDayColor }}
+          >
+            {deltaDay > 0 ? '+' : ''}{fmt(deltaDay)} today
           </div>
         )}
       </div>

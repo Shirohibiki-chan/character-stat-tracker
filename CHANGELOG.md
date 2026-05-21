@@ -3,7 +3,8 @@
 ## [Unreleased]
 
 ### Fixes
-- **"This week" resets on Monday:** stat card deltas now use a calendar week (Monday midnight local time) instead of a rolling 7-day window. Numbers reset cleanly each Monday.
+- **"This week" resets on Monday 0 UTC:** stat card weekly deltas now use Monday midnight UTC (matching CharSnap's reset time) instead of a rolling 7-day window.
+- **"Today" delta on stat cards:** each stat card now also shows a daily gain since midnight UTC, matching CharSnap's daily reset.
 
 ---
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Pencil, ClipboardPlus, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 import { METRICS } from '../../constants/metrics.js'
 import { getAura } from '../../constants/auras.js'
@@ -24,6 +24,8 @@ function SortHeader({ label, active, dir, onClick, className = '', style }) {
 
 export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBot, onEditBot, onAddSnapshot, onDeleteBot, selectMode, selectedIds, onToggleSelect }) {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null)
+  const hasBreakdown = useMemo(() => sorted.some(b => b.messagesGroup != null), [sorted])
+  const msgMetric = useMemo(() => METRICS.find(m => m.key === 'messages'), [])
 
   return (
     <section className="border border-border rounded-lg overflow-hidden">
@@ -39,17 +41,33 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                 dir={sortDir}
                 onClick={() => toggleSort('name')}
               />
-              {METRICS.map(m => (
-                <SortHeader
-                  key={m.key}
-                  className="text-right"
-                  label={m.label}
-                  active={sortBy === m.key}
-                  dir={sortDir}
-                  onClick={() => toggleSort(m.key)}
-                  style={{ background: m.headerTint }}
-                />
-              ))}
+              {METRICS.flatMap(m => {
+                const header = (
+                  <SortHeader
+                    key={m.key}
+                    className="text-right"
+                    label={m.label}
+                    active={sortBy === m.key}
+                    dir={sortDir}
+                    onClick={() => toggleSort(m.key)}
+                    style={{ background: m.headerTint }}
+                  />
+                )
+                if (m.key === 'messages' && hasBreakdown) {
+                  return [header, (
+                    <SortHeader
+                      key="messagesGroup"
+                      className="text-right"
+                      label="Group"
+                      active={sortBy === 'messagesGroup'}
+                      dir={sortDir}
+                      onClick={() => toggleSort('messagesGroup')}
+                      style={{ background: msgMetric?.headerTint }}
+                    />
+                  )]
+                }
+                return [header]
+              })}
               <SortHeader
                 className="text-right hidden md:table-cell"
                 label="Updated"
@@ -66,7 +84,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
           <tbody>
             {sorted.length === 0 && (
               <tr>
-                <td colSpan={selectMode ? 8 : 7} className="text-center py-12 text-text-muted text-sm">
+                <td colSpan={(selectMode ? 8 : 7) + (hasBreakdown ? 1 : 0)} className="text-center py-12 text-text-muted text-sm">
                   No bots match your filters.
                 </td>
               </tr>
@@ -145,10 +163,10 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                       </div>
                     </div>
                   </td>
-                  {METRICS.map(m => {
+                  {METRICS.flatMap(m => {
                     const deltaKey = `delta${m.key[0].toUpperCase()}${m.key.slice(1)}`
                     const delta = bot[deltaKey]
-                    return (
+                    const cell = (
                       <td
                         key={m.key}
                         className="py-3 px-3 text-right"
@@ -171,6 +189,31 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                         )}
                       </td>
                     )
+                    if (m.key === 'messages' && hasBreakdown) {
+                      return [cell, (
+                        <td
+                          key="messagesGroup"
+                          className="py-3 px-3 text-right"
+                          style={{ background: msgMetric?.rowTint }}
+                        >
+                          <div
+                            className="leading-none"
+                            style={{
+                              fontFamily: 'var(--table-nums-font)',
+                              fontWeight: 'var(--table-nums-weight)',
+                              fontSize: 'var(--table-size)',
+                              color: 'var(--color-table-nums)',
+                            }}
+                          >
+                            {bot.messagesGroup != null ? fmt(bot.messagesGroup) : '—'}
+                          </div>
+                          {bot.deltaMessagesGroup > 0 && (
+                            <div className="text-[10px] num" style={{ color: msgMetric?.color }}>+{fmt(bot.deltaMessagesGroup)}</div>
+                          )}
+                        </td>
+                      )]
+                    }
+                    return [cell]
                   })}
                   <td
                     className="py-3 px-3 text-right whitespace-nowrap hidden md:table-cell"

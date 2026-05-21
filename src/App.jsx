@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart, Settings2, Database, Newspaper, Bot, LayoutList, LayoutGrid, X } from 'lucide-react'
+import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart, Cog, Database, Newspaper, Bot, LayoutList, LayoutGrid, X } from 'lucide-react'
 import { useBots } from './hooks/use-bots.js'
 import { useDashboard } from './hooks/use-dashboard.js'
 import { usePagination } from './hooks/use-pagination.js'
@@ -161,7 +161,7 @@ export default function App() {
               className="p-2 text-text-muted hover:text-text-secondary transition"
               title="Settings"
             >
-              <Settings2 size={15} />
+              <Cog size={15} />
             </button>
             <button
               onClick={() => setShowBackup(true)}

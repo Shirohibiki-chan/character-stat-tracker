@@ -8,6 +8,9 @@
 
 ### Fixes
 - **Chart focus outline:** clicking bars on the Ranking, History, Gains, and Tags charts no longer shows a white box outline.
+- **PFP squish on load:** avatars in the bot table no longer briefly distort when the page refreshes; wrapped the image in an overflow-hidden container so it's always properly clipped.
+- **Settings icon:** changed to a plain gear (was a different settings-style icon).
+- **Snapshot icon:** table snapshot button no longer uses the camera icon (reserved for changing PFP); now shows a clipboard-plus icon.
 
 ---
 

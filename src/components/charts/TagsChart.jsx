@@ -101,7 +101,7 @@ export default function TagsChart({ bots, onTagClick }) {
                   return (
                     <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
                       <div className="font-bold text-base mb-1">#{d.tag}</div>
-                      <div className="text-xs text-text-muted mb-2">
+                      <div className="text-xs text-text-secondary font-medium mb-2">
                         {d.botCount} {d.botCount === 1 ? 'bot' : 'bots'}
                       </div>
                       {METRICS.map(mx => (

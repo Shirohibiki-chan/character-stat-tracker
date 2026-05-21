@@ -7,8 +7,15 @@ import { METRICS } from '../../constants/metrics.js'
 import { getAura } from '../../constants/auras.js'
 import { fmt } from '../../constants/format.js'
 
-function buildData(bots, metric, relative) {
-  const eligible = bots
+const TOP_N = [
+  { label: '10', n: 10 },
+  { label: '15', n: 15 },
+  { label: '25', n: 25 },
+  { label: 'All', n: 0 },
+]
+
+function buildData(bots, metric, relative, topN) {
+  const allEligible = bots
     .map(bot => {
       const totalSnaps = (bot.snapshots || [])
         .filter(s => s.scope === 'Total')
@@ -16,8 +23,15 @@ function buildData(bots, metric, relative) {
       return { bot, totalSnaps }
     })
     .filter(({ totalSnaps }) => totalSnaps.length >= 1)
+    .sort((a, b) => {
+      const aVal = a.totalSnaps[a.totalSnaps.length - 1][metric] ?? 0
+      const bVal = b.totalSnaps[b.totalSnaps.length - 1][metric] ?? 0
+      return bVal - aVal
+    })
 
-  if (eligible.length === 0) return { data: [], eligibleBots: [] }
+  const eligible = topN === 0 ? allEligible : allEligible.slice(0, topN)
+
+  if (eligible.length === 0) return { data: [], eligibleBots: [], totalEligible: 0 }
 
   const dateSet = new Set()
   eligible.forEach(({ totalSnaps }) => {
@@ -43,6 +57,7 @@ function buildData(bots, metric, relative) {
       ...bot,
       color: getAura(bot.id),
     })),
+    totalEligible: allEligible.length,
   }
 }
 
@@ -75,10 +90,11 @@ function OverlayTooltip({ active, payload, label, relative }) {
 export default function OverlayChart({ bots, onViewBot }) {
   const [metric, setMetric] = useState('messages')
   const [relative, setRelative] = useState(false)
+  const [topN, setTopN] = useState(10)
 
-  const { data, eligibleBots } = useMemo(
-    () => buildData(bots, metric, relative),
-    [bots, metric, relative]
+  const { data, eligibleBots, totalEligible } = useMemo(
+    () => buildData(bots, metric, relative, topN),
+    [bots, metric, relative, topN]
   )
 
   const metricObj = METRICS.find(m => m.key === metric)
@@ -99,7 +115,10 @@ export default function OverlayChart({ bots, onViewBot }) {
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
         <div className="flex items-center gap-2 text-sm text-text-secondary">
           <TrendingUp size={16} className="text-accent opacity-60" />
-          {eligibleBots.length} bot{eligibleBots.length !== 1 ? 's' : ''} · {metricObj?.label}
+          {topN === 0 || eligibleBots.length >= totalEligible
+            ? `${eligibleBots.length} bot${eligibleBots.length !== 1 ? 's' : ''}`
+            : `Top ${eligibleBots.length} of ${totalEligible}`
+          } · {metricObj?.label}
           {relative && <span className="text-text-muted text-xs ml-1">(growth from first snapshot)</span>}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -128,6 +147,17 @@ export default function OverlayChart({ bots, onViewBot }) {
             >
               Growth
             </button>
+          </div>
+          <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
+            {TOP_N.map(t => (
+              <button
+                key={t.n}
+                onClick={() => setTopN(t.n)}
+                className={`px-2.5 py-1 text-xs rounded transition ${topN === t.n ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+              >
+                {t.label}
+              </button>
+            ))}
           </div>
         </div>
       </div>

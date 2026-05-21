@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Fixes
-- **Chart header text thin:** section titles on all charts (Ranking, Gains, History, Tags, Overlay) are now bold.
+- **Chart header text thin:** section titles and all control button labels on every chart are now bolder (section titles: semibold; button labels: medium weight).
 - **Bot names wrapping on bar charts:** names longer than 22 characters are now truncated with an ellipsis on the Y-axis of all bar charts so no name ever wraps to two lines. Label column widened to fit.
 - **Overlay chart legend cramped:** the bot name legend below the overlay chart no longer sits in a tiny scrollable box; names now wrap freely.
 

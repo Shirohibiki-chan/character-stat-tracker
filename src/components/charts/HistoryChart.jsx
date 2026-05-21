@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Calendar } from 'lucide-react'
+import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import {
   BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, ResponsiveContainer,
 } from 'recharts'
@@ -56,6 +56,12 @@ export default function HistoryChart({ bots, onViewBot }) {
 
   const m = METRICS.find(mx => mx.key === metric)
 
+  function stepDate(delta) {
+    const d = new Date(targetDate + 'T12:00:00')
+    d.setDate(d.getDate() + delta)
+    setTargetDate(d.toISOString().slice(0, 10))
+  }
+
   const hasBreakdown = useMemo(
     () => bots.some(b => (b.snapshots || []).some(s => s.messagesGroup != null)),
     [bots]
@@ -106,12 +112,28 @@ export default function HistoryChart({ bots, onViewBot }) {
               ))}
             </div>
           )}
-          <input
-            type="date"
-            value={targetDate}
-            onChange={e => setTargetDate(e.target.value)}
-            className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus:border-accent/50"
-          />
+          <div className="flex items-center bg-surface-alt border border-border rounded overflow-hidden">
+            <button
+              onClick={() => stepDate(-1)}
+              className="px-1.5 py-1 text-text-muted hover:text-text-secondary hover:bg-surface transition"
+              aria-label="Previous day"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <input
+              type="date"
+              value={targetDate}
+              onChange={e => setTargetDate(e.target.value)}
+              className="bg-transparent text-xs text-text-secondary focus:outline-none px-1 py-1"
+            />
+            <button
+              onClick={() => stepDate(1)}
+              className="px-1.5 py-1 text-text-muted hover:text-text-secondary hover:bg-surface transition"
+              aria-label="Next day"
+            >
+              <ChevronRight size={14} />
+            </button>
+          </div>
         </div>
       </div>
 

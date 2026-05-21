@@ -2,6 +2,9 @@
 
 ## 2026-05-21
 
+### Additions
+- **Date arrows on Top gainers chart:** ‹ and › arrow buttons now flank the date picker, so you can step through dates one day at a time without opening the calendar.
+
 ### Fixes
 - **Full numbers in snapshot history:** the Messages, Threads, and Favorites columns in a bot's snapshot table now show full comma-formatted numbers (e.g. 3,100,000) instead of the abbreviated shorthand (3.1M).
 - **Stat card delta colors:** the "today" delta line on each stat tile is now orange (matching the table number color) instead of the same green as the "this week" line, so the two are easier to tell apart at a glance. Negative deltas remain red.

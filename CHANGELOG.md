@@ -2,6 +2,9 @@
 
 ## 2026-05-21
 
+### Fixes
+- **Full numbers in snapshot history:** the Messages, Threads, and Favorites columns in a bot's snapshot table now show full comma-formatted numbers (e.g. 3,100,000) instead of the abbreviated shorthand (3.1M).
+
 ### Additions
 - **Solo and Group columns in bot table:** when any of your bots has group chat breakdown data, two columns appear next to Messages — Solo and Group — showing the split counts and gains since the previous snapshot. Both are sortable. The columns are hidden entirely when no breakdown data exists.
 

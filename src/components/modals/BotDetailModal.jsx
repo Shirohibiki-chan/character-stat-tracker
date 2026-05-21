@@ -465,9 +465,9 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                 {[...sortedSnaps].reverse().map(s => (
                   <tr key={s.id} className="border-b border-border-subtle hover:bg-surface-alt/50">
                     <td className="py-2 px-4 text-xs text-text-secondary font-semibold">{fmtDate(s.date)}</td>
-                    <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.messages)}</td>
-                    <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.chats)}</td>
-                    <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.favorites)}</td>
+                    <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmtFull(s.messages)}</td>
+                    <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmtFull(s.chats)}</td>
+                    <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmtFull(s.favorites)}</td>
                     <td className="py-2 px-3 text-right text-[10px] text-text-secondary font-medium">{s.scope || ''}</td>
                     <td className="py-2 px-3 text-right">
                       {confirmDeleteSnap === s.id ? (

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Additions
+- **Scatter plot view:** new "Scatter" tab plots every bot as a dot — pick any two metrics for the X and Y axes. Dashed lines mark the averages, dividing bots into four zones (e.g. high messages + high favorites = popular and loved). Click any dot to open that bot's detail.
+- **Treemap view:** new "Treemap" tab fills the screen with one box per bot, sized by the selected metric, so you can see at a glance which bots dominate your collection. Click any box to open that bot's detail.
+
 ### Fixes
 - **Body font not loading:** Quicksand (the intended body font) was missing from the Google Fonts import, causing all UI text to fall back to the system font. Text now renders in Quicksand as designed.
 - **Chart header text thin:** section titles and all control button labels on every chart are now bolder (section titles: semibold; button labels: medium weight).

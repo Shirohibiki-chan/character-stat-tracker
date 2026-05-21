@@ -5,4 +5,6 @@ export const VIEWS = [
   { id: 'gains',    label: 'Gains'    },
   { id: 'history',  label: 'History'  },
   { id: 'tags',     label: 'Tags'     },
+  { id: 'scatter',  label: 'Scatter'  },
+  { id: 'treemap',  label: 'Treemap'  },
 ]

@@ -16,6 +16,8 @@ import RankingChart from './components/charts/RankingChart.jsx'
 import GainsChart from './components/charts/GainsChart.jsx'
 import HistoryChart from './components/charts/HistoryChart.jsx'
 import TagsChart from './components/charts/TagsChart.jsx'
+import ScatterPlot from './components/charts/ScatterPlot.jsx'
+import TreemapChart from './components/charts/TreemapChart.jsx'
 import AddBotModal from './components/modals/AddBotModal.jsx'
 import AddSnapshotModal from './components/modals/AddSnapshotModal.jsx'
 import EditBotModal from './components/modals/EditBotModal.jsx'
@@ -381,6 +383,8 @@ export default function App() {
             {activeView === 'gains'    && <GainsChart bots={sorted} onViewBot={setDetailBotId} />}
             {activeView === 'history'  && <HistoryChart bots={sorted} onViewBot={setDetailBotId} />}
             {activeView === 'tags'     && <TagsChart bots={sorted} onTagClick={handleTagClick} />}
+            {activeView === 'scatter'  && <ScatterPlot bots={sorted} onViewBot={setDetailBotId} />}
+            {activeView === 'treemap'  && <TreemapChart bots={sorted} onViewBot={setDetailBotId} />}
           </>
         )}
       </div>

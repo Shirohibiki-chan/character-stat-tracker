@@ -68,29 +68,53 @@ export function useDashboard(bots) {
   }, [filtered, sortBy, sortDir])
 
   const totals = useMemo(() => {
-    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+    const now = new Date()
+    // Both anchors use UTC to match CharSnap's reset times.
+    const utcDay = now.getUTCDay() // 0 = Sun, 1 = Mon …
+    const daysSinceMonday = utcDay === 0 ? 6 : utcDay - 1
+    const weekStartMs = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - daysSinceMonday)
+    const todayStartMs = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+
     return filtered.reduce((acc, b) => {
-      // Use Total-scope snapshots so weekly gain compares cumulative values only.
+      // Use Total-scope snapshots so weekly/daily gain compares cumulative values only.
       const totalSnaps = b._totalSnaps
       const latest = totalSnaps.length ? totalSnaps[totalSnaps.length - 1] : null
-      let baseline = null
+
+      let weekBaseline = null
+      let dayBaseline = null
       if (totalSnaps.length >= 2) {
         for (let i = totalSnaps.length - 2; i >= 0; i--) {
-          if (new Date(totalSnaps[i].date).getTime() <= weekAgo) { baseline = totalSnaps[i]; break }
+          const t = new Date(totalSnaps[i].date).getTime()
+          if (dayBaseline === null && t < todayStartMs) dayBaseline = totalSnaps[i]
+          if (weekBaseline === null && t < weekStartMs) weekBaseline = totalSnaps[i]
+          if (dayBaseline !== null && weekBaseline !== null) break
         }
-        if (!baseline) baseline = totalSnaps[0]
+        if (!weekBaseline) weekBaseline = totalSnaps[0]
+        if (!dayBaseline) dayBaseline = totalSnaps[0]
       }
-      const gain = (key) => latest && baseline ? (latest[key] ?? 0) - (baseline[key] ?? 0) : 0
+
+      const gain     = (key) => latest && weekBaseline ? (latest[key] ?? 0) - (weekBaseline[key] ?? 0) : 0
+      const gainDay  = (key) => latest && dayBaseline  ? (latest[key] ?? 0) - (dayBaseline[key]  ?? 0) : 0
+
       return {
-        chats:          acc.chats     + (b.chats     || 0),
-        messages:       acc.messages  + (b.messages  || 0),
-        favorites:      acc.favorites + (b.favorites || 0),
-        deltaChats:     acc.deltaChats     + gain('chats'),
-        deltaMessages:  acc.deltaMessages  + gain('messages'),
-        deltaFavorites: acc.deltaFavorites + gain('favorites'),
-        newBots: acc.newBots + (totalSnaps.length > 0 && new Date(totalSnaps[0].date).getTime() > weekAgo ? 1 : 0),
+        chats:              acc.chats          + (b.chats     || 0),
+        messages:           acc.messages       + (b.messages  || 0),
+        favorites:          acc.favorites      + (b.favorites || 0),
+        deltaChats:         acc.deltaChats         + gain('chats'),
+        deltaMessages:      acc.deltaMessages      + gain('messages'),
+        deltaFavorites:     acc.deltaFavorites     + gain('favorites'),
+        dailyDeltaChats:    acc.dailyDeltaChats    + gainDay('chats'),
+        dailyDeltaMessages: acc.dailyDeltaMessages + gainDay('messages'),
+        dailyDeltaFavorites:acc.dailyDeltaFavorites+ gainDay('favorites'),
+        newBots:      acc.newBots      + (totalSnaps.length > 0 && new Date(totalSnaps[0].date).getTime() >= weekStartMs  ? 1 : 0),
+        newBotsToday: acc.newBotsToday + (totalSnaps.length > 0 && new Date(totalSnaps[0].date).getTime() >= todayStartMs ? 1 : 0),
       }
-    }, { chats: 0, messages: 0, favorites: 0, deltaChats: 0, deltaMessages: 0, deltaFavorites: 0, newBots: 0 })
+    }, {
+      chats: 0, messages: 0, favorites: 0,
+      deltaChats: 0, deltaMessages: 0, deltaFavorites: 0,
+      dailyDeltaChats: 0, dailyDeltaMessages: 0, dailyDeltaFavorites: 0,
+      newBots: 0, newBotsToday: 0,
+    })
   }, [filtered])
 
   function toggleSort(key) {

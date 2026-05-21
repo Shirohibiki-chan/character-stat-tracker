@@ -206,17 +206,21 @@ export default function App() {
 
             {/* Stat cards */}
             <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-              <StatCard label="Total bots" value={filteredCount} card={BOTS_CARD} icon={Bot} delta={totals.newBots} />
-              {METRICS.map(m => (
-                <StatCard
-                  key={m.key}
-                  label={`Total ${m.label.toLowerCase()}`}
-                  value={totals[m.key]}
-                  card={m.card}
-                  icon={ICON_MAP[m.icon]}
-                  delta={totals[`delta${m.key.charAt(0).toUpperCase()}${m.key.slice(1)}`]}
-                />
-              ))}
+              <StatCard label="Total bots" value={filteredCount} card={BOTS_CARD} icon={Bot} delta={totals.newBots} deltaDay={totals.newBotsToday} />
+              {METRICS.map(m => {
+                const cap = m.key.charAt(0).toUpperCase() + m.key.slice(1)
+                return (
+                  <StatCard
+                    key={m.key}
+                    label={`Total ${m.label.toLowerCase()}`}
+                    value={totals[m.key]}
+                    card={m.card}
+                    icon={ICON_MAP[m.icon]}
+                    delta={totals[`delta${cap}`]}
+                    deltaDay={totals[`dailyDelta${cap}`]}
+                  />
+                )
+              })}
             </section>
 
             {/* View tabs */}

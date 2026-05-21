@@ -92,7 +92,7 @@ export default function GainsChart({ bots, onViewBot }) {
               <button
                 key={mx.key}
                 onClick={() => setMetric(mx.key)}
-                className={`px-2.5 py-1 text-xs rounded transition ${metric === mx.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                className={`px-2.5 py-1 text-xs font-medium rounded transition ${metric === mx.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
                 style={metric === mx.key ? { boxShadow: `inset 0 0 0 1px ${mx.color}40` } : {}}
               >
                 {mx.label}
@@ -104,7 +104,7 @@ export default function GainsChart({ bots, onViewBot }) {
               <button
                 key={w.days}
                 onClick={() => setWindowDays(w.days)}
-                className={`px-2.5 py-1 text-xs rounded transition ${windowDays === w.days ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                className={`px-2.5 py-1 text-xs font-medium rounded transition ${windowDays === w.days ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
               >
                 {w.label}
               </button>

@@ -80,7 +80,7 @@ export default function RankingChart({ bots, onViewBot }) {
               <YAxis
                 type="category"
                 dataKey="name"
-                width={130}
+                width={160}
                 axisLine={false}
                 tickLine={false}
                 tick={{ fill: 'var(--color-text-primary)', fontWeight: 600, fontSize: 13, fontFamily: 'Poppins, system-ui, sans-serif' }}
@@ -114,7 +114,7 @@ export default function RankingChart({ bots, onViewBot }) {
                   dataKey="_val"
                   position="right"
                   formatter={fmt}
-                  style={{ fill: 'var(--color-text-secondary)', fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                  style={{ fill: 'var(--color-text-secondary)', fontSize: 11, fontWeight: 600, fontFamily: 'Inter, system-ui, sans-serif' }}
                 />
               </Bar>
             </BarChart>

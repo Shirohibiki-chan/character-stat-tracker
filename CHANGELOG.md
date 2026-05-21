@@ -11,7 +11,8 @@
 
 ### Adjustments
 - **Bar chart colors:** each bot's bars now use their aura ring color (the same hash-based color as the PFP ring), so you can identify bots at a glance across Ranking, Gains, and History charts. Tags chart bars are colored the same way by tag name.
-- **Bar chart bot names:** Y-axis labels are now larger (13px) and bolder so names are easier to read.
+- **Bar chart bot names:** Y-axis labels are now larger (13px) and bolder so names are easier to read; wider label column (160px) prevents long names from being clipped.
+- **Bar chart value labels:** the numbers shown to the right of each bar are now bold.
 
 ---
 

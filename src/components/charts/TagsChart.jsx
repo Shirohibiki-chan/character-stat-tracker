@@ -109,7 +109,7 @@ export default function TagsChart({ bots, onTagClick }) {
               <YAxis
                 type="category"
                 dataKey="name"
-                width={130}
+                width={160}
                 axisLine={false}
                 tickLine={false}
                 tick={props => <ClickableTick {...props} onTagClick={onTagClick} />}
@@ -146,7 +146,7 @@ export default function TagsChart({ bots, onTagClick }) {
                   dataKey="_val"
                   position="right"
                   formatter={fmt}
-                  style={{ fill: 'var(--color-text-secondary)', fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                  style={{ fill: 'var(--color-text-secondary)', fontSize: 11, fontWeight: 600, fontFamily: 'Inter, system-ui, sans-serif' }}
                 />
               </Bar>
             </BarChart>

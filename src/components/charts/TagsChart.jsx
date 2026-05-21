@@ -4,7 +4,7 @@ import {
   BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, ResponsiveContainer,
 } from 'recharts'
 import { METRICS } from '../../constants/metrics.js'
-import { getAura } from '../../constants/auras.js'
+import { getBarColor } from '../../constants/auras.js'
 import { fmt, fmtFull } from '../../constants/format.js'
 
 function computeTagAggregates(bots, metric) {
@@ -30,24 +30,20 @@ function computeTagAggregates(bots, metric) {
 
 function ClickableTick({ x, y, value, onTagClick }) {
   return (
-    <g
-      transform={`translate(${x},${y})`}
+    <text
+      x={x}
+      y={y}
+      dy={4}
+      textAnchor="end"
+      fill="var(--color-text-primary)"
+      fontWeight={600}
+      fontSize={13}
+      fontFamily="Poppins, system-ui, sans-serif"
       onClick={() => onTagClick?.(value)}
       style={{ cursor: onTagClick ? 'pointer' : 'default' }}
     >
-      <text
-        x={0}
-        y={0}
-        dy={4}
-        textAnchor="end"
-        fill="var(--color-text-primary)"
-        fontWeight={600}
-        fontSize={13}
-        fontFamily="Poppins, system-ui, sans-serif"
-      >
-        {value}
-      </text>
-    </g>
+      {value}
+    </text>
   )
 }
 
@@ -109,7 +105,7 @@ export default function TagsChart({ bots, onTagClick }) {
               <YAxis
                 type="category"
                 dataKey="name"
-                width={130}
+                width={160}
                 axisLine={false}
                 tickLine={false}
                 tick={props => <ClickableTick {...props} onTagClick={onTagClick} />}
@@ -122,13 +118,13 @@ export default function TagsChart({ bots, onTagClick }) {
                   return (
                     <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
                       <div className="font-bold text-sm mb-1">#{d.tag}</div>
-                      <div className="text-[10px] text-text-muted mb-1.5">
+                      <div className="text-xs text-text-muted mb-1.5">
                         {d.botCount} {d.botCount === 1 ? 'bot' : 'bots'}
                       </div>
                       {METRICS.map(mx => (
                         <div key={mx.key} className="flex justify-between gap-6 text-xs">
                           <span className="text-text-muted">{mx.label}</span>
-                          <span className="num" style={{ color: mx.color }}>{fmtFull(d[mx.key] || 0)}</span>
+                          <span className="num font-semibold" style={{ color: mx.color }}>{fmtFull(d[mx.key] || 0)}</span>
                         </div>
                       ))}
                     </div>
@@ -141,12 +137,12 @@ export default function TagsChart({ bots, onTagClick }) {
                 onClick={onTagClick ? d => onTagClick(d.tag) : undefined}
                 className={onTagClick ? 'cursor-pointer' : undefined}
               >
-                {data.map(d => <Cell key={d.tag} fill={getAura(d.tag)} />)}
+                {data.map(d => <Cell key={d.tag} fill={getBarColor(d.tag)} />)}
                 <LabelList
                   dataKey="_val"
                   position="right"
                   formatter={fmt}
-                  style={{ fill: 'var(--color-text-secondary)', fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                  style={{ fill: 'var(--color-text-secondary)', fontSize: 11, fontWeight: 600, fontFamily: 'Inter, system-ui, sans-serif' }}
                 />
               </Bar>
             </BarChart>

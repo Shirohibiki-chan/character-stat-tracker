@@ -10,8 +10,9 @@
 - **Bar chart labels disappearing when a modal opens:** labels to the right of bars no longer vanish when a modal with a backdrop blur is open.
 
 ### Adjustments
-- **Bar chart colors:** each bot's bars now use their aura ring color (the same hash-based color as the PFP ring), so you can identify bots at a glance across Ranking, Gains, and History charts. Tags chart bars are colored the same way by tag name.
-- **Bar chart bot names:** Y-axis labels are now larger (13px) and bolder so names are easier to read.
+- **Bar chart colors:** each bot's bars now use their aura ring color (hash-based), so you can identify bots at a glance. Tags chart bars are colored the same way by tag name. Bar colors use a darker variant of each hue so they're not eye-straining on a dark background.
+- **Bar chart bot names:** Y-axis labels are now larger (13px) and bolder so names are easier to read; wider label column (160px) prevents long names from being clipped. Tag names on the Tags chart were missing entirely — fixed.
+- **Bar chart value labels:** the numbers shown to the right of each bar are now bold.
 
 ---
 

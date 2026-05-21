@@ -23,6 +23,11 @@ Phases 0–7 from `docs/plan.md` are complete. Polish roadmap (this doc) is most
 - **Phase 6 (complete):** Enhanced empty state, onboarding banner, Data & Backup modal (export JSON / import from file / reset all data), What's New modal (renders changelog in-app), README, horizontal tab bar scroll; mobile layout finalized 2026-05-17
 - **Phase 7:** Tampermonkey userscript — auto-capture on Total tab activation, draggable floating queue pill, toast notifications, JSON export to clipboard; v1.8 (2026-05-17) added strict on-load position clamp and Ctrl+Shift+Alt+R pill recovery shortcut
 
+## Recent App Changes (2026-05-21)
+
+- **Spider chart:** Treemap tab replaced with Spider. Gallery mode shows a mini-spider per bot (grid); Single mode overlays up to 4 bots on one radar with 6 axes (solo msgs, group msgs, threads, favorites, avg msgs/day, favs per 1K). Selected bots persist across tab navigation via state lifted to App.jsx. `TreemapChart.jsx` is no longer imported or used (file remains on disk but is dead code — can be deleted).
+- **History chart date arrows:** ‹ / › buttons flank the date picker for single-day stepping.
+
 ## Known Issue (workaround, not a code fix)
 
 Bots imported before the import-side avatar mapping fix landed (Phase 7 late) don't have stored avatar URLs and display as letter-initials in the table. To fix retroactively: re-capture those bots via the userscript and re-import — the import will match them by name and update existing records.

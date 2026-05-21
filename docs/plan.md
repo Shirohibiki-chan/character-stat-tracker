@@ -28,6 +28,7 @@ If new parked features get added later that each have substantive rationale + de
 
 ## Queued Adjustments
 
+- **Spider chart view — done 2026-05-21.** Replaced the Treemap tab with a radar/spider chart. Six axes (solo msgs, group msgs, threads, favorites, avg msgs/day, favs per 1K msgs), all normalized to dataset max. Gallery mode: small-multiples grid, click to open bot detail. Single mode: primary bot + up to 3 comparison overlays with semi-transparent fills; selected bots persist across navigation. Treemap removed.
 - **Dashboard visual refresh (locked design tokens) — done 2026-05-18.** Applied sandbox-finalized tokens: Manrope/Lora/Outfit/Poppins typography, accent-colored table numbers, top-to-bottom gradient overlays on stat cards, row-banding composition fix through colored columns.
 - **Tag filter from Tag Totals — done 2026-05-19.** Clicking a tag in the Tags chart navigates to the bot list and applies that tag as a filter, with a removable chip display.
 - **Manual PFP override — done 2026-05-19.** Click-to-edit PFP in bot detail view; supports URL or file upload; `avatarIsManual` flag prevents import overwrites; pencil badge indicator.

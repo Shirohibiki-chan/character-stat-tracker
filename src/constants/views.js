@@ -6,5 +6,5 @@ export const VIEWS = [
   { id: 'history',  label: 'History'  },
   { id: 'tags',     label: 'Tags'     },
   { id: 'scatter',  label: 'Scatter'  },
-  { id: 'treemap',  label: 'Treemap'  },
+  { id: 'spider',   label: 'Spider'   },
 ]

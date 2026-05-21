@@ -5,9 +5,16 @@ export const useBotStore = create((set, get) => ({
   bots: {},
   initialized: false,
 
-  setBots(bots) {
+  setBots(rawBots) {
+    // Assign IDs to any snapshots that predate this field
+    const bots = Object.fromEntries(
+      Object.entries(rawBots).map(([botId, bot]) => [
+        botId,
+        { ...bot, snapshots: (bot.snapshots || []).map(s => s.id ? s : { id: crypto.randomUUID(), ...s }) },
+      ])
+    )
     set({ bots, initialized: true })
-    // no autosave on initial load — data came from disk
+    scheduleSave(bots)
   },
 
   addBot(bot) {
@@ -36,9 +43,9 @@ export const useBotStore = create((set, get) => ({
     scheduleSave(bots)
   },
 
-  deleteSnapshot(botId, date) {
+  deleteSnapshot(botId, snapId) {
     const bot = get().bots[botId]
-    const updated = { ...bot, snapshots: bot.snapshots.filter(s => s.date !== date) }
+    const updated = { ...bot, snapshots: bot.snapshots.filter(s => s.id !== snapId) }
     const bots = { ...get().bots, [botId]: updated }
     set({ bots })
     scheduleSave(bots)

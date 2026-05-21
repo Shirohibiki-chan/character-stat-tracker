@@ -3,6 +3,8 @@
 ## 2026-05-21
 
 ### Fixes
+- **Deleting a snapshot wiped all snapshots from the same date:** snapshots were identified by their date string, so any two with the same date would both be deleted. Snapshots now have their own unique ID; deleting one only removes that exact snapshot.
+- **Group chat % removed from bot table:** the `X% grp` sub-line added in the last release was showing under the message count in a way that pushed out the `+N` delta. Removed until a better placement is decided.
 - **Group chat data dropped on import:** `messagesSolo` and `messagesGroup` were silently stripped during JSON import, so userscript snapshots with breakdown data never saved those fields — making the group chat breakdown and % features invisible even after merging. Both the parser and the snapshot-save step now pass the breakdown fields through correctly.
 
 ### Additions

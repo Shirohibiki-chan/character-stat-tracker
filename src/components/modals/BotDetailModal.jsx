@@ -463,18 +463,18 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
               </thead>
               <tbody>
                 {[...sortedSnaps].reverse().map(s => (
-                  <tr key={s.date} className="border-b border-border-subtle hover:bg-surface-alt/50">
+                  <tr key={s.id} className="border-b border-border-subtle hover:bg-surface-alt/50">
                     <td className="py-2 px-4 text-xs text-text-secondary font-semibold">{fmtDate(s.date)}</td>
                     <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.chats)}</td>
                     <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.messages)}</td>
                     <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.favorites)}</td>
                     <td className="py-2 px-3 text-right text-[10px] text-text-secondary font-medium">{s.scope || ''}</td>
                     <td className="py-2 px-3 text-right">
-                      {confirmDeleteSnap === s.date ? (
+                      {confirmDeleteSnap === s.id ? (
                         <div className="flex items-center gap-1 justify-end">
                           <span className="text-text-secondary text-[10px] whitespace-nowrap">Delete?</span>
                           <button
-                            onClick={() => { onDeleteSnapshot(s.date); setConfirmDeleteSnap(null) }}
+                            onClick={() => { onDeleteSnapshot(s.id); setConfirmDeleteSnap(null) }}
                             className="px-1.5 py-0.5 bg-red-500/20 text-red-300 rounded hover:bg-red-500/30 text-[10px] transition"
                           >
                             Yes
@@ -488,7 +488,7 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                         </div>
                       ) : (
                         <button
-                          onClick={() => setConfirmDeleteSnap(s.date)}
+                          onClick={() => setConfirmDeleteSnap(s.id)}
                           className="p-1 text-text-muted hover:text-red-400 transition"
                         >
                           <Trash2 size={12} />

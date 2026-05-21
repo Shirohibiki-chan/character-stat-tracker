@@ -53,7 +53,7 @@ export default function TagsChart({ bots, onTagClick }) {
   return (
     <section className="border border-border rounded-lg bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm text-text-secondary">
+        <div className="flex items-center gap-2 text-sm font-semibold text-text-secondary">
           <Tag size={16} className="text-accent opacity-60" />
           Tag totals · {m?.label}
         </div>

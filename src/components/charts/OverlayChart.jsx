@@ -90,7 +90,16 @@ function OverlayTooltip({ active, payload, label, relative }) {
 export default function OverlayChart({ bots, onViewBot }) {
   const [metric, setMetric] = useState('messages')
   const [relative, setRelative] = useState(false)
-  const [topN, setTopN] = useState(10)
+  const [topN, setTopN] = useState(() => {
+    const saved = localStorage.getItem('overlay-topN')
+    const n = saved ? Number(saved) : 10
+    return TOP_N.some(t => t.n === n) ? n : 10
+  })
+
+  const handleSetTopN = (n) => {
+    setTopN(n)
+    localStorage.setItem('overlay-topN', String(n))
+  }
 
   const { data, eligibleBots, totalEligible } = useMemo(
     () => buildData(bots, metric, relative, topN),
@@ -113,7 +122,7 @@ export default function OverlayChart({ bots, onViewBot }) {
   return (
     <section className="border border-border rounded-lg bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm text-text-secondary">
+        <div className="flex items-center gap-2 text-sm font-semibold text-text-secondary">
           <TrendingUp size={16} className="text-accent opacity-60" />
           {topN === 0 || eligibleBots.length >= totalEligible
             ? `${eligibleBots.length} bot${eligibleBots.length !== 1 ? 's' : ''}`
@@ -152,7 +161,7 @@ export default function OverlayChart({ bots, onViewBot }) {
             {TOP_N.map(t => (
               <button
                 key={t.n}
-                onClick={() => setTopN(t.n)}
+                onClick={() => handleSetTopN(t.n)}
                 className={`px-2.5 py-1 text-xs rounded transition ${topN === t.n ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
               >
                 {t.label}
@@ -206,7 +215,7 @@ export default function OverlayChart({ bots, onViewBot }) {
             </LineChart>
           </ResponsiveContainer>
         </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-4 max-h-24 overflow-y-auto scrollbar-thin">
+        <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-4">
           {eligibleBots.map(bot => (
             <button
               key={bot.id}

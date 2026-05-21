@@ -3,6 +3,14 @@
 ## [Unreleased]
 
 ### Fixes
+- **Chart header text thin:** section titles on all charts (Ranking, Gains, History, Tags, Overlay) are now bold.
+- **Bot names wrapping on bar charts:** names longer than 22 characters are now truncated with an ellipsis on the Y-axis of all bar charts so no name ever wraps to two lines. Label column widened to fit.
+- **Overlay chart legend cramped:** the bot name legend below the overlay chart no longer sits in a tiny scrollable box; names now wrap freely.
+
+### Adjustments
+- **Overlay chart Top N is now remembered:** your last-used Top N setting (10 / 15 / 25 / All) is saved across page reloads.
+
+### Additions
 - **"This week" resets on Monday 0 UTC:** stat card weekly deltas now use Monday midnight UTC (matching CharSnap's reset time) instead of a rolling 7-day window.
 - **"Today" delta on stat cards:** each stat card now also shows a daily gain since midnight UTC, matching CharSnap's daily reset.
 - **White flash on initial load:** the app no longer briefly flashes a white screen before the dark background loads.

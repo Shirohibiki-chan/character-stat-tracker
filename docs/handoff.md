@@ -56,7 +56,7 @@ Stat cards were rendering noticeably different between page reloads — some ref
 
 ## 3. Chart White Box Artifact
 
-**Resolved 2026-05-17.** Recharts default focus outline removed via global CSS.
+**Re-resolved 2026-05-20.** First fix (2026-05-17) only targeted `.recharts-surface` and `.recharts-wrapper:focus`, missing the individual SVG child elements (bar rectangles) that receive focus on click. Updated global CSS to also suppress `outline` on `.recharts-surface:focus` and `.recharts-wrapper svg *:focus`. Affects ranking, history, gains, and tags charts.
 
 ## 4. Deferred Phase 6 Items
 

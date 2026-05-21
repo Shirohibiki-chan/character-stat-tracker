@@ -3,6 +3,7 @@
 ## 2026-05-21
 
 ### Additions
+- **Solo/group split in History chart:** when "Messages" is selected in the History (top gainers) chart, a Total / Solo / Group toggle appears (only if your userscript has captured breakdown data). Switching to Solo or Group re-ranks bots by that component of their message gain.
 - **Group chat % in bot table:** the Messages column now shows a `X% grp` sub-line when your userscript has captured the breakdown, so you can see at a glance which bots are most active in group chats.
 - **Group chat breakdown in bot detail:** the Messages card in the bot detail popup now shows a `(X solo + Y grp)` sub-line when your userscript has captured the breakdown data.
 - **Scatter plot view:** new "Scatter" tab plots every bot as a dot — pick any two metrics for the X and Y axes. Dashed lines mark the averages, dividing bots into four zones (e.g. high messages + high favorites = popular and loved). Click any dot to open that bot's detail.

@@ -23,6 +23,20 @@ Phases 0–7 from `docs/plan.md` are complete. Polish roadmap (this doc) is most
 - **Phase 6 (complete):** Enhanced empty state, onboarding banner, Data & Backup modal (export JSON / import from file / reset all data), What's New modal (renders changelog in-app), README, horizontal tab bar scroll; mobile layout finalized 2026-05-17
 - **Phase 7:** Tampermonkey userscript — auto-capture on Total tab activation, draggable floating queue pill, toast notifications, JSON export to clipboard; v1.8 (2026-05-17) added strict on-load position clamp and Ctrl+Shift+Alt+R pill recovery shortcut
 
+## Phase 8 App Changes (2026-05-21 — PR A: new chart tabs)
+
+- **6 new chart tabs added** (tab bar now has 14 tabs total, horizontally scrollable):
+  - **Velocity** (`VelocityChart.jsx`) — point-to-point growth rate over time (metric/day). Line chart, same shape as OverlayChart. Top N + metric selectors.
+  - **Breakdown** (`BreakdownChart.jsx`) — stacked bar: solo vs. group messages per bot. Absolute or 100% normalized. Sort by total/solo%/group%. Empty states when no breakdown data.
+  - **Trending** (`TrendingChart.jsx`) — "hot right now" card grid. Ranked by recent gain (7/14/30d). Momentum arrow per bot. Avatar thumbnails.
+  - **Bump** (`BumpChart.jsx`) — rank-over-time line chart (Y-axis = rank #1 at top, inverted). Shows bots crossing each other. Top N + metric selectors.
+  - **Lifespan** (`LifespanChart.jsx`) — custom SVG Gantt-style chart. Each bot = horizontal bar from first to last snapshot, with dots per snapshot. Sort options. Hover shows date range in header.
+  - **Heatmap** (`HeatmapChart.jsx`) — Pearson correlation matrix (7×7 or 5×5 if no breakdown data). Color-coded −1→+1. Hover cells for labels.
+- All 6 new charts have graceful empty states with context-specific messages.
+- `src/constants/views.js` — 6 new entries added (14 total).
+- `src/App.jsx` — 6 new chart imports + render blocks.
+- PR B (upgrades to Scatter/Tags/Timeline) and PR C (bot detail report card) still pending.
+
 ## Recent App Changes (2026-05-21)
 
 - **Spider chart:** Treemap tab replaced with Spider. Gallery mode shows a mini-spider per bot (grid); Single mode overlays up to 4 bots on one radar with 6 axes (solo msgs, group msgs, threads, favorites, avg msgs/day, favs per 1K). Selected bots persist across tab navigation via state lifted to App.jsx. `TreemapChart.jsx` is no longer imported or used (file remains on disk but is dead code — can be deleted).

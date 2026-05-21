@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-05-20 (App — settings panel)
+
+### Additions
+- **Settings panel:** gear icon in the header opens a Settings modal with two sections.
+  - **Appearance** — theme picker (Default; more themes coming) and a compact mode toggle that tightens card padding across the dashboard.
+  - **Preferences** — opening view (which tab the app lands on when you load it; clicking also switches you there immediately) and rows per page (25 / 50 / 100; applies instantly).
+- All settings persist automatically across sessions.
+- Header now has a dedicated `Database` icon for Data & Backup; the `Settings` gear opens the new settings panel.
+
+---
+
 ## 2026-05-20 (Userscript v2.2 — settings panel)
 
 ### Additions

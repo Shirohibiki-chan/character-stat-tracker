@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart, Settings2, Newspaper, Bot, LayoutList, LayoutGrid, X } from 'lucide-react'
+import { useState, useMemo, useEffect } from 'react'
+import { Plus, Upload, Search, Hash, MessageSquare, MessagesSquare, Heart, Settings2, Database, Newspaper, Bot, LayoutList, LayoutGrid, X } from 'lucide-react'
 import { useBots } from './hooks/use-bots.js'
 import { useDashboard } from './hooks/use-dashboard.js'
 import { usePagination } from './hooks/use-pagination.js'
@@ -24,19 +24,14 @@ import BotDetailModal from './components/modals/BotDetailModal.jsx'
 import BackupModal from './components/modals/BackupModal.jsx'
 import ChangelogModal from './components/modals/ChangelogModal.jsx'
 import BulkTagModal from './components/modals/BulkTagModal.jsx'
+import SettingsModal from './components/modals/SettingsModal.jsx'
+import { useSettings } from './hooks/use-settings.js'
+import { VIEWS } from './constants/views.js'
 
 const ICON_MAP = { MessageSquare, MessagesSquare, Heart }
 
-const VIEWS = [
-  { id: 'table',    label: 'Table'    },
-  { id: 'timeline', label: 'Timeline' },
-  { id: 'ranking',  label: 'Ranking'  },
-  { id: 'gains',    label: 'Gains'    },
-  { id: 'history',  label: 'History'  },
-  { id: 'tags',     label: 'Tags'     },
-]
-
 export default function App() {
+  const { theme, compactMode, defaultView } = useSettings()
   const { bots, addBot, updateBot, deleteBot, addSnapshot, deleteSnapshot } = useBots()
   const {
     search, setSearch,
@@ -47,9 +42,10 @@ export default function App() {
 
   const { page, setPage, pageSize, setPageSize, viewMode, setViewMode, totalPages, paginated } = usePagination(sorted)
 
-  const [activeView, setActiveView] = useState('table')
+  const [activeView, setActiveView] = useState(defaultView)
   const [showImport, setShowImport] = useState(false)
   const [showBackup, setShowBackup] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
   const [showChangelog, setShowChangelog] = useState(false)
   const [adding, setAdding] = useState(false)
   const [detailBotId, setDetailBotId] = useState(null)
@@ -60,6 +56,16 @@ export default function App() {
   const [selectMode, setSelectMode] = useState(false)
   const [selectedBotIds, setSelectedBotIds] = useState(new Set())
   const [bulkTagMode, setBulkTagMode] = useState(null) // 'add' | 'remove' | null
+
+  useEffect(() => {
+    if (theme === 'default') document.documentElement.removeAttribute('data-theme')
+    else document.documentElement.setAttribute('data-theme', theme)
+  }, [theme])
+
+  useEffect(() => {
+    if (compactMode) document.documentElement.setAttribute('data-compact', 'true')
+    else document.documentElement.removeAttribute('data-compact')
+  }, [compactMode])
 
   const totalBotCount = Object.keys(bots).length
   const detailBot = detailBotId ? bots[detailBotId] : null
@@ -151,11 +157,18 @@ export default function App() {
               <Newspaper size={15} />
             </button>
             <button
+              onClick={() => setShowSettings(true)}
+              className="p-2 text-text-muted hover:text-text-secondary transition"
+              title="Settings"
+            >
+              <Settings2 size={15} />
+            </button>
+            <button
               onClick={() => setShowBackup(true)}
               className="p-2 text-text-muted hover:text-text-secondary transition"
               title="Data & Backup"
             >
-              <Settings2 size={15} />
+              <Database size={15} />
             </button>
             <button
               onClick={() => setShowImport(true)}
@@ -376,6 +389,7 @@ export default function App() {
       {snapshotBot && <AddSnapshotModal bot={snapshotBot} onClose={() => setAddingSnapshotForId(null)} onAdd={(snapshot) => { addSnapshot(addingSnapshotForId, snapshot); setAddingSnapshotForId(null) }} />}
       {showBackup    && <BackupModal onClose={() => setShowBackup(false)} />}
       {showChangelog && <ChangelogModal onClose={() => setShowChangelog(false)} />}
+      {showSettings  && <SettingsModal onClose={() => setShowSettings(false)} onViewChange={setActiveView} />}
       {bulkTagMode && (
         <BulkTagModal
           mode={bulkTagMode}

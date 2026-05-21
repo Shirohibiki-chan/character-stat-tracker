@@ -117,6 +117,11 @@
 /* Future themes scope their overrides here, e.g.:
    [data-theme="kawaii"] { --color-bg: #fff0fa; --color-accent: #ff69b4; ... } */
 
+html[data-compact="true"] {
+  --card-padding: 12px;
+  --card-gap:      8px;
+}
+
 @layer base {
   body {
     font-family: 'Quicksand', system-ui, sans-serif;

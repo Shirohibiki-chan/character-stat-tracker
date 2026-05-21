@@ -2,6 +2,9 @@
 
 ## 2026-05-21
 
+### Fixes
+- **Group chat data dropped on import:** `messagesSolo` and `messagesGroup` were silently stripped during JSON import, so userscript snapshots with breakdown data never saved those fields — making the group chat breakdown and % features invisible even after merging. Both the parser and the snapshot-save step now pass the breakdown fields through correctly.
+
 ### Additions
 - **Solo/group split in History chart:** when "Messages" is selected in the History (top gainers) chart, a Total / Solo / Group toggle appears (only if your userscript has captured breakdown data). Switching to Solo or Group re-ranks bots by that component of their message gain.
 - **Group chat % in bot table:** the Messages column now shows a `X% grp` sub-line when your userscript has captured the breakdown, so you can see at a glance which bots are most active in group chats.

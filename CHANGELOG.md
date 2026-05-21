@@ -3,6 +3,7 @@
 ## 2026-05-21
 
 ### Additions
+- **Group chat % in bot table:** the Messages column now shows a `X% grp` sub-line when your userscript has captured the breakdown, so you can see at a glance which bots are most active in group chats.
 - **Group chat breakdown in bot detail:** the Messages card in the bot detail popup now shows a `(X solo + Y grp)` sub-line when your userscript has captured the breakdown data.
 - **Scatter plot view:** new "Scatter" tab plots every bot as a dot — pick any two metrics for the X and Y axes. Dashed lines mark the averages, dividing bots into four zones (e.g. high messages + high favorites = popular and loved). Click any dot to open that bot's detail.
 - **Treemap view:** new "Treemap" tab fills the screen with one box per bot, sized by the selected metric, so you can see at a glance which bots dominate your collection. Click any box to open that bot's detail.

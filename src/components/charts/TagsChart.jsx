@@ -106,7 +106,7 @@ export default function TagsChart({ bots, onTagClick }) {
                       </div>
                       {METRICS.map(mx => (
                         <div key={mx.key} className="flex justify-between gap-6 text-sm">
-                          <span className="text-text-muted">{mx.label}</span>
+                          <span className="text-text-secondary font-medium">{mx.label}</span>
                           <span className="num font-semibold" style={{ color: mx.color }}>{fmtFull(d[mx.key] || 0)}</span>
                         </div>
                       ))}

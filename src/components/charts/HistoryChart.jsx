@@ -134,7 +134,7 @@ export default function HistoryChart({ bots, onViewBot }) {
                           {fmtDate(d.prevSnapDate)} → {fmtDate(d.snapDate)}
                         </div>
                         <div className="flex justify-between gap-6 text-sm">
-                          <span className="text-text-muted">{m?.label} gain</span>
+                          <span className="text-text-secondary font-medium">{m?.label} gain</span>
                           <span className="num font-semibold" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
                         </div>
                       </div>

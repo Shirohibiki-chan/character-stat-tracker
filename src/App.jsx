@@ -387,6 +387,21 @@ export default function App() {
             {activeView === 'treemap'  && <TreemapChart bots={sorted} onViewBot={setDetailBotId} />}
           </>
         )}
+
+        {/* Footer */}
+        <footer className="mt-16 pt-6 border-t border-border text-center">
+          <p className="text-xs text-text-muted">
+            A CharSnap stat tracker made by{' '}
+            <a
+              href="https://charsnap.ai/creator/d590a696-7c4e-4c59-9b78-eaae86b316f0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:opacity-80 transition-opacity"
+            >
+              Shirohibiki
+            </a>
+          </p>
+        </footer>
       </div>
 
       {/* Modals */}

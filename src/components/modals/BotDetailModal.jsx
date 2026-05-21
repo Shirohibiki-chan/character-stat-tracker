@@ -454,8 +454,8 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
               <thead className="text-[10px] uppercase tracking-[0.22em] font-bold text-text-muted">
                 <tr className="border-b border-border">
                   <th className="text-left py-2 px-4">Date</th>
-                  <th className="text-right py-2 px-3">Threads</th>
                   <th className="text-right py-2 px-3">Messages</th>
+                  <th className="text-right py-2 px-3">Threads</th>
                   <th className="text-right py-2 px-3">Favorites</th>
                   <th className="text-right py-2 px-3">Scope</th>
                   <th className="py-2 px-3 w-28" />
@@ -465,8 +465,8 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
                 {[...sortedSnaps].reverse().map(s => (
                   <tr key={s.id} className="border-b border-border-subtle hover:bg-surface-alt/50">
                     <td className="py-2 px-4 text-xs text-text-secondary font-semibold">{fmtDate(s.date)}</td>
-                    <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.chats)}</td>
                     <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.messages)}</td>
+                    <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.chats)}</td>
                     <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmt(s.favorites)}</td>
                     <td className="py-2 px-3 text-right text-[10px] text-text-secondary font-medium">{s.scope || ''}</td>
                     <td className="py-2 px-3 text-right">

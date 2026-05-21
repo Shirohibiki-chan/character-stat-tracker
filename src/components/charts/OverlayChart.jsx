@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { TrendingUp } from 'lucide-react'
+import { useState, useMemo, useRef, useEffect } from 'react'
+import { TrendingUp, Plus, X } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
@@ -8,13 +8,14 @@ import { getAura } from '../../constants/auras.js'
 import { fmt } from '../../constants/format.js'
 
 const TOP_N = [
-  { label: '10', n: 10 },
-  { label: '15', n: 15 },
-  { label: '25', n: 25 },
-  { label: 'All', n: 0 },
+  { label: '10',     n: 10 },
+  { label: '15',     n: 15 },
+  { label: '25',     n: 25 },
+  { label: 'All',    n: 0  },
+  { label: 'Custom', n: -1 },
 ]
 
-function buildData(bots, metric, relative, topN, cohortMode) {
+function buildData(bots, metric, relative, topN, cohortMode, customIds) {
   const allEligible = bots
     .map(bot => {
       const totalSnaps = (bot.snapshots || [])
@@ -29,9 +30,11 @@ function buildData(bots, metric, relative, topN, cohortMode) {
       return bVal - aVal
     })
 
-  const eligible = topN === 0 ? allEligible : allEligible.slice(0, topN)
+  const eligible = topN === -1
+    ? allEligible.filter(({ bot }) => customIds.includes(bot.id))
+    : topN === 0 ? allEligible : allEligible.slice(0, topN)
 
-  if (eligible.length === 0) return { data: [], eligibleBots: [], totalEligible: 0 }
+  if (eligible.length === 0) return { data: [], eligibleBots: [], totalEligible: allEligible.length }
 
   const xSet = new Set()
   eligible.forEach(({ totalSnaps }) => {
@@ -79,6 +82,100 @@ function buildData(bots, metric, relative, topN, cohortMode) {
   }
 }
 
+// ─── Bot picker (Custom mode) ────────────────────────────────────────────────
+
+function BotPicker({ allBots, selectedIds, onAdd, onRemove }) {
+  const [q,    setQ]    = useState('')
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (!open) return
+    function onDown(e) {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setOpen(false)
+        setQ('')
+      }
+    }
+    document.addEventListener('mousedown', onDown)
+    return () => document.removeEventListener('mousedown', onDown)
+  }, [open])
+
+  const eligible  = allBots.filter(b => b.latest)
+  const available = eligible.filter(
+    b => !selectedIds.includes(b.id) && b.name.toLowerCase().includes(q.toLowerCase())
+  )
+
+  return (
+    <div className="flex flex-wrap items-center gap-2 px-5 py-3 border-b border-border bg-surface-alt/30">
+      {selectedIds.map(id => {
+        const bot = allBots.find(b => b.id === id)
+        if (!bot) return null
+        return (
+          <div
+            key={id}
+            className="flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 rounded border border-border bg-surface text-xs font-semibold"
+          >
+            <div className="w-2 h-2 rounded-full shrink-0" style={{ background: getAura(id) }} />
+            <span className="max-w-[110px] truncate text-text-primary">{bot.name}</span>
+            <button
+              onClick={() => onRemove(id)}
+              className="text-text-muted hover:text-text-primary transition ml-0.5"
+            >
+              <X size={10} />
+            </button>
+          </div>
+        )
+      })}
+      <div ref={ref} className="relative">
+        <button
+          onClick={() => setOpen(v => !v)}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded border border-dashed border-border text-xs text-text-muted hover:text-text-secondary hover:border-accent/40 transition"
+        >
+          <Plus size={10} />
+          Add bot…
+        </button>
+        {open && (
+          <div className="absolute z-50 top-full mt-1 left-0 w-60 bg-bg border border-border rounded-lg shadow-xl overflow-hidden">
+            <div className="p-2 border-b border-border">
+              <input
+                autoFocus
+                value={q}
+                onChange={e => setQ(e.target.value)}
+                placeholder="Search bots…"
+                className="w-full bg-surface-alt rounded px-2.5 py-1.5 text-xs text-text-primary focus:outline-none placeholder:text-text-muted"
+              />
+            </div>
+            <div className="max-h-56 overflow-y-auto">
+              {available.length === 0 ? (
+                <p className="text-xs text-text-muted p-3 text-center">
+                  {q ? 'No matches' : eligible.length === 0 ? 'No bots with snapshot data' : 'All bots already added'}
+                </p>
+              ) : (
+                available.map(b => (
+                  <button
+                    key={b.id}
+                    onClick={() => { onAdd(b.id); setQ('') }}
+                    className="w-full text-left px-3 py-2 text-xs hover:bg-surface transition flex items-center justify-between gap-2"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-2 h-2 rounded-full shrink-0" style={{ background: getAura(b.id) }} />
+                      <span className="truncate text-text-primary">{b.name}</span>
+                    </div>
+                    <span className="text-text-muted num shrink-0">{fmt(b.messages || 0)}</span>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── Tooltip ─────────────────────────────────────────────────────────────────
+
 function OverlayTooltip({ active, payload, label, relative, cohortMode }) {
   if (!active || !payload?.length) return null
 
@@ -107,6 +204,8 @@ function OverlayTooltip({ active, payload, label, relative, cohortMode }) {
   )
 }
 
+// ─── Main component ──────────────────────────────────────────────────────────
+
 export default function OverlayChart({ bots, onViewBot }) {
   const [metric, setMetric] = useState('messages')
   const [relative, setRelative] = useState(false)
@@ -116,20 +215,39 @@ export default function OverlayChart({ bots, onViewBot }) {
     return TOP_N.some(t => t.n === n) ? n : 10
   })
   const [cohortMode, setCohortMode] = useState(false)
+  const [customIds, setCustomIds] = useState(() => {
+    try {
+      const saved = localStorage.getItem('overlay-customIds')
+      return saved ? JSON.parse(saved) : []
+    } catch { return [] }
+  })
 
   const handleSetTopN = (n) => {
     setTopN(n)
     localStorage.setItem('overlay-topN', String(n))
   }
 
+  const handleAddCustom = (id) => {
+    const next = [...customIds, id]
+    setCustomIds(next)
+    localStorage.setItem('overlay-customIds', JSON.stringify(next))
+  }
+
+  const handleRemoveCustom = (id) => {
+    const next = customIds.filter(x => x !== id)
+    setCustomIds(next)
+    localStorage.setItem('overlay-customIds', JSON.stringify(next))
+  }
+
   const { data, eligibleBots, totalEligible } = useMemo(
-    () => buildData(bots, metric, relative, topN, cohortMode),
-    [bots, metric, relative, topN, cohortMode]
+    () => buildData(bots, metric, relative, topN, cohortMode, customIds),
+    [bots, metric, relative, topN, cohortMode, customIds]
   )
 
   const metricObj = METRICS.find(m => m.key === metric)
 
-  if (eligibleBots.length === 0) {
+  // Hard empty state: no snapshot data at all (not relevant to custom mode)
+  if (topN !== -1 && eligibleBots.length === 0 && totalEligible === 0) {
     return (
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
@@ -140,15 +258,20 @@ export default function OverlayChart({ bots, onViewBot }) {
     )
   }
 
+  const titleText = topN === -1
+    ? `${eligibleBots.length} selected`
+    : topN === 0 || eligibleBots.length >= totalEligible
+      ? `${eligibleBots.length} bot${eligibleBots.length !== 1 ? 's' : ''}`
+      : `Top ${eligibleBots.length} of ${totalEligible}`
+
   return (
     <section className="border border-border rounded-lg bg-surface">
+
+      {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
         <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
           <TrendingUp size={16} className="text-accent opacity-60" />
-          {topN === 0 || eligibleBots.length >= totalEligible
-            ? `${eligibleBots.length} bot${eligibleBots.length !== 1 ? 's' : ''}`
-            : `Top ${eligibleBots.length} of ${totalEligible}`
-          } · {metricObj?.label}
+          {titleText} · {metricObj?.label}
           {relative && <span className="text-text-muted text-xs ml-1">(growth from first snapshot)</span>}
           {cohortMode && !relative && <span className="text-text-muted text-xs ml-1">(days since first capture)</span>}
         </div>
@@ -206,67 +329,100 @@ export default function OverlayChart({ bots, onViewBot }) {
           </div>
         </div>
       </div>
-      <div className="p-5">
-        <div style={{ height: 360 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-              <CartesianGrid stroke="var(--color-border-subtle)" strokeDasharray="3 3" />
-              <XAxis
-                dataKey="date"
-                type="number"
-                domain={['dataMin', 'dataMax']}
-                tickFormatter={cohortMode
-                  ? d => `Day ${d}`
-                  : ts => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                stroke="var(--color-text-muted)"
-                style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
-                axisLine={{ stroke: 'var(--color-border)' }}
-                tickLine={{ stroke: 'var(--color-border)' }}
-                scale={cohortMode ? 'linear' : 'time'}
-              />
-              <YAxis
-                tickFormatter={fmt}
-                stroke="var(--color-text-muted)"
-                style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
-                axisLine={{ stroke: 'var(--color-border)' }}
-                tickLine={{ stroke: 'var(--color-border)' }}
-                width={52}
-              />
-              <Tooltip
-                content={(props) => (
-                  <OverlayTooltip {...props} eligibleBots={eligibleBots} relative={relative} cohortMode={cohortMode} />
-                )}
-              />
-              {eligibleBots.map(bot => (
-                <Line
-                  key={bot.id}
-                  type="monotone"
-                  dataKey={bot.id}
-                  name={bot.name}
-                  stroke={bot.color}
-                  strokeWidth={1.5}
-                  dot={false}
-                  activeDot={{ r: 4, strokeWidth: 0 }}
-                  connectNulls
+
+      {/* Custom mode bot picker */}
+      {topN === -1 && (
+        <BotPicker
+          allBots={bots}
+          selectedIds={customIds}
+          onAdd={handleAddCustom}
+          onRemove={handleRemoveCustom}
+        />
+      )}
+
+      {/* Chart or empty state */}
+      {eligibleBots.length === 0 ? (
+        <div className="flex items-center justify-center py-20">
+          <p className="text-text-muted text-sm text-center max-w-xs">
+            {topN === -1
+              ? <>No bots selected yet.<br /><span className="text-text-muted/70 text-xs">Use the search above to add bots to the chart.</span></>
+              : <>No bots have Total-scope snapshots to plot.<br /><span className="text-text-muted/70 text-xs">Add snapshots from the CharSnap "Total" tab.</span></>
+            }
+          </p>
+        </div>
+      ) : (
+        <div className="p-5">
+          <div style={{ height: 360 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                <CartesianGrid stroke="var(--color-border-subtle)" strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  type="number"
+                  domain={['dataMin', 'dataMax']}
+                  tickFormatter={cohortMode
+                    ? d => `Day ${d}`
+                    : ts => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  stroke="var(--color-text-muted)"
+                  style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                  axisLine={{ stroke: 'var(--color-border)' }}
+                  tickLine={{ stroke: 'var(--color-border)' }}
+                  scale={cohortMode ? 'linear' : 'time'}
                 />
-              ))}
-            </LineChart>
-          </ResponsiveContainer>
+                <YAxis
+                  tickFormatter={fmt}
+                  stroke="var(--color-text-muted)"
+                  style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                  axisLine={{ stroke: 'var(--color-border)' }}
+                  tickLine={{ stroke: 'var(--color-border)' }}
+                  width={52}
+                />
+                <Tooltip
+                  content={(props) => (
+                    <OverlayTooltip {...props} eligibleBots={eligibleBots} relative={relative} cohortMode={cohortMode} />
+                  )}
+                />
+                {eligibleBots.map(bot => (
+                  <Line
+                    key={bot.id}
+                    type="monotone"
+                    dataKey={bot.id}
+                    name={bot.name}
+                    stroke={bot.color}
+                    strokeWidth={1.5}
+                    dot={false}
+                    activeDot={{ r: 4, strokeWidth: 0 }}
+                    connectNulls
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex flex-wrap gap-x-3 gap-y-1.5 mt-4">
+            {eligibleBots.map(bot => (
+              <div key={bot.id} className="flex items-center gap-0.5 min-w-0">
+                <button
+                  onClick={() => onViewBot?.(bot.id)}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-text-tertiary hover:text-text-primary transition"
+                  title={bot.name}
+                >
+                  <div className="w-4 h-[2px] rounded-full shrink-0" style={{ backgroundColor: bot.color }} />
+                  <span className="truncate max-w-[130px]">{bot.name}</span>
+                </button>
+                {topN === -1 && (
+                  <button
+                    onClick={() => handleRemoveCustom(bot.id)}
+                    className="text-text-muted hover:text-red-400 transition ml-1 shrink-0"
+                    title={`Remove ${bot.name}`}
+                  >
+                    <X size={9} />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-4">
-          {eligibleBots.map(bot => (
-            <button
-              key={bot.id}
-              onClick={() => onViewBot?.(bot.id)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-text-tertiary hover:text-text-primary transition min-w-0"
-              title={bot.name}
-            >
-              <div className="w-4 h-[2px] rounded-full shrink-0" style={{ backgroundColor: bot.color }} />
-              <span className="truncate max-w-[140px]">{bot.name}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      )}
     </section>
   )
 }

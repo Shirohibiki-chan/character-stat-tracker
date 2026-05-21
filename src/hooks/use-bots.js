@@ -12,6 +12,7 @@ export function useBots() {
 
   return {
     bots,
+    initialized,
     botCount: Object.keys(bots).length,
     addBot,
     updateBot,

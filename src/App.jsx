@@ -18,6 +18,12 @@ import HistoryChart from './components/charts/HistoryChart.jsx'
 import TagsChart from './components/charts/TagsChart.jsx'
 import ScatterPlot from './components/charts/ScatterPlot.jsx'
 import SpiderChart from './components/charts/SpiderChart.jsx'
+import VelocityChart from './components/charts/VelocityChart.jsx'
+import BreakdownChart from './components/charts/BreakdownChart.jsx'
+import TrendingChart from './components/charts/TrendingChart.jsx'
+import BumpChart from './components/charts/BumpChart.jsx'
+import LifespanChart from './components/charts/LifespanChart.jsx'
+import HeatmapChart from './components/charts/HeatmapChart.jsx'
 import AddBotModal from './components/modals/AddBotModal.jsx'
 import AddSnapshotModal from './components/modals/AddSnapshotModal.jsx'
 import EditBotModal from './components/modals/EditBotModal.jsx'
@@ -396,6 +402,12 @@ export default function App() {
                 setSelectedIds={setSpiderSelectedIds}
               />
             )}
+            {activeView === 'velocity'  && <VelocityChart  bots={sorted} onViewBot={setDetailBotId} />}
+            {activeView === 'breakdown' && <BreakdownChart bots={sorted} onViewBot={setDetailBotId} />}
+            {activeView === 'trending'  && <TrendingChart  bots={sorted} onViewBot={setDetailBotId} />}
+            {activeView === 'bump'      && <BumpChart      bots={sorted} onViewBot={setDetailBotId} />}
+            {activeView === 'lifespan'  && <LifespanChart  bots={sorted} onViewBot={setDetailBotId} />}
+            {activeView === 'heatmap'   && <HeatmapChart   bots={sorted} />}
           </>
         )}
 

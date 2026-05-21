@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-05-21 — Phase 8 (part 1)
+
+### Additions
+- **Velocity chart:** new "Velocity" tab shows growth *rate* (metric units per day) over time instead of cumulative totals. Each line is the point-to-point rate between consecutive snapshots, so you can immediately see which bots are accelerating vs. cooling off. Supports metric and Top N selectors.
+- **Breakdown chart:** new "Breakdown" tab shows a stacked bar for each bot split into Solo and Group messages. Toggle between absolute counts and 100% normalized view. Sort by Total, Solo%, or Group%.
+- **Trending chart:** new "Trending" tab (Hot right now) lists bots ranked by recent gain over a 7/14/30-day window. Each card shows avatar, name, how much they gained, and a momentum arrow — Accelerating (↑), Steady (→), or Slowing (↓) — based on whether the growth rate sped up or slowed in the second half of the window.
+- **Bump chart:** new "Bump" tab shows rank positions over time as a line chart. #1 is at the top; lines cross whenever bots overtake each other. Great for seeing which bots have climbed or fallen in your collection. Supports metric and Top N selectors.
+- **Lifespan chart:** new "Lifespan" tab shows a Gantt-style view — each bot is a horizontal bar spanning its first to last snapshot date. A dot marks every individual snapshot. Sort by Messages, First capture, Last capture, or Duration. Hover a row to see exact date range and snapshot count in the header.
+- **Heatmap chart:** new "Heatmap" tab shows a correlation matrix for all metrics (Messages, Threads, Favorites, Solo, Group, Avg/day, Favs/1K). Each cell shows the Pearson correlation coefficient, color-coded green (positive) to red (negative). Hover any cell for the full label and value. Solo/Group columns only appear if you have breakdown data.
+- **Graceful empty states:** all six new chart tabs show a specific, helpful message when there isn't enough data yet (e.g. "Capture at least 2 snapshots per bot to see growth rate" for Velocity), rather than rendering a broken or empty chart.
+
 ## 2026-05-21
 
 ### Additions

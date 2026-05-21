@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-05-21 — Phase 8 (part 3)
+
+### Additions
+- **Bot detail → Report Card:** the bot detail modal now has a collapsible **Report Card** section (click to expand) between the metric cards and the growth chart. It shows:
+  - **Rankings** — a progress bar and "#N of M · top X%" label for each metric, so you can instantly see how this bot stacks up against everything else in your tracker.
+  - **Last 30 days** — messages, threads, and favorites gained in the past 30 days (only shown when you have at least two Total snapshots within that window).
+  - **Solo / Group donut** — a two-slice donut chart breaking down solo vs. group messages, with counts and percentages, pulled from the latest Total snapshot's breakdown data (only shown if you have breakdown data for this bot).
+  - **Snapshot streak** — count of consecutive days where at least one Total snapshot was captured (only shown when streak ≥ 2 days).
+
 ## 2026-05-21 — Phase 8 (part 2)
 
 ### Additions

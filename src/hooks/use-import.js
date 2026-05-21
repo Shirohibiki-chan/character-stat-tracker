@@ -43,6 +43,10 @@ export function useImport() {
         messages: item.capture.messages,
         favorites: item.capture.favorites,
         scope: item.capture.scope,
+        ...(item.capture.messagesGroup != null && {
+          messagesGroup: item.capture.messagesGroup,
+          messagesSolo: item.capture.messagesSolo,
+        }),
       })
       if (item.assignedBotId === '__new__') {
         const name = item.capture.name || item.newName.trim() || 'Unnamed bot'

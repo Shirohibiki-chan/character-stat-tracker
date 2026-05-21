@@ -10,7 +10,8 @@
 - **Chart focus outline:** clicking bars on the Ranking, History, Gains, and Tags charts no longer shows a white box outline.
 - **PFP squish on load:** avatars in the bot table no longer briefly distort when the page refreshes; wrapped the image in an overflow-hidden container so it's always properly clipped.
 - **Settings icon:** changed to a plain gear (was a different settings-style icon).
-- **Snapshot icon:** table snapshot button no longer uses the camera icon (reserved for changing PFP); now shows a clipboard-plus icon.
+- **Snapshot icon:** table snapshot button and bot detail Snapshots section header no longer use the camera icon (reserved for changing PFP); now shows a clipboard-plus icon.
+- **Lander flash on refresh:** the empty/onboarding screen no longer flickers on load for users who already have bots; the app now waits for IndexedDB to finish loading before deciding what to show.
 
 ---
 

@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from 'react'
-import { X, ChevronLeft, Pencil, Check, Plus, Trash2, TrendingUp, Camera } from 'lucide-react'
+import { X, ChevronLeft, Pencil, Check, Plus, Trash2, TrendingUp, Camera, ClipboardPlus } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
@@ -381,7 +381,7 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
           <div className="border border-border rounded-lg bg-surface">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
               <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <Camera size={14} className="text-accent opacity-60" />
+                <ClipboardPlus size={14} className="text-accent opacity-60" />
                 Snapshots ({sortedSnaps.length})
               </div>
               <button

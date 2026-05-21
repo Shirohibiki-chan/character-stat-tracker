@@ -32,7 +32,7 @@ const ICON_MAP = { MessageSquare, MessagesSquare, Heart }
 
 export default function App() {
   const { theme, compactMode, defaultView } = useSettings()
-  const { bots, addBot, updateBot, deleteBot, addSnapshot, deleteSnapshot } = useBots()
+  const { bots, initialized, addBot, updateBot, deleteBot, addSnapshot, deleteSnapshot } = useBots()
   const {
     search, setSearch,
     activeTag, setActiveTag,
@@ -189,7 +189,7 @@ export default function App() {
           </div>
         </header>
 
-        {totalBotCount === 0 ? (
+        {!initialized ? null : totalBotCount === 0 ? (
           <EmptyState onAdd={() => setAdding(true)} onImport={() => setShowImport(true)} />
         ) : (
           <>

@@ -1,7 +1,8 @@
 import { useState, useMemo, useRef } from 'react'
-import { X, ChevronLeft, Pencil, Check, Plus, Trash2, TrendingUp, Camera, ClipboardPlus } from 'lucide-react'
+import { X, ChevronLeft, ChevronDown, Award, Pencil, Check, Plus, Trash2, TrendingUp, Camera, ClipboardPlus } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  PieChart, Pie, Cell,
 } from 'recharts'
 import { METRICS } from '../../constants/metrics.js'
 import { getAura } from '../../constants/auras.js'
@@ -29,7 +30,7 @@ function ChartTooltip({ active, payload }) {
   )
 }
 
-export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSnapshot, onUpdateMeta, onDelete }) {
+export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, onDeleteSnapshot, onUpdateMeta, onDelete }) {
   const [editingMeta, setEditingMeta] = useState(false)
   const [metaName, setMetaName] = useState(bot.name)
   const [metaTags, setMetaTags] = useState((bot.tags || []).join(', '))
@@ -46,6 +47,7 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
   const [pfpFileName, setPfpFileName] = useState('')
   const [pfpDataUrl, setPfpDataUrl] = useState(null)
   const pfpFileRef = useRef(null)
+  const [reportOpen, setReportOpen] = useState(false)
 
   const isDirty = addingSnap && !!(newSnap.chats || newSnap.messages || newSnap.favorites)
 
@@ -103,6 +105,60 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
 
   const latest = sortedSnaps[sortedSnaps.length - 1]
   const prev = sortedSnaps.length > 1 ? sortedSnaps[sortedSnaps.length - 2] : null
+
+  const reportCard = useMemo(() => {
+    if (!allBots?.length) return null
+    const eligible = allBots.filter(b => b.latest)
+    if (!eligible.length) return null
+    const n = eligible.length
+    if (!eligible.some(b => b.id === bot.id)) return null
+
+    // Percentile rank for each metric
+    const ranks = METRICS.map(m => {
+      const byRank = [...eligible].sort((a, b) => (b[m.key] || 0) - (a[m.key] || 0))
+      const rank = byRank.findIndex(b => b.id === bot.id) + 1
+      const topPct = Math.max(1, Math.round((rank / n) * 100))
+      const barFill = n > 1 ? Math.max(1, Math.round((1 - (rank - 1) / (n - 1)) * 100)) : 100
+      return { ...m, rank, topPct, barFill, total: n }
+    })
+
+    // 30-day momentum
+    const totalSnps = sortedSnaps.filter(s => s.scope === 'Total')
+    const cutoff = new Date()
+    cutoff.setDate(cutoff.getDate() - 30)
+    const recent = totalSnps.filter(s => new Date(s.date) >= cutoff)
+    let momentum = null
+    if (recent.length >= 2) {
+      const first = recent[0], last = recent[recent.length - 1]
+      momentum = METRICS.map(m => ({ ...m, delta: (last[m.key] || 0) - (first[m.key] || 0) }))
+    }
+
+    // Solo/Group donut
+    const latestTotal = totalSnps[totalSnps.length - 1]
+    let donut = null
+    if (latestTotal?.messagesGroup != null) {
+      const solo = latestTotal.messagesSolo ?? (latestTotal.messages - latestTotal.messagesGroup)
+      const group = latestTotal.messagesGroup
+      if (solo + group > 0) {
+        donut = [
+          { name: 'Solo', value: solo, fill: '#34d399' },
+          { name: 'Group', value: group, fill: '#818cf8' },
+        ]
+      }
+    }
+
+    // Snapshot streak — consecutive days from most recent backward
+    const dates = [...new Set(totalSnps.map(s => s.date.slice(0, 10)))].sort().reverse()
+    let streak = 0
+    for (let i = 0; i < dates.length; i++) {
+      if (i === 0) { streak = 1; continue }
+      const diff = (new Date(dates[i - 1]) - new Date(dates[i])) / 86400000
+      if (diff <= 1) streak++
+      else break
+    }
+
+    return { ranks, momentum, donut, streak }
+  }, [allBots, bot.id, sortedSnaps])
 
   function saveMeta() {
     onUpdateMeta({
@@ -327,6 +383,116 @@ export default function BotDetailModal({ bot, onClose, onAddSnapshot, onDeleteSn
             <p className="text-center py-8 text-text-muted text-sm mb-6">
               No snapshots yet. Add one below or paste from CharSnap.
             </p>
+          )}
+
+          {/* Report Card */}
+          {reportCard && (
+            <div className="mb-6 border border-border rounded-lg bg-surface overflow-hidden">
+              <button
+                onClick={() => setReportOpen(o => !o)}
+                className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-surface-alt/40 transition"
+              >
+                <div className="flex items-center gap-2 text-sm text-text-secondary font-semibold">
+                  <Award size={16} className="text-accent opacity-60" />
+                  Report Card
+                </div>
+                <ChevronDown size={14} className={`text-text-muted transition-transform ${reportOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {reportOpen && (
+                <div className="px-4 pt-3 pb-4 space-y-4 border-t border-border">
+
+                  {/* Percentile ranks */}
+                  <div className="space-y-2.5">
+                    {reportCard.ranks.map(r => (
+                      <div key={r.key}>
+                        <div className="flex justify-between items-baseline text-xs mb-1">
+                          <span className="text-text-secondary font-medium">{r.label}</span>
+                          <span className="num font-bold tabular-nums" style={{ color: r.color }}>
+                            #{r.rank} of {r.total} · top {r.topPct}%
+                          </span>
+                        </div>
+                        <div className="h-1.5 bg-surface-alt rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all"
+                            style={{ width: `${r.barFill}%`, background: r.color, opacity: 0.65 }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* 30d momentum + solo/group donut */}
+                  {(reportCard.momentum || reportCard.donut) && (
+                    <div className="flex flex-wrap gap-4">
+                      {reportCard.momentum && (
+                        <div className="flex-1 min-w-[130px]">
+                          <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-muted mb-2">Last 30 days</div>
+                          <div className="space-y-1.5">
+                            {reportCard.momentum.map(m => (
+                              <div key={m.key} className="flex justify-between items-center">
+                                <span className="text-xs text-text-secondary">{m.label}</span>
+                                <span
+                                  className={`num text-xs font-bold ${m.delta > 0 ? 'text-emerald-400' : m.delta < 0 ? 'text-red-400' : 'text-text-muted'}`}
+                                >
+                                  {m.delta > 0 ? '+' : ''}{fmt(m.delta)}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {reportCard.donut && (
+                        <div className="flex items-center gap-3 flex-1 min-w-[160px]">
+                          <div style={{ width: 72, height: 72, flexShrink: 0 }}>
+                            <ResponsiveContainer width="100%" height="100%">
+                              <PieChart>
+                                <Pie
+                                  data={reportCard.donut}
+                                  dataKey="value"
+                                  innerRadius={20}
+                                  outerRadius={34}
+                                  strokeWidth={0}
+                                  startAngle={90}
+                                  endAngle={-270}
+                                >
+                                  {reportCard.donut.map((entry, i) => (
+                                    <Cell key={i} fill={entry.fill} opacity={0.8} />
+                                  ))}
+                                </Pie>
+                              </PieChart>
+                            </ResponsiveContainer>
+                          </div>
+                          <div className="space-y-1.5">
+                            {reportCard.donut.map(d => {
+                              const total = reportCard.donut.reduce((s, x) => s + x.value, 0)
+                              return (
+                                <div key={d.name} className="flex items-center gap-1.5 text-xs">
+                                  <span className="w-2 h-2 rounded-full shrink-0" style={{ background: d.fill }} />
+                                  <span className="text-text-secondary">{d.name}</span>
+                                  <span className="num font-bold">{fmt(d.value)}</span>
+                                  <span className="text-text-muted">({Math.round(d.value / total * 100)}%)</span>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Snapshot streak */}
+                  {reportCard.streak >= 2 && (
+                    <p className="text-xs text-text-muted">
+                      <span className="text-text-secondary font-semibold num">{reportCard.streak}</span>{' '}
+                      consecutive day{reportCard.streak !== 1 ? 's' : ''} with a snapshot captured
+                    </p>
+                  )}
+
+                </div>
+              )}
+            </div>
           )}
 
           {/* Growth chart */}

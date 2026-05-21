@@ -53,7 +53,15 @@ Phases 0–7 from `docs/plan.md` are complete. Polish roadmap (this doc) is most
 - **Timeline → Cohort mode** (`OverlayChart.jsx`):
   - New "Calendar / Cohort" toggle. Calendar = existing date-based X axis. Cohort = X axis shows "Day N" (days since each bot's first Total-scope snapshot).
   - In Cohort mode the data is rebuilt with per-bot day offsets so lines are aligned to their own start dates rather than calendar dates. Tooltip shows "Day N" label. X axis scale switches to `linear`.
-  - PR C (bot detail report card) still pending.
+## Phase 8 App Changes (2026-05-21 — PR C: report card)
+
+- **BotDetailModal → Report Card section** (`BotDetailModal.jsx`):
+  - New collapsible "Report Card" panel between metric cards and growth chart (collapsed by default, click to toggle).
+  - **Percentile ranks** — three progress bars (one per metric) each labeled "#N of M · top X%", computed against all bots in the current `sorted` array that have at least one Total snapshot.
+  - **30-day momentum** — shows gain for each metric over the last 30 days (needs ≥ 2 Total snapshots in window; hidden if not enough data).
+  - **Solo/Group donut** — 2-slice recharts PieChart with count + percentage labels; only rendered when the latest Total snapshot has messagesGroup data.
+  - **Snapshot streak** — consecutive days (backward from most recent) with at least one Total snapshot; hidden when streak < 2.
+  - `App.jsx` now passes `sorted` array as `allBots` prop to `BotDetailModal` for percentile computation.
 
 ## Recent App Changes (2026-05-21)
 

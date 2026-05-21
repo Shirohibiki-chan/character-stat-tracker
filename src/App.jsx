@@ -431,6 +431,7 @@ export default function App() {
       {detailBot && (
         <BotDetailModal
           bot={detailBot}
+          allBots={sorted}
           onClose={() => setDetailBotId(null)}
           onAddSnapshot={snap => addSnapshot(detailBotId, snap)}
           onDeleteSnapshot={date => deleteSnapshot(detailBotId, date)}

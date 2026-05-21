@@ -51,6 +51,10 @@ function parseJSON(text) {
       messages: parseCommaNum(c.messages),
       favorites: parseCommaNum(c.favorites),
       capturedAt: c.capturedAt || new Date().toISOString(),
+      ...(c.messagesGroup != null && {
+        messagesGroup: parseCommaNum(c.messagesGroup),
+        messagesSolo: parseCommaNum(c.messagesSolo),
+      }),
     }))
     if (!captures.length) return { kind: 'unknown', captures: [] }
     return { kind: 'json', captures }

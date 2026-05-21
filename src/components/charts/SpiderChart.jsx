@@ -436,21 +436,33 @@ export default function SpiderChart({ bots, onViewBot, mode, setMode, selectedId
         <div className="p-5">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
             {bots.map(bot => (
-              <button
+              <div
                 key={bot.id}
-                onClick={() => onViewBot?.(bot.id)}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-border bg-surface-alt hover:border-accent/40 hover:bg-surface transition group cursor-pointer"
+                className="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-border bg-surface-alt hover:border-accent/40 hover:bg-surface transition group"
               >
-                <MiniSpider normValues={normMap[bot.id] || {}} color={getAura(bot.id)} />
-                <span className="text-xs font-bold text-text-primary truncate w-full text-center group-hover:text-accent-light transition leading-tight">
-                  {bot.name}
-                </span>
-                <span className="text-[10px] text-text-muted num">{fmt(bot.messages || 0)} msgs</span>
-              </button>
+                {/* Click the spider → Single mode with this bot */}
+                <div
+                  onClick={() => { setSelectedIds([bot.id]); setMode('single') }}
+                  className="cursor-pointer rounded hover:opacity-80 transition"
+                  title="View in Single mode"
+                >
+                  <MiniSpider normValues={normMap[bot.id] || {}} color={getAura(bot.id)} />
+                </div>
+                {/* Click the name/count → bot detail modal */}
+                <button
+                  onClick={() => onViewBot?.(bot.id)}
+                  className="w-full text-center hover:opacity-80 transition"
+                >
+                  <span className="text-xs font-bold text-text-primary truncate block w-full group-hover:text-accent-light transition leading-tight">
+                    {bot.name}
+                  </span>
+                  <span className="text-[10px] text-text-muted num">{fmt(bot.messages || 0)} msgs</span>
+                </button>
+              </div>
             ))}
           </div>
           <p className="text-text-muted text-[11px] mt-4 text-center">
-            Axes normalized to dataset max · click any card to open bot details
+            Axes normalized to dataset max · click a spider to open Single view · click the name to open bot details
           </p>
         </div>
 

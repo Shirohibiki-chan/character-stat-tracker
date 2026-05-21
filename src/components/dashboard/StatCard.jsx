@@ -10,7 +10,7 @@ export default function StatCard({ label, value, card, icon: Icon, gradient, del
   const showDelta    = delta    != null && delta    !== 0
   const showDeltaDay = deltaDay != null && deltaDay !== 0
   const deltaColor    = delta    > 0 ? 'var(--color-positive)' : 'var(--color-negative)'
-  const deltaDayColor = deltaDay > 0 ? 'var(--color-positive)' : 'var(--color-negative)'
+  const deltaDayColor = deltaDay > 0 ? 'var(--color-table-nums)' : 'var(--color-negative)'
 
   return (
     <div

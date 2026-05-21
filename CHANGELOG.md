@@ -7,9 +7,11 @@
   - **Gallery** (default) — one mini spider per bot in a responsive grid, sorted by total messages. Click any card to open bot details.
   - **Single** — pick a primary bot, then add up to 3 comparison overlays. Each bot gets a distinct color; fills are semi-transparent so layered shapes stay readable. Hover any vertex to see that bot's raw value for that axis.
   - Selected bots in Single mode are remembered when you switch tabs and come back.
+- **Date arrows on Top gainers chart:** ‹ and › arrow buttons now flank the date picker, so you can step through dates one day at a time without opening the calendar.
 
 ### Fixes
 - **Full numbers in snapshot history:** the Messages, Threads, and Favorites columns in a bot's snapshot table now show full comma-formatted numbers (e.g. 3,100,000) instead of the abbreviated shorthand (3.1M).
+- **Stat card delta colors:** the "today" delta line on each stat tile is now orange (matching the table number color) instead of the same green as the "this week" line, so the two are easier to tell apart at a glance. Negative deltas remain red.
 
 ### Additions
 - **Solo and Group columns in bot table:** when any of your bots has group chat breakdown data, two columns appear next to Messages — Solo and Group — showing the split counts and gains since the previous snapshot. Both are sortable. The columns are hidden entirely when no breakdown data exists.

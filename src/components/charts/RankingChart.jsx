@@ -34,7 +34,7 @@ export default function RankingChart({ bots, onViewBot }) {
   return (
     <section className="border border-border rounded-lg bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm font-semibold text-text-secondary">
+        <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
           <BarChart3 size={16} className="text-accent opacity-60" />
           Top {data.length} by {m?.label.toLowerCase()}
         </div>
@@ -44,7 +44,7 @@ export default function RankingChart({ bots, onViewBot }) {
               <button
                 key={mx.key}
                 onClick={() => setMetric(mx.key)}
-                className={`px-2.5 py-1 text-xs font-medium rounded transition ${metric === mx.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                className={`px-2.5 py-1 text-xs font-semibold rounded transition ${metric === mx.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
                 style={metric === mx.key ? { boxShadow: `inset 0 0 0 1px ${mx.color}40` } : {}}
               >
                 {mx.label}

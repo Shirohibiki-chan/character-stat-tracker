@@ -122,7 +122,7 @@ export default function OverlayChart({ bots, onViewBot }) {
   return (
     <section className="border border-border rounded-lg bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm font-semibold text-text-secondary">
+        <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
           <TrendingUp size={16} className="text-accent opacity-60" />
           {topN === 0 || eligibleBots.length >= totalEligible
             ? `${eligibleBots.length} bot${eligibleBots.length !== 1 ? 's' : ''}`
@@ -136,7 +136,7 @@ export default function OverlayChart({ bots, onViewBot }) {
               <button
                 key={m.key}
                 onClick={() => setMetric(m.key)}
-                className={`px-2.5 py-1 text-xs font-medium rounded transition ${metric === m.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                className={`px-2.5 py-1 text-xs font-semibold rounded transition ${metric === m.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
                 style={metric === m.key ? { boxShadow: `inset 0 0 0 1px ${m.color}40` } : {}}
               >
                 {m.label}
@@ -146,13 +146,13 @@ export default function OverlayChart({ bots, onViewBot }) {
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
             <button
               onClick={() => setRelative(false)}
-              className={`px-2.5 py-1 text-xs font-medium rounded transition ${!relative ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+              className={`px-2.5 py-1 text-xs font-semibold rounded transition ${!relative ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
             >
               Total
             </button>
             <button
               onClick={() => setRelative(true)}
-              className={`px-2.5 py-1 text-xs font-medium rounded transition ${relative ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+              className={`px-2.5 py-1 text-xs font-semibold rounded transition ${relative ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
             >
               Growth
             </button>
@@ -162,7 +162,7 @@ export default function OverlayChart({ bots, onViewBot }) {
               <button
                 key={t.n}
                 onClick={() => handleSetTopN(t.n)}
-                className={`px-2.5 py-1 text-xs font-medium rounded transition ${topN === t.n ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                className={`px-2.5 py-1 text-xs font-semibold rounded transition ${topN === t.n ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
               >
                 {t.label}
               </button>
@@ -220,7 +220,7 @@ export default function OverlayChart({ bots, onViewBot }) {
             <button
               key={bot.id}
               onClick={() => onViewBot?.(bot.id)}
-              className="flex items-center gap-1.5 text-xs font-medium text-text-tertiary hover:text-text-primary transition min-w-0"
+              className="flex items-center gap-1.5 text-xs font-semibold text-text-tertiary hover:text-text-primary transition min-w-0"
               title={bot.name}
             >
               <div className="w-4 h-[2px] rounded-full shrink-0" style={{ backgroundColor: bot.color }} />

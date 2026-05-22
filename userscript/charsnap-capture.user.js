@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.6
+// @version      2.7
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -481,7 +481,7 @@ function injectCaptureButton(dialog) {
       btn.classList.add('charsnap-capture-btn--success')
       setTimeout(() => {
         const closeBtn = [...dialog.querySelectorAll('button')].find(b => b.textContent.trim() === 'Close')
-        if (closeBtn) closeBtn.click()
+        if (closeBtn) dispatchPointerClick(closeBtn)
       }, 800)
       setTimeout(() => {
         btn.textContent = 'Capture'

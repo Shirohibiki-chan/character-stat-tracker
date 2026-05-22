@@ -173,6 +173,10 @@ All resolved as of 2026-05-16–17:
 - `settingsOpen` module state; collapse and hide both reset it to false.
 - Settings gear icon no longer disabled; "Settings (coming soon)" tooltip updated to "Settings".
 
+### v2.7 (2026-05-22) — Fix close button dispatch method
+
+- `.click()` is also a synthetic event that Radix UI ignores. Switched to `dispatchPointerClick()` (already used for tab switching) which fires the full pointer event sequence Radix UI responds to.
+
 ### v2.6 (2026-05-22) — Fix close button selector
 
 - Previous selectors targeted `aria-label="Close"` and `data-radix-dialog-close`, but CharSnap's close button has neither — it just has the text "Close". Switched to finding the button by text content.

@@ -173,6 +173,10 @@ All resolved as of 2026-05-16–17:
 - `settingsOpen` module state; collapse and hide both reset it to false.
 - Settings gear icon no longer disabled; "Settings (coming soon)" tooltip updated to "Settings".
 
+### v2.4 (2026-05-22) — Fix modal auto-close (click close button directly)
+
+- v2.3's Escape keydown approach didn't work because Radix UI ignores synthetic keyboard events (`isTrusted: false`). Switched to finding and clicking the actual close button (`button[aria-label="Close"]` / `[data-radix-dialog-close]`). Logs all dialog buttons to console if no selector matches, so the right selector can be identified.
+
 ### v2.3 (2026-05-22) — Auto-close modal after capture
 
 - After a successful capture, the modal now closes automatically after 0.8 s (long enough to see the ✓ Captured flash). Implemented by dispatching an `Escape` keydown event on `document` from the success path of the capture button click handler. Duplicate and error paths are unaffected — the modal stays open so the user can see what happened.

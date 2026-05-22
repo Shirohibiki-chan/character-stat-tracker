@@ -3,7 +3,7 @@
 ## 2026-05-22
 
 ### Additions
-- **Userscript v2.3 — modal auto-close:** the stats modal now closes on its own after you capture a bot, so you don't have to dismiss it manually. You still see the "✓ Captured" flash for a moment before it closes.
+- **Userscript v2.4 — modal auto-close (fix):** the stats modal now reliably closes after you capture a bot. The previous v2.3 attempt used a keyboard shortcut that CharSnap's UI ignored; v2.4 clicks the actual Close button instead.
 - **Snapshot timestamps:** the snapshot history table now shows the exact time each snapshot was saved (e.g., "May 22, 2026 · 3:45 PM"), displayed in your local timezone. Snapshots captured via the userscript already had precise times; manually added snapshots now record the actual time of day when you click Save instead of defaulting to noon.
 
 ### Fixes

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.3
+// @version      2.4
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -470,7 +470,14 @@ function injectCaptureButton(dialog) {
       btn.textContent = '✓ Captured'
       btn.classList.add('charsnap-capture-btn--success')
       setTimeout(() => {
-        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+        const closeBtn = dialog.querySelector('button[aria-label="Close"]')
+          || dialog.querySelector('[data-radix-dialog-close]')
+          || dialog.querySelector('button[aria-label="close"]')
+        if (closeBtn) {
+          closeBtn.click()
+        } else {
+          console.warn('[CharSnap Capture] Could not find close button. Buttons in dialog:', [...dialog.querySelectorAll('button')].map(b => ({ text: b.textContent.trim(), aria: b.getAttribute('aria-label'), title: b.title })))
+        }
       }, 800)
       setTimeout(() => {
         btn.textContent = 'Capture'

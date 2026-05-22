@@ -8,6 +8,7 @@ import { getBarColor } from '../../constants/auras.js'
 import { fmt, fmtFull, fmtDate } from '../../constants/format.js'
 
 const WINDOWS = [
+  { label: '24h', days: 1 },
   { label: '7d', days: 7 },
   { label: '30d', days: 30 },
   { label: '90d', days: 90 },
@@ -52,7 +53,7 @@ function computeGains(bots, metric, windowDays) {
 }
 
 export default function GainsChart({ bots, onViewBot }) {
-  const [windowDays, setWindowDays] = useState(30)
+  const [windowDays, setWindowDays] = useState(1)
   const [metric, setMetric] = useState('messages')
 
   const m = METRICS.find(mx => mx.key === metric)

@@ -23,6 +23,10 @@ Phases 0–7 from `docs/plan.md` are complete. Polish roadmap (this doc) is most
 - **Phase 6 (complete):** Enhanced empty state, onboarding banner, Data & Backup modal (export JSON / import from file / reset all data), What's New modal (renders changelog in-app), README, horizontal tab bar scroll; mobile layout finalized 2026-05-17
 - **Phase 7:** Tampermonkey userscript — auto-capture on Total tab activation, draggable floating queue pill, toast notifications, JSON export to clipboard; v1.8 (2026-05-17) added strict on-load position clamp and Ctrl+Shift+Alt+R pill recovery shortcut
 
+## Recent App Changes (2026-05-22)
+
+- **GainsChart — 24h window:** Added `{ label: '24h', days: 1 }` as first option in `WINDOWS`; default `windowDays` changed from `30` to `1`.
+
 ## Phase 8 App Changes (2026-05-21 — PR A: new chart tabs)
 
 - **6 new chart tabs added** (tab bar now has 14 tabs total, horizontally scrollable):

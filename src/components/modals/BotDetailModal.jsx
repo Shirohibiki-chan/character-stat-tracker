@@ -122,15 +122,20 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
       return { ...m, rank, topPct, barFill, total: n }
     })
 
-    // 30-day momentum
+    // 7-day and 30-day momentum
     const totalSnps = sortedSnaps.filter(s => s.scope === 'Total')
-    const cutoff = new Date()
-    cutoff.setDate(cutoff.getDate() - 30)
-    const recent = totalSnps.filter(s => new Date(s.date) >= cutoff)
-    let momentum = null
-    if (recent.length >= 2) {
-      const first = recent[0], last = recent[recent.length - 1]
-      momentum = METRICS.map(m => ({ ...m, delta: (last[m.key] || 0) - (first[m.key] || 0) }))
+    const cutoff30 = new Date(); cutoff30.setDate(cutoff30.getDate() - 30)
+    const cutoff7 = new Date(); cutoff7.setDate(cutoff7.getDate() - 7)
+    const recent30 = totalSnps.filter(s => new Date(s.date) >= cutoff30)
+    const recent7 = totalSnps.filter(s => new Date(s.date) >= cutoff7)
+    let momentum30 = null, momentum7 = null
+    if (recent30.length >= 2) {
+      const first = recent30[0], last = recent30[recent30.length - 1]
+      momentum30 = METRICS.map(m => ({ ...m, delta: (last[m.key] || 0) - (first[m.key] || 0) }))
+    }
+    if (recent7.length >= 2) {
+      const first = recent7[0], last = recent7[recent7.length - 1]
+      momentum7 = METRICS.map(m => ({ ...m, delta: (last[m.key] || 0) - (first[m.key] || 0) }))
     }
 
     // Solo/Group donut
@@ -157,7 +162,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
       else break
     }
 
-    return { ranks, momentum, donut, streak }
+    return { ranks, momentum7, momentum30, donut, streak }
   }, [allBots, bot.id, sortedSnaps])
 
   function saveMeta() {
@@ -425,24 +430,31 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                     ))}
                   </div>
 
-                  {/* 30d momentum + solo/group donut */}
-                  {(reportCard.momentum || reportCard.donut) && (
+                  {/* Momentum windows + solo/group donut */}
+                  {(reportCard.momentum7 || reportCard.momentum30 || reportCard.donut) && (
                     <div className="flex flex-wrap gap-4">
-                      {reportCard.momentum && (
-                        <div className="flex-1 min-w-[130px]">
-                          <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-muted mb-2">Last 30 days</div>
-                          <div className="space-y-1.5">
-                            {reportCard.momentum.map(m => (
-                              <div key={m.key} className="flex justify-between items-center">
-                                <span className="text-xs text-text-secondary">{m.label}</span>
-                                <span
-                                  className={`num text-xs font-bold ${m.delta > 0 ? 'text-emerald-400' : m.delta < 0 ? 'text-red-400' : 'text-text-muted'}`}
-                                >
-                                  {m.delta > 0 ? '+' : ''}{fmt(m.delta)}
-                                </span>
+                      {(reportCard.momentum7 || reportCard.momentum30) && (
+                        <div className="flex gap-5 shrink-0">
+                          {[
+                            { label: 'Last 7 days', data: reportCard.momentum7 },
+                            { label: 'Last 30 days', data: reportCard.momentum30 },
+                          ].filter(w => w.data).map(w => (
+                            <div key={w.label}>
+                              <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-muted mb-2">{w.label}</div>
+                              <div className="space-y-1.5">
+                                {w.data.map(m => (
+                                  <div key={m.key} className="flex items-center gap-3">
+                                    <span className="text-xs text-text-secondary">{m.label}</span>
+                                    <span
+                                      className={`num text-xs font-bold ${m.delta > 0 ? 'text-emerald-400' : m.delta < 0 ? 'text-red-400' : 'text-text-muted'}`}
+                                    >
+                                      {m.delta > 0 ? '+' : ''}{fmt(m.delta)}
+                                    </span>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
-                          </div>
+                            </div>
+                          ))}
                         </div>
                       )}
 

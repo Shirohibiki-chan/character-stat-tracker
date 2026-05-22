@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-22
+
+### Additions
+- **Snapshot timestamps:** the snapshot history table now shows the exact time each snapshot was saved (e.g., "May 22, 2026 · 3:45 PM"), displayed in your local timezone. Snapshots captured via the userscript already had precise times; manually added snapshots now record the actual time of day when you click Save instead of defaulting to noon.
+
 ## 2026-05-21 — Phase 8 (part 3)
 
 ### Additions

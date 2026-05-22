@@ -20,6 +20,16 @@ export function fmtDate(iso) {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
+export function fmtDateTime(iso) {
+  if (!iso) return '—'
+  const d = new Date(iso)
+  return (
+    d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
+    ' · ' +
+    d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+  )
+}
+
 export function fmtRelative(iso) {
   if (!iso) return 'never'
   const diffMs = Date.now() - new Date(iso).getTime()

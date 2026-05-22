@@ -173,6 +173,11 @@ All resolved as of 2026-05-16–17:
 - `settingsOpen` module state; collapse and hide both reset it to false.
 - Settings gear icon no longer disabled; "Settings (coming soon)" tooltip updated to "Settings".
 
+### v2.8 (2026-05-22) — Fix modal close via React props
+
+- `dispatchPointerClick` and `.click()` are both synthetic events that Radix UI ignores. Added `closeDialog(dialog)` helper that reads the close button's React props directly from the DOM (`__reactProps$...` key) and calls `onClick` without going through event dispatch at all.
+- Also fixed the auto-capture path, which still had the old broken `aria-label` selectors from v2.4.
+
 ### v2.7 (2026-05-22) — Fix close button dispatch method
 
 - `.click()` is also a synthetic event that Radix UI ignores. Switched to `dispatchPointerClick()` (already used for tab switching) which fires the full pointer event sequence Radix UI responds to.

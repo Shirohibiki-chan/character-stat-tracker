@@ -7,6 +7,7 @@
 
 ### Fixes
 - **"+N today" showing stale data:** the daily delta on stat cards was computing the difference between your two most recent snapshots even when neither was from today. It now only shows a value when your latest snapshot for that bot was actually captured after 0:00 UTC today.
+- **"+N this week" showing stale data:** same bug as above but for the weekly delta — it was computing the difference between recent snapshots even if none were from the current week (Monday 0:00 UTC reset). It now only shows a value when the latest snapshot is actually from this week.
 
 ## 2026-05-21 — Phase 8 (part 3)
 

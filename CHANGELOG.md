@@ -3,7 +3,7 @@
 ## 2026-05-22
 
 ### Additions
-- **Userscript v2.7 — modal auto-close (fix):** the stats modal now correctly closes itself after capturing.
+- **Userscript v2.8 — modal auto-close (fix):** the stats modal now correctly closes itself after capturing.
 - **Snapshot timestamps:** the snapshot history table now shows the exact time each snapshot was saved (e.g., "May 22, 2026 · 3:45 PM"), displayed in your local timezone. Snapshots captured via the userscript already had precise times; manually added snapshots now record the actual time of day when you click Save instead of defaulting to noon.
 
 ### Fixes

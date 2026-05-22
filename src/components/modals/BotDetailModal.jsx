@@ -370,16 +370,16 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                       </span>
                     </div>
                     <div className="num text-3xl font-bold" style={{ color: m.card.number }}>{fmt(val)}</div>
-                    <div className="text-[10px] num mt-0.5" style={{ color: m.card.label }}>{fmtFull(val)}</div>
+                    <div className="text-[10px] num font-semibold mt-0.5" style={{ color: m.card.label }}>{fmtFull(val)}</div>
                     {m.key === 'messages' && latest.messagesGroup != null && (
-                      <div className="text-[10px] num mt-0.5" style={{ color: m.card.label }}>
+                      <div className="text-[10px] num font-semibold mt-0.5" style={{ color: m.card.label }}>
                         {fmt(latest.messagesSolo ?? (latest.messages - latest.messagesGroup))} solo
                         {' + '}
                         {fmt(latest.messagesGroup)} grp
                       </div>
                     )}
                     {delta !== null && delta !== 0 && (
-                      <div className={`text-xs mt-1 num ${delta > 0 ? 'text-emerald-400/80' : 'text-red-400/80'}`}>
+                      <div className={`text-xs mt-1 num font-semibold ${delta > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                         {delta > 0 ? '+' : ''}{fmt(delta)} since {fmtDate(prev.date)}
                       </div>
                     )}

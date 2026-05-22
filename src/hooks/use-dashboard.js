@@ -101,8 +101,9 @@ export function useDashboard(bots) {
         if (!dayBaseline) dayBaseline = totalSnaps[0]
       }
 
+      const latestIsToday = latest && new Date(latest.date).getTime() >= todayStartMs
       const gain     = (key) => latest && weekBaseline ? (latest[key] ?? 0) - (weekBaseline[key] ?? 0) : 0
-      const gainDay  = (key) => latest && dayBaseline  ? (latest[key] ?? 0) - (dayBaseline[key]  ?? 0) : 0
+      const gainDay  = (key) => latestIsToday && dayBaseline ? (latest[key] ?? 0) - (dayBaseline[key] ?? 0) : 0
 
       return {
         chats:              acc.chats          + (b.chats     || 0),

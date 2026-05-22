@@ -173,6 +173,10 @@ All resolved as of 2026-05-16–17:
 - `settingsOpen` module state; collapse and hide both reset it to false.
 - Settings gear icon no longer disabled; "Settings (coming soon)" tooltip updated to "Settings".
 
+### v2.6 (2026-05-22) — Fix close button selector
+
+- Previous selectors targeted `aria-label="Close"` and `data-radix-dialog-close`, but CharSnap's close button has neither — it just has the text "Close". Switched to finding the button by text content.
+
 ### v2.5 (2026-05-22) — Fix modal auto-close for auto-capture mode
 
 - v2.3 and v2.4 added the close logic only to the manual Capture button path. Auto-capture mode (the default) has no button — it captures silently when you open the modal — so the close never ran. Added the same close-button logic to `performAutoCapture`'s `doCapture` function.

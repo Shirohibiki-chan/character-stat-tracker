@@ -3,7 +3,7 @@
 ## 2026-05-22
 
 ### Additions
-- **Userscript v2.5 — modal auto-close (fix):** the stats modal now closes after capturing in both auto and manual modes. Previous attempts only wired up the close logic to the manual Capture button; v2.5 also closes the modal when auto-capture fires silently in the background.
+- **Userscript v2.6 — modal auto-close (fix):** the stats modal now correctly closes itself after capturing. Previous attempts used the wrong selector for CharSnap's close button; v2.6 finds it by its text content instead.
 - **Snapshot timestamps:** the snapshot history table now shows the exact time each snapshot was saved (e.g., "May 22, 2026 · 3:45 PM"), displayed in your local timezone. Snapshots captured via the userscript already had precise times; manually added snapshots now record the actual time of day when you click Save instead of defaulting to noon.
 
 ### Fixes

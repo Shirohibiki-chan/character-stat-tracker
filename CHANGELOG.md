@@ -3,6 +3,7 @@
 ## 2026-05-22
 
 ### Additions
+- **Report Card — Last 7 days:** the Report Card in bot detail now shows both a "Last 7 days" and "Last 30 days" column side by side. Each window only appears when you have at least 2 snapshots within it.
 - **Top gainers — 24h window:** the Top Gainers chart now has a "24h" time window option and defaults to it on page load.
 - **Userscript v2.8 — modal auto-close (fix):** the stats modal now correctly closes itself after capturing.
 - **Snapshot timestamps:** the snapshot history table now shows the exact time each snapshot was saved (e.g., "May 22, 2026 · 3:45 PM"), displayed in your local timezone. Snapshots captured via the userscript already had precise times; manually added snapshots now record the actual time of day when you click Save instead of defaulting to noon.

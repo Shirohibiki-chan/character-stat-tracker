@@ -470,7 +470,14 @@ function injectCaptureButton(dialog) {
       btn.textContent = '✓ Captured'
       btn.classList.add('charsnap-capture-btn--success')
       setTimeout(() => {
-        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+        const closeBtn = dialog.querySelector('button[aria-label="Close"]')
+          || dialog.querySelector('[data-radix-dialog-close]')
+          || dialog.querySelector('button[aria-label="close"]')
+        if (closeBtn) {
+          closeBtn.click()
+        } else {
+          console.warn('[CharSnap Capture] Could not find close button. Buttons in dialog:', [...dialog.querySelectorAll('button')].map(b => ({ text: b.textContent.trim(), aria: b.getAttribute('aria-label'), title: b.title })))
+        }
       }, 800)
       setTimeout(() => {
         btn.textContent = 'Capture'

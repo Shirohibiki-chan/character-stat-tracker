@@ -444,7 +444,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                               <div className="space-y-1.5">
                                 {w.data.map(m => (
                                   <div key={m.key} className="flex items-center gap-3">
-                                    <span className="text-xs text-text-secondary">{m.label}</span>
+                                    <span className="text-xs text-text-secondary font-semibold">{m.label}</span>
                                     <span
                                       className={`num text-xs font-bold ${m.delta > 0 ? 'text-emerald-400' : m.delta < 0 ? 'text-red-400' : 'text-text-muted'}`}
                                     >
@@ -487,7 +487,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                                   <span className="w-2 h-2 rounded-full shrink-0" style={{ background: d.fill }} />
                                   <span className="text-text-secondary">{d.name}</span>
                                   <span className="num font-bold">{fmt(d.value)}</span>
-                                  <span className="text-text-muted">({Math.round(d.value / total * 100)}%)</span>
+                                  <span className="num font-semibold text-text-secondary">({Math.round(d.value / total * 100)}%)</span>
                                 </div>
                               )
                             })}

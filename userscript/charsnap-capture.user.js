@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.4
+// @version      2.5
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -395,6 +395,16 @@ function performAutoCapture(dialog) {
       `Captured <b>${escHtml(capture.name)}</b>.` +
       ` <button class="cs-toast-undo" data-ts="${escHtml(capture.capturedAt)}">Undo</button>`
     )
+    setTimeout(() => {
+      const closeBtn = dialog.querySelector('button[aria-label="Close"]')
+        || dialog.querySelector('[data-radix-dialog-close]')
+        || dialog.querySelector('button[aria-label="close"]')
+      if (closeBtn) {
+        closeBtn.click()
+      } else {
+        console.warn('[CharSnap Capture] Could not find close button. Buttons in dialog:', [...dialog.querySelectorAll('button')].map(b => ({ text: b.textContent.trim(), aria: b.getAttribute('aria-label'), title: b.title })))
+      }
+    }, 800)
   }
 
   // Already on Total — nothing to wait for

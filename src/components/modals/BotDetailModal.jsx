@@ -6,7 +6,7 @@ import {
 } from 'recharts'
 import { METRICS } from '../../constants/metrics.js'
 import { getAura } from '../../constants/auras.js'
-import { fmt, fmtFull, fmtDate, parseNum } from '../../constants/format.js'
+import { fmt, fmtFull, fmtDate, fmtDateTime, parseNum } from '../../constants/format.js'
 import { createSnapshot, SCOPES } from '../../constants/schema.js'
 import Modal from './Modal.jsx'
 
@@ -175,8 +175,11 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
   }
 
   function submitSnap() {
+    const now = new Date()
+    const [y, m, d] = newSnap.date.split('-').map(Number)
+    const dt = new Date(y, m - 1, d, now.getHours(), now.getMinutes(), now.getSeconds())
     onAddSnapshot(createSnapshot({
-      date: new Date(newSnap.date + 'T12:00:00').toISOString(),
+      date: dt.toISOString(),
       chats: parseNum(newSnap.chats),
       messages: parseNum(newSnap.messages),
       favorites: parseNum(newSnap.favorites),
@@ -630,7 +633,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
               <tbody>
                 {[...sortedSnaps].reverse().map(s => (
                   <tr key={s.id} className="border-b border-border-subtle hover:bg-surface-alt/50">
-                    <td className="py-2 px-4 text-xs text-text-secondary font-semibold">{fmtDate(s.date)}</td>
+                    <td className="py-2 px-4 text-xs text-text-secondary font-semibold">{fmtDateTime(s.date)}</td>
                     <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmtFull(s.messages)}</td>
                     <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmtFull(s.chats)}</td>
                     <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmtFull(s.favorites)}</td>

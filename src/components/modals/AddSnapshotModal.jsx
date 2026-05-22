@@ -15,8 +15,11 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
   const isDirty = !!(chats || messages || favorites)
 
   function submit() {
+    const now = new Date()
+    const [y, m, d] = date.split('-').map(Number)
+    const dt = new Date(y, m - 1, d, now.getHours(), now.getMinutes(), now.getSeconds())
     onAdd(createSnapshot({
-      date: new Date(date + 'T12:00:00').toISOString(),
+      date: dt.toISOString(),
       chats: parseNum(chats),
       messages: parseNum(messages),
       favorites: parseNum(favorites),

@@ -5,6 +5,9 @@
 ### Additions
 - **Snapshot timestamps:** the snapshot history table now shows the exact time each snapshot was saved (e.g., "May 22, 2026 · 3:45 PM"), displayed in your local timezone. Snapshots captured via the userscript already had precise times; manually added snapshots now record the actual time of day when you click Save instead of defaulting to noon.
 
+### Fixes
+- **"+N today" showing stale data:** the daily delta on stat cards was computing the difference between your two most recent snapshots even when neither was from today. It now only shows a value when your latest snapshot for that bot was actually captured after 0:00 UTC today.
+
 ## 2026-05-21 — Phase 8 (part 3)
 
 ### Additions

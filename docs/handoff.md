@@ -181,6 +181,10 @@ All resolved as of 2026-05-16–17:
 - `settingsOpen` module state; collapse and hide both reset it to false.
 - Settings gear icon no longer disabled; "Settings (coming soon)" tooltip updated to "Settings".
 
+### v2.9 (2026-05-23) — Fix scroll reset on HUD refresh
+
+- `updateHUD()` does a full `innerHTML` wipe on every call (triggered by exports, removes, checkbox toggles, and even background CharSnap DOM mutations). This destroyed `.cs-captures-list` and reset `scrollTop` to 0. Fixed by saving `scrollTop` before the wipe and restoring it after the rebuild.
+
 ### v2.8 (2026-05-22) — Fix modal close via React props
 
 - `dispatchPointerClick` and `.click()` are both synthetic events that Radix UI ignores. Added `closeDialog(dialog)` helper that reads the close button's React props directly from the DOM (`__reactProps$...` key) and calls `onClick` without going through event dispatch at all.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-23
+
+### Fixes
+- **Userscript v2.9 — scroll position resetting:** the bot list in the HUD no longer jumps back to the top when you export, remove a bot, or when CharSnap's page updates in the background. Your scroll position is now preserved across every HUD refresh.
+
 ## 2026-05-22
 
 ### Additions

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-23 (4)
+
+### Fixes
+- **Userscript — pill can't be dragged (v2.12):** the collapsed pill couldn't be repositioned by dragging because the drag code was cancelling any drag that started on a button — and the pill itself is a button. In pill mode there are no action buttons to protect, so the exclusion now only applies when the HUD is expanded.
+
 ## 2026-05-23 (3)
 
 ### Additions

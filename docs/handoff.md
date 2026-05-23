@@ -198,6 +198,7 @@ All resolved as of 2026-05-16–17:
 - No resize grip — responsive fixed size: `min(340px, viewport-40px)` × `min(480px, viewport-80px)`.
 - Re-init guard: `window.__csBookmarklet.restore()` called when bookmark is tapped again — restores hidden HUD and refreshes content.
 - Install: minify source → prepend `javascript:` → save as browser bookmark. See file header for platform-specific instructions (iOS Safari, Android Chrome, desktop).
+- **Lander install section (2026-05-23):** `EmptyState.jsx` now renders `BookmarkletInstall.jsx` below the "How to start" card. Shows a draggable amber link labeled **CS Capture Bookmarklet** + a Copy URL button (fallback for iOS). Platform-specific instructions for desktop drag, Android long-press, and iOS paste-into-bookmark. Note warns against running both bookmarklet and userscript simultaneously. The bookmarklet URL is auto-generated at build time via `scripts/build-bookmarklet.js` (terser) → `src/constants/bookmarklet-url.js`; regenerates automatically on `npm run build` via the `prebuild` hook.
 
 ### v2.13 (2026-05-23) — Click header to collapse
 

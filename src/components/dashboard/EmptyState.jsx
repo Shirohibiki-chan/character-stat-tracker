@@ -1,4 +1,5 @@
 import { Plus, Upload, TrendingUp, BarChart3, LineChart } from 'lucide-react'
+import BookmarkletInstall from './BookmarkletInstall.jsx'
 
 const FEATURES = [
   {
@@ -79,6 +80,8 @@ export default function EmptyState({ onAdd, onImport }) {
           </button>
         </div>
       </div>
+
+      <BookmarkletInstall />
     </div>
   )
 }

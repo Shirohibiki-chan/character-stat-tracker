@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-23 (7)
+
+### Additions
+- **Bookmarklet install section on lander:** The lander page (visible to new users and via clicking the app title) now has an "Optional: capture tool" section. It explains what the bookmarklet does, shows a draggable amber link labeled **CS Capture Bookmarklet** you can drag straight to your bookmarks bar, and a **Copy URL** button as a fallback (needed on iOS). Includes platform-specific install instructions for desktop, Android, and iOS Safari, plus a note that you don't need the bookmarklet if you're already using the Tampermonkey userscript.
+
 ## 2026-05-23 (6)
 
 ### Additions

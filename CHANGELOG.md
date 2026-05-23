@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-23 (5)
+
+### Additions
+- **Userscript — click header to collapse (v2.13):** you can now click anywhere in the HUD header (the title/icon bar at the top) to collapse it back to a pill. The Settings and Hide buttons in the header still do their own thing — only blank header space and the title collapse it.
+
 ## 2026-05-23 (4)
 
 ### Fixes

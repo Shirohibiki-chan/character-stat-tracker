@@ -187,6 +187,10 @@ All resolved as of 2026-05-16–17:
 - `settingsOpen` module state; collapse and hide both reset it to false.
 - Settings gear icon no longer disabled; "Settings (coming soon)" tooltip updated to "Settings".
 
+### v2.13 (2026-05-23) — Click header to collapse
+
+- Clicking anywhere in the HUD header (title or empty space) now collapses to pill. Settings and Hide buttons still work normally — button clicks are excluded. Title shows `cursor: pointer` as a hint.
+
 ### v2.12 (2026-05-23) — Fix pill can't be dragged
 
 - Collapsed pill couldn't be repositioned by dragging. The drag code cancelled any drag that started on a `<button>` element — but the pill itself is a `<button>`. In pill mode there are no action buttons to protect, so the exclusion is now guarded by `hudExpanded`. A click (no movement) still opens the HUD normally.

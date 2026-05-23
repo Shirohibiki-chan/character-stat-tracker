@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build:bookmarklet": "node scripts/build-bookmarklet.js",
+    "prebuild": "node scripts/build-bookmarklet.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -28,6 +30,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
+    "terser": "^5.48.0",
     "vite": "^8.0.12"
   }
 }

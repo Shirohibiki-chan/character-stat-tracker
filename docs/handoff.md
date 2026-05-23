@@ -187,6 +187,18 @@ All resolved as of 2026-05-16–17:
 - `settingsOpen` module state; collapse and hide both reset it to false.
 - Settings gear icon no longer disabled; "Settings (coming soon)" tooltip updated to "Settings".
 
+### Bookmarklet v1.0 (2026-05-23) — Mobile-compatible capture tool
+
+- New file: `userscript/charsnap-capture.bookmarklet.js` — standalone IIFE, no Tampermonkey required.
+- Storage via `localStorage` (keys `cs_bm_*` to avoid collision with GM_setValue keys).
+- Export via `navigator.clipboard.writeText()` with `execCommand('copy')` fallback.
+- Full feature parity with userscript: auto-capture (MutationObserver on Total tab), manual Capture button (Auto OFF mode), queue management, search/filter, select mode, bulk export/remove, undo toasts, drag to reposition (pointer events — works on touch).
+- No profile gate — HUD always shows on any CharSnap page (user activated intentionally).
+- No settings panel — auto-capture toggle inline in the panel header.
+- No resize grip — responsive fixed size: `min(340px, viewport-40px)` × `min(480px, viewport-80px)`.
+- Re-init guard: `window.__csBookmarklet.restore()` called when bookmark is tapped again — restores hidden HUD and refreshes content.
+- Install: minify source → prepend `javascript:` → save as browser bookmark. See file header for platform-specific instructions (iOS Safari, Android Chrome, desktop).
+
 ### v2.13 (2026-05-23) — Click header to collapse
 
 - Clicking anywhere in the HUD header (title or empty space) now collapses to pill. Settings and Hide buttons still work normally — button clicks are excluded. Title shows `cursor: pointer` as a hint.

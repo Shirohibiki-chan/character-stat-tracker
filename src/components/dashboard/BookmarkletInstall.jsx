@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Bookmark, Copy, Check } from 'lucide-react'
 import { BOOKMARKLET_URL } from '../../constants/bookmarklet-url.js'
 
@@ -20,6 +20,12 @@ async function copyToClipboard(text) {
 
 export default function BookmarkletInstall() {
   const [copied, setCopied] = useState(false)
+  const linkRef = useRef(null)
+
+  // React blocks javascript: hrefs as a security measure — set it directly on the DOM node instead.
+  useEffect(() => {
+    if (linkRef.current) linkRef.current.setAttribute('href', BOOKMARKLET_URL)
+  }, [])
 
   async function handleCopy() {
     const ok = await copyToClipboard(BOOKMARKLET_URL)
@@ -41,7 +47,8 @@ export default function BookmarkletInstall() {
       <div className="flex items-center gap-2 mb-5">
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <a
-          href={BOOKMARKLET_URL}
+          ref={linkRef}
+          href="#"
           onClick={e => e.preventDefault()}
           draggable
           className="flex items-center gap-2 px-4 py-2 rounded-md text-[11px] uppercase tracking-[0.12em] font-bold transition select-none cursor-grab active:cursor-grabbing"

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-05-23 (2)
+
+### Fixes
+- **Trending — avatars not showing:** bot profile pictures were missing from all Trending cards due to a wrong property name in the component. They now display correctly.
+- **Trending — momentum arrow almost always showing ↑:** the Accelerating arrow was firing incorrectly for bots that had only one snapshot in the first half of the comparison window (giving them a gain-of-zero in the first half, which always resolved to ↑). It now correctly falls back to Steady (–) when there isn't enough first-half data to compute a reliable ratio.
+- **Trending — default window changed to 7d:** the chart previously defaulted to 30 days, which required a full month of snapshots before most bots appeared. 7 days is a more practical default.
+
 ## 2026-05-23
 
 ### Additions

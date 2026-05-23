@@ -51,8 +51,10 @@ function computeTrending(bots, metric, windowDays) {
           const pivot = beforeWindow.length > 0 ? beforeWindow[beforeWindow.length - 1] : firstHalf[0]
           const g1 = (firstHalf[firstHalf.length - 1][metric] ?? 0) - (pivot[metric] ?? 0)
           const g2 = (secondHalf[secondHalf.length - 1][metric] ?? 0) - (firstHalf[firstHalf.length - 1][metric] ?? 0)
-          const ratio = g1 > 10 ? g2 / g1 : g2 > 0 ? 1.5 : 0.5
-          momentum = ratio > 1.2 ? 'up' : ratio < 0.8 ? 'down' : 'flat'
+          if (g1 > 10) {
+            const ratio = g2 / g1
+            momentum = ratio > 1.2 ? 'up' : ratio < 0.8 ? 'down' : 'flat'
+          }
         }
       }
 
@@ -63,7 +65,7 @@ function computeTrending(bots, metric, windowDays) {
 }
 
 export default function TrendingChart({ bots, onViewBot }) {
-  const [windowDays, setWindowDays] = useState(30)
+  const [windowDays, setWindowDays] = useState(7)
   const [metric, setMetric] = useState('messages')
 
   const data = useMemo(
@@ -145,8 +147,8 @@ export default function TrendingChart({ bots, onViewBot }) {
                   className="w-9 h-9 rounded-full shrink-0 flex items-center justify-center text-sm font-bold overflow-hidden"
                   style={{ background: aura + '33', color: aura, border: `1.5px solid ${aura}55` }}
                 >
-                  {bot.avatarUrl
-                    ? <img src={bot.avatarUrl} alt={bot.name} className="w-full h-full object-cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  {bot.avatar
+                    ? <img src={bot.avatar} alt={bot.name} className="w-full h-full object-cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     : initial
                   }
                 </div>

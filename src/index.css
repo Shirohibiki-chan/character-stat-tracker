@@ -140,7 +140,7 @@ html[data-compact="true"] {
   }
 }
 
-.row-banded { background: rgba(255, 255, 255, var(--table-banding-alpha)); }
+.row-banded { background: rgba(255, 255, 255, 0.030); }
 tbody tr:hover { background: rgba(255, 255, 255, 0.08); }
 
 /* ─── Alpha-stable utility classes ──────────────────────────────────────────

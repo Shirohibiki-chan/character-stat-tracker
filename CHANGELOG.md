@@ -8,6 +8,8 @@
 ### Fixes
 - **Userscript v2.11 — HUD search × button not showing while typing:** the × clear button on the HUD's search field only appeared after tabbing away or some other unrelated page event triggered a full HUD rebuild. While typing it stayed invisible even though the filter was working. Fixed by keeping the button in the DOM at all times and toggling its visibility directly, the same way the row filter already works.
 - **Userscript v2.9 — scroll position resetting:** the bot list in the HUD no longer jumps back to the top when you export, remove a bot, or when CharSnap's page updates in the background. Your scroll position is now preserved across every HUD refresh.
+- **Row banding / column tint flickering on refresh:** the alternating row highlight in the bot table and the slight white brightening on tinted columns would disappear on some page loads, making the table look flat and the column tints appear darker than normal. Root cause: `.row-banded` was using a CSS custom property inside `rgba()` (`rgba(255, 255, 255, var(--table-banding-alpha))`), which browsers must resolve at runtime. If the variable resolves late or is missed, the color is invalid and the background paints as transparent. Fixed by hardcoding the value directly — same pattern as every other alpha-sensitive rule in the stylesheet.
+- **Avatar image squish on refresh:** bot avatars in grid cards, the bot table, the Trending chart, and the bot detail modal would briefly render at their natural aspect ratio while the page was loading, before Tailwind's `object-cover` and size classes kicked in. Fixed by inlining the critical layout properties (width, height, objectFit) directly on each image element so they apply immediately regardless of CSS load timing.
 
 ## 2026-05-22
 

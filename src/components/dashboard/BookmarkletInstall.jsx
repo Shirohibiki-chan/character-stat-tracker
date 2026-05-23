@@ -80,7 +80,7 @@ export default function BookmarkletInstall() {
         </p>
         <p>
           <span className="text-text-secondary font-bold">Android: </span>
-          Long-press the amber button → <em>Add to bookmarks</em>.
+          Not supported — Chrome strips bookmarklet URLs on save. Use the Tampermonkey userscript on desktop instead.
         </p>
         <p>
           <span className="text-text-secondary font-bold">iOS Safari: </span>

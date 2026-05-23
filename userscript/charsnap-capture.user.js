@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.12
+// @version      2.13
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -1200,6 +1200,20 @@ function updateHUD() {
   hudEl.querySelector('#cs-hud-hide').addEventListener('click', hideHUD)
   hudEl.querySelector('#cs-auto-btn').addEventListener('click', () => setAutoCapture(!auto))
 
+  // Click anywhere in the header (not on a button) to collapse to pill
+  hudEl.querySelector('.cs-hud-header').addEventListener('click', e => {
+    if (e.target.closest('button')) return
+    dismissAllToasts()
+    hudExpanded = false
+    confirmingAction = false
+    settingsOpen = false
+    selectMode = false
+    selectedIds.clear()
+    expandedCaptureId = null
+    searchQuery = ''
+    updateHUD()
+  })
+
   // Search — live filter, no re-render (preserves input focus while typing)
   const searchInput = hudEl.querySelector('#cs-search')
   searchInput.addEventListener('input', () => {
@@ -1495,6 +1509,7 @@ function injectStyles() {
       min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
+      cursor: pointer;
     }
     .cs-hud-header-right {
       display: flex;
@@ -1937,4 +1952,4 @@ document.addEventListener('keydown', e => {
     applyProfileGate()
   }
 }, true)
-console.log('[CharSnap Capture] v2.12 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')
+console.log('[CharSnap Capture] v2.13 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')

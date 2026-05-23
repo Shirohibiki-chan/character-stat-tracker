@@ -187,6 +187,10 @@ All resolved as of 2026-05-16–17:
 - `settingsOpen` module state; collapse and hide both reset it to false.
 - Settings gear icon no longer disabled; "Settings (coming soon)" tooltip updated to "Settings".
 
+### v2.12 (2026-05-23) — Fix pill can't be dragged
+
+- Collapsed pill couldn't be repositioned by dragging. The drag code cancelled any drag that started on a `<button>` element — but the pill itself is a `<button>`. In pill mode there are no action buttons to protect, so the exclusion is now guarded by `hudExpanded`. A click (no movement) still opens the HUD normally.
+
 ### v2.11 (2026-05-23) — Fix HUD search × button visibility
 
 - The × button was conditionally rendered in the HTML string based on `searchQuery`. The search filter bypasses `updateHUD()` (to preserve input focus), so typing updated `searchQuery` in memory but never rebuilt the DOM — the button never appeared until something else triggered a full re-render. Fixed by always including the button in the HTML and toggling `style.display` from the `input` event handler, the same way row visibility is already controlled.

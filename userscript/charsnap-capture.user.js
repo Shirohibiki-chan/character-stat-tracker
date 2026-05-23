@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.11
+// @version      2.12
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -620,8 +620,9 @@ function attachDrag() {
 
       if (!dragging) {
         if (Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return
-        // Don't drag when clicking buttons, links, or the resize grip
-        if (startTarget?.closest('button, a, .cs-resize-grip')) { cleanup(); return }
+        // Don't drag when clicking buttons, links, or the resize grip.
+        // Exception: in pill mode the whole HUD is a single button — allow dragging from it.
+        if (hudExpanded && startTarget?.closest('button, a, .cs-resize-grip')) { cleanup(); return }
         // Enter drag mode — switch element to top/left coords
         dragging = true
         const rect = hudEl.getBoundingClientRect()
@@ -1936,4 +1937,4 @@ document.addEventListener('keydown', e => {
     applyProfileGate()
   }
 }, true)
-console.log('[CharSnap Capture] v2.11 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')
+console.log('[CharSnap Capture] v2.12 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')

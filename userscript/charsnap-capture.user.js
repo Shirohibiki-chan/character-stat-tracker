@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.10
+// @version      2.11
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -1168,7 +1168,7 @@ function updateHUD() {
           <button class="cs-hud-auto${auto ? ' cs-hud-auto--on' : ''}" id="cs-auto-btn">AUTO: ${auto ? 'ON' : 'OFF'}</button>
           <div class="cs-search-wrap">
             <input class="cs-hud-search" id="cs-search" type="text" placeholder="Filter bots…" value="${escHtml(searchQuery)}">
-            ${searchQuery ? '<button class="cs-search-clear" id="cs-search-clear" title="Clear search">&#xD7;</button>' : ''}
+            <button class="cs-search-clear" id="cs-search-clear" title="Clear search" style="${searchQuery ? '' : 'display:none'}">&#xD7;</button>
           </div>
         </div>
         <div class="cs-captures-list" id="cs-captures-list">${capturesHtml}</div>
@@ -1207,6 +1207,8 @@ function updateHUD() {
     hudEl.querySelectorAll('.cs-capture-row').forEach(row => {
       row.style.display = (row.dataset.botName || '').includes(term) ? '' : 'none'
     })
+    const clearBtn = hudEl.querySelector('#cs-search-clear')
+    if (clearBtn) clearBtn.style.display = searchQuery ? '' : 'none'
   })
 
   hudEl.querySelector('#cs-search-clear')?.addEventListener('click', () => {
@@ -1934,4 +1936,4 @@ document.addEventListener('keydown', e => {
     applyProfileGate()
   }
 }, true)
-console.log('[CharSnap Capture] v2.10 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')
+console.log('[CharSnap Capture] v2.11 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')

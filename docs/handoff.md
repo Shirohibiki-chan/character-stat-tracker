@@ -181,6 +181,10 @@ All resolved as of 2026-05-16–17:
 - `settingsOpen` module state; collapse and hide both reset it to false.
 - Settings gear icon no longer disabled; "Settings (coming soon)" tooltip updated to "Settings".
 
+### v2.11 (2026-05-23) — Fix HUD search × button visibility
+
+- The × button was conditionally rendered in the HTML string based on `searchQuery`. The search filter bypasses `updateHUD()` (to preserve input focus), so typing updated `searchQuery` in memory but never rebuilt the DOM — the button never appeared until something else triggered a full re-render. Fixed by always including the button in the HTML and toggling `style.display` from the `input` event handler, the same way row visibility is already controlled.
+
 ### v2.10 (2026-05-23) — Clear button on HUD search
 
 - Added × clear button inside the filter input. Wraps the input in `.cs-search-wrap` (relative flex container). Button only renders when `searchQuery` is non-empty; clicking it sets `searchQuery = ''` and calls `updateHUD()`. Input padding-right extended to 20px to make room.

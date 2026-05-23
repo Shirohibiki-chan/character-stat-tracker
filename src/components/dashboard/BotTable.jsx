@@ -126,12 +126,13 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                         {bot.avatar ? (
                           <div
                             className="w-8 h-8 rounded-full overflow-hidden"
-                            style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
+                            style={{ width: '2rem', height: '2rem', overflow: 'hidden', backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
                           >
                             <img
                               src={bot.avatar}
                               alt=""
                               className="w-full h-full object-cover"
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                               onError={e => { e.target.parentElement.style.display = 'none' }}
                             />
                           </div>

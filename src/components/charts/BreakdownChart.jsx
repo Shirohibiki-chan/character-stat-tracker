@@ -108,6 +108,38 @@ export default function BreakdownChart({ bots, onViewBot }) {
         </div>
       </div>
       <div className="p-5">
+        {/* Combined summary card */}
+        {(() => {
+          const totalSolo  = data.reduce((s, d) => s + d.solo,  0)
+          const totalGroup = data.reduce((s, d) => s + d.group, 0)
+          const total      = totalSolo + totalGroup
+          const soloPct    = total > 0 ? (totalSolo  / total * 100).toFixed(1) : '0.0'
+          const groupPct   = total > 0 ? (totalGroup / total * 100).toFixed(1) : '0.0'
+          return (
+            <div className="mb-4 rounded-lg border border-border bg-surface-alt px-4 py-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <span className="text-[11px] font-bold text-text-tertiary uppercase tracking-wide">All bots combined</span>
+                <div className="flex items-center gap-4 text-xs">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-sm inline-block shrink-0" style={{ background: SOLO_COLOR }} />
+                    <span className="font-bold num" style={{ color: SOLO_COLOR }}>{soloPct}%</span>
+                    <span className="text-text-muted num">({fmtFull(totalSolo)})</span>
+                  </span>
+                  <span className="text-text-muted">·</span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-sm inline-block shrink-0" style={{ background: GROUP_COLOR }} />
+                    <span className="font-bold num" style={{ color: GROUP_COLOR }}>{groupPct}%</span>
+                    <span className="text-text-muted num">({fmtFull(totalGroup)})</span>
+                  </span>
+                </div>
+              </div>
+              <div className="mt-2.5 h-1.5 rounded-full overflow-hidden flex">
+                <div style={{ width: `${soloPct}%`, background: SOLO_COLOR }} />
+                <div style={{ width: `${groupPct}%`, background: GROUP_COLOR }} />
+              </div>
+            </div>
+          )
+        })()}
         <div className="flex gap-6 mb-3">
           <span className="flex items-center gap-1.5 text-xs text-text-muted">
             <span className="w-3 h-3 rounded-sm inline-block" style={{ background: SOLO_COLOR }} />

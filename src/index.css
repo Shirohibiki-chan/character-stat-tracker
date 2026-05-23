@@ -2,6 +2,8 @@
 
 /* ─── Design tokens (sandbox-locked 2026-05-18) ─── */
 :root {
+  color-scheme: dark;
+
   /* Typography */
   --stat-font-family: 'Manrope', sans-serif;
   --stat-font-weight: 800;

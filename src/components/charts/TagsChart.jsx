@@ -236,7 +236,7 @@ export default function TagsChart({ bots, onTagClick }) {
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
           No tags found in the current selection.<br />
-          <span className="text-text-muted/70 text-xs">Add tags to your bots to see aggregates here.</span>
+          <span className="text-muted-70 text-xs">Add tags to your bots to see aggregates here.</span>
         </p>
       </section>
     )

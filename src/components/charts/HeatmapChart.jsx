@@ -93,7 +93,7 @@ export default function HeatmapChart({ bots }) {
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
           Not enough bots for correlation analysis.<br />
-          <span className="text-text-muted/70 text-xs">Need at least 3 bots with snapshot data to compute meaningful correlations.</span>
+          <span className="text-muted-70 text-xs">Need at least 3 bots with snapshot data to compute meaningful correlations.</span>
         </p>
       </section>
     )
@@ -192,7 +192,7 @@ export default function HeatmapChart({ bots }) {
             />
             <span>−1 · 0 · +1</span>
           </div>
-          <span className="text-text-muted/60">
+          <span className="text-muted-60">
             Hover a cell for details · diagonal (·) = same metric
           </span>
         </div>

@@ -54,7 +54,7 @@ export default function RankingChart({ bots, onViewBot }) {
           <select
             value={topN}
             onChange={e => setTopN(Number(e.target.value))}
-            className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus:border-accent/50"
+            className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus-accent-border"
           >
             <option value={10}>Top 10</option>
             <option value={15}>Top 15</option>

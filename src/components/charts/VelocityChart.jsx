@@ -106,7 +106,7 @@ export default function VelocityChart({ bots, onViewBot }) {
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
           Not enough snapshot history yet.<br />
-          <span className="text-text-muted/70 text-xs">Capture at least 2 snapshots per bot to see growth rate over time.</span>
+          <span className="text-muted-70 text-xs">Capture at least 2 snapshots per bot to see growth rate over time.</span>
         </p>
       </section>
     )
@@ -117,7 +117,7 @@ export default function VelocityChart({ bots, onViewBot }) {
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
           No velocity data for this metric yet.
-          <span className="block text-text-muted/70 text-xs mt-1">Try a different metric or capture more snapshots.</span>
+          <span className="block text-muted-70 text-xs mt-1">Try a different metric or capture more snapshots.</span>
         </p>
       </section>
     )

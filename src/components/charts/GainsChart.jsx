@@ -70,7 +70,7 @@ export default function GainsChart({ bots, onViewBot }) {
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
           No gains found in this window.<br />
-          <span className="text-text-muted/70 text-xs">
+          <span className="text-muted-70 text-xs">
             Bots need at least 2 Total-scope snapshots to compute gains. Try a wider window.
           </span>
         </p>

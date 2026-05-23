@@ -73,7 +73,7 @@ export default function EmptyState({ onAdd, onImport }) {
           </button>
           <button
             onClick={onAdd}
-            className="px-4 py-2 text-[11px] uppercase tracking-[0.12em] font-bold text-text-secondary hover:text-text-primary border border-border hover:border-accent/40 rounded-md transition flex items-center gap-2"
+            className="px-4 py-2 text-[11px] uppercase tracking-[0.12em] font-bold text-text-secondary hover:text-text-primary border border-border hover-accent-border-40 rounded-md transition flex items-center gap-2"
           >
             <Plus size={13} /> Add bot manually
           </button>

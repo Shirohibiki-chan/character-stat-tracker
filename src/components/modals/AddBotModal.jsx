@@ -54,7 +54,7 @@ export default function AddBotModal({ onClose, onAdd }) {
               value={name}
               onChange={e => setName(e.target.value)}
               onKeyDown={onKeyDown}
-              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus-accent-border"
             />
           </div>
           <div>
@@ -66,7 +66,7 @@ export default function AddBotModal({ onClose, onAdd }) {
               onChange={e => setTags(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder="e.g. event, collab"
-              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus-accent-border"
             />
           </div>
           <div className="border-t border-border pt-4">
@@ -78,19 +78,19 @@ export default function AddBotModal({ onClose, onAdd }) {
                 placeholder="threads"
                 value={chats}
                 onChange={e => setChats(e.target.value)}
-                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus-accent-border"
               />
               <input
                 placeholder="messages"
                 value={messages}
                 onChange={e => setMessages(e.target.value)}
-                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus-accent-border"
               />
               <input
                 placeholder="favorites"
                 value={favorites}
                 onChange={e => setFavorites(e.target.value)}
-                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus-accent-border"
               />
             </div>
             <div className="flex items-center justify-between">
@@ -100,7 +100,7 @@ export default function AddBotModal({ onClose, onAdd }) {
               <select
                 value={scope}
                 onChange={e => setScope(e.target.value)}
-                className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus:border-accent/50"
+                className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus-accent-border"
               >
                 {SCOPES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>

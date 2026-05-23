@@ -52,8 +52,8 @@ export default function BotGrid({ sorted, onViewBot, selectMode, selectedIds, on
             key={bot.id}
             className={`rounded-lg bg-surface border cursor-pointer transition-colors ${
               selected
-                ? 'border-accent/60 bg-accent-faint'
-                : 'border-border hover:border-accent/40 hover:bg-surface-alt'
+                ? 'accent-border-60 bg-accent-faint'
+                : 'border-border hover-accent-border-40 hover:bg-surface-alt'
             }`}
             onClick={() => selectMode ? onToggleSelect?.(bot.id) : onViewBot?.(bot.id)}
           >
@@ -75,7 +75,7 @@ export default function BotGrid({ sorted, onViewBot, selectMode, selectedIds, on
 
               {/* PFP edit affordance — bottom-right, visible on hover */}
               <button
-                className="absolute bottom-2 right-2 w-7 h-7 rounded-full flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                className="absolute bottom-2 right-2 w-7 h-7 rounded-full flex items-center justify-center bg-overlay-50 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                 title="Edit PFP"
                 onClick={e => { e.stopPropagation(); onViewBot?.(bot.id) }}
               >

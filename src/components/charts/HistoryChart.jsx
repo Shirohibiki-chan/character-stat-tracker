@@ -141,7 +141,7 @@ export default function HistoryChart({ bots, onViewBot }) {
         <div className="flex items-center justify-center py-20">
           <p className="text-text-muted text-sm text-center max-w-xs">
             No gains found on or before this date.<br />
-            <span className="text-text-muted/70 text-xs">
+            <span className="text-muted-70 text-xs">
               Each bot needs at least 2 Total-scope snapshots at or before the selected date.
             </span>
           </p>

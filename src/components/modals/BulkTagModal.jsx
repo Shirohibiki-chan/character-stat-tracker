@@ -80,7 +80,7 @@ export default function BulkTagModal({ mode, existingTags, allTags, onConfirm, o
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={mode === 'add' ? 'Type tag name, press Enter…' : 'Filter tags…'}
-            className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+            className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus-accent-border"
           />
 
           {suggestions.length > 0 && (

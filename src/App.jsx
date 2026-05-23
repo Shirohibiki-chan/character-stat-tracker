@@ -188,7 +188,7 @@ export default function App() {
             </button>
             <button
               onClick={() => setShowImport(true)}
-              className="px-3 py-2 text-[11px] uppercase tracking-[0.12em] font-bold text-text-secondary hover:text-text-primary border border-border hover:border-accent/40 rounded-md transition flex items-center gap-2"
+              className="px-3 py-2 text-[11px] uppercase tracking-[0.12em] font-bold text-text-secondary hover:text-text-primary border border-border hover-accent-border-40 rounded-md transition flex items-center gap-2"
             >
               <Upload size={14} /> Import
             </button>
@@ -261,7 +261,7 @@ export default function App() {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search bots or tags…"
-                  className="w-full bg-surface border border-border rounded-md pl-9 pr-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+                  className="w-full bg-surface border border-border rounded-md pl-9 pr-3 py-2 text-sm text-text-primary focus:outline-none focus-accent-border"
                 />
               </div>
               {allTags.length > 0 && (
@@ -322,7 +322,7 @@ export default function App() {
                   <select
                     value={pageSize}
                     onChange={e => setPageSize(Number(e.target.value))}
-                    className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus:border-accent/50"
+                    className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus-accent-border"
                   >
                     <option value={25}>25 / page</option>
                     <option value={50}>50 / page</option>

@@ -16,13 +16,13 @@ export default function BulkActionBar({ count, visibleCount, onSelectAllVisible,
         <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={onAddTags}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border border-border hover:border-accent/40 rounded transition text-text-secondary hover:text-text-primary"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border border-border hover-accent-border-40 rounded transition text-text-secondary hover:text-text-primary"
           >
             <Tag size={12} /> Add tags…
           </button>
           <button
             onClick={onRemoveTags}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border border-border hover:border-red-500/30 rounded transition text-text-secondary hover:text-red-400"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border border-border hover-danger-border rounded transition text-text-secondary hover:text-red-400"
           >
             <X size={12} /> Remove tags…
           </button>

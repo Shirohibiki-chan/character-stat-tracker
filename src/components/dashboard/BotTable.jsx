@@ -270,7 +270,7 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                         <span className="text-text-secondary text-xs whitespace-nowrap">Delete?</span>
                         <button
                           onClick={() => { onDeleteBot(bot.id); setConfirmDeleteId(null) }}
-                          className="px-2 py-0.5 bg-red-500/20 text-red-300 rounded hover:bg-red-500/30 text-xs transition"
+                          className="px-2 py-0.5 bg-danger-20 text-red-300 rounded hover-danger-bg text-xs transition"
                         >
                           Yes
                         </button>

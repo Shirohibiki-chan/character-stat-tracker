@@ -83,7 +83,7 @@ function BotMatchDropdown({ value, onChange, capture, allBots }) {
       <button
         type="button"
         onClick={() => setIsOpen(o => !o)}
-        className="w-full flex items-center justify-between bg-surface-alt border border-border rounded px-2 py-1.5 text-xs focus:outline-none hover:border-accent/30 transition"
+        className="w-full flex items-center justify-between bg-surface-alt border border-border rounded px-2 py-1.5 text-xs focus:outline-none hover-accent-border-30 transition"
       >
         <div className="flex items-center gap-1.5 min-w-0">
           {selectedBot?.avatar && (
@@ -109,7 +109,7 @@ function BotMatchDropdown({ value, onChange, capture, allBots }) {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Filter bots…"
-              className="w-full bg-surface border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
+              className="w-full bg-surface border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus-accent-border"
             />
           </div>
 
@@ -237,13 +237,13 @@ function ReviewRow({ item, allBots, onChange, onNameChange }) {
             value={newName}
             onChange={e => onNameChange(e.target.value)}
             placeholder="Bot name…"
-            className="w-full bg-surface-alt border border-border rounded px-2 py-1.5 text-xs text-text-primary focus:outline-none focus:border-accent/50"
+            className="w-full bg-surface-alt border border-border rounded px-2 py-1.5 text-xs text-text-primary focus:outline-none focus-accent-border"
           />
         )}
       </div>
 
       {status === 'auto' && assignedBotId && assignedBotId !== '__new__' && (
-        <div className="text-[10px] text-emerald-400/60 flex items-center gap-1">
+        <div className="text-[10px] text-emerald-dim flex items-center gap-1">
           <Check size={9} /> Auto-matched
         </div>
       )}
@@ -329,7 +329,7 @@ export default function ImportModal({ onClose }) {
                 autoFocus
                 value={raw}
                 onChange={e => { setRaw(e.target.value); setParseError(null) }}
-                className="w-full h-36 bg-surface-alt border border-border rounded px-3 py-2 text-sm font-mono text-text-primary resize-none focus:outline-none focus:border-accent/50 scrollbar-thin"
+                className="w-full h-36 bg-surface-alt border border-border rounded px-3 py-2 text-sm font-mono text-text-primary resize-none focus:outline-none focus-accent-border scrollbar-thin"
                 placeholder={"📊 Creator Analytics (All Time)\n━━━━━━━━━━━━━━━━\n💬 Messages: 1,234,567\n❤️ Favorites: 890\n🗨️ Threads: 1,234"}
               />
               {parseError && (

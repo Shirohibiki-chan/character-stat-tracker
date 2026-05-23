@@ -143,6 +143,45 @@ html[data-compact="true"] {
 .row-banded { background: rgba(255, 255, 255, var(--table-banding-alpha)); }
 tbody tr:hover { background: rgba(255, 255, 255, 0.08); }
 
+/* ─── Alpha-stable utility classes ──────────────────────────────────────────
+   LightningCSS wraps Tailwind /N opacity-modifier utilities in
+   @supports (color: color-mix(in lab, red, red)) and emits a second
+   color-mix(oklab) rule. That guard can evaluate inconsistently across page
+   loads, causing all three visible symptoms: row banding gone, column tints
+   darker, stat tile gradients flat. Fix: define the same classes here using
+   literal rgba() so Tailwind never generates the @supports version.
+   (Same pattern as --gradient-* fix, 2026-05-19.)
+   All rgba() values are the sRGB equivalents of the Tailwind /N hex fallbacks. */
+
+/* Modal / avatar dark overlays */
+.bg-overlay-50 { background-color: rgba(0, 0, 0, 0.50); }
+.bg-overlay-60 { background-color: rgba(0, 0, 0, 0.60); }
+.bg-overlay-70 { background-color: rgba(0, 0, 0, 0.70); }
+
+/* Translucent surface-alt (chart header toolbar, hover rows) */
+.bg-surface-dim          { background-color: rgba(20, 24, 38, 0.30); }
+.hover-bg-dim-40:hover   { background-color: rgba(20, 24, 38, 0.40); }
+.hover-bg-dim-50:hover   { background-color: rgba(20, 24, 38, 0.50); }
+
+/* Accent border highlights (selection rings, focus outlines, card hovers) */
+.accent-border-60              { border-color: rgba(75, 168, 196, 0.60); }
+.hover-accent-border-30:hover  { border-color: rgba(75, 168, 196, 0.30); }
+.hover-accent-border-40:hover  { border-color: rgba(75, 168, 196, 0.40); }
+.focus-accent-border:focus     { border-color: rgba(75, 168, 196, 0.50); }
+
+/* Danger zone (BackupModal, delete confirm buttons, BulkActionBar) */
+.bg-danger-20              { background-color: rgba(251,  44,  54, 0.20); }
+.hover-danger-bg:hover     { background-color: rgba(251,  44,  54, 0.30); }
+.hover-danger-border:hover { border-color:     rgba(251,  44,  54, 0.30); }
+.border-danger-30          { border-color:     rgba(130,  24,  26, 0.30); }
+.border-danger-40          { border-color:     rgba(130,  24,  26, 0.40); }
+.text-danger-dim           { color:            rgba(255, 101, 104, 0.70); }
+
+/* Muted / subtle tinted text */
+.text-emerald-dim { color: rgba(  0, 210, 148, 0.60); }
+.text-muted-60    { color: rgba(110, 119, 135, 0.60); }
+.text-muted-70    { color: rgba(110, 119, 135, 0.70); }
+
 .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
 .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
 .scrollbar-thin::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }

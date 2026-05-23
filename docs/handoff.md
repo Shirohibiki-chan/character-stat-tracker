@@ -181,6 +181,10 @@ All resolved as of 2026-05-16–17:
 - `settingsOpen` module state; collapse and hide both reset it to false.
 - Settings gear icon no longer disabled; "Settings (coming soon)" tooltip updated to "Settings".
 
+### v2.10 (2026-05-23) — Clear button on HUD search
+
+- Added × clear button inside the filter input. Wraps the input in `.cs-search-wrap` (relative flex container). Button only renders when `searchQuery` is non-empty; clicking it sets `searchQuery = ''` and calls `updateHUD()`. Input padding-right extended to 20px to make room.
+
 ### v2.9 (2026-05-23) — Fix scroll reset on HUD refresh
 
 - `updateHUD()` does a full `innerHTML` wipe on every call (triggered by exports, removes, checkbox toggles, and even background CharSnap DOM mutations). This destroyed `.cs-captures-list` and reset `scrollTop` to 0. Fixed by saving `scrollTop` before the wipe and restoring it after the rebuild.

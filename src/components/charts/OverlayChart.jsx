@@ -138,13 +138,23 @@ function BotPicker({ allBots, selectedIds, onAdd, onRemove }) {
         {open && (
           <div className="absolute z-50 top-full mt-1 left-0 w-60 bg-bg border border-border rounded-lg shadow-xl overflow-hidden">
             <div className="p-2 border-b border-border">
-              <input
-                autoFocus
-                value={q}
-                onChange={e => setQ(e.target.value)}
-                placeholder="Search bots…"
-                className="w-full bg-surface-alt rounded px-2.5 py-1.5 text-xs text-text-primary focus:outline-none placeholder:text-text-muted"
-              />
+              <div className="relative">
+                <input
+                  autoFocus
+                  value={q}
+                  onChange={e => setQ(e.target.value)}
+                  placeholder="Search bots…"
+                  className="w-full bg-surface-alt rounded pl-2.5 pr-6 py-1.5 text-xs text-text-primary focus:outline-none placeholder:text-text-muted"
+                />
+                {q && (
+                  <button
+                    onClick={() => setQ('')}
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition"
+                  >
+                    <X size={10} />
+                  </button>
+                )}
+              </div>
             </div>
             <div className="max-h-56 overflow-y-auto">
               {available.length === 0 ? (

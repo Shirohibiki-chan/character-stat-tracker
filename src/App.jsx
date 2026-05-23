@@ -261,8 +261,16 @@ export default function App() {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search bots or tags…"
-                  className="w-full bg-surface border border-border rounded-md pl-9 pr-3 py-2 text-sm text-text-primary focus:outline-none focus-accent-border"
+                  className="w-full bg-surface border border-border rounded-md pl-9 pr-8 py-2 text-sm text-text-primary focus:outline-none focus-accent-border"
                 />
+                {search && (
+                  <button
+                    onClick={() => setSearch('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
               </div>
               {allTags.length > 0 && (
                 <div className="flex items-center gap-1.5 flex-wrap">

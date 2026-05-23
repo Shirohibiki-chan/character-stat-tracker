@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.9
+// @version      2.10
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -1166,7 +1166,10 @@ function updateHUD() {
       <div class="cs-hud-body" id="cs-hud-body">
         <div class="cs-hud-toolbar">
           <button class="cs-hud-auto${auto ? ' cs-hud-auto--on' : ''}" id="cs-auto-btn">AUTO: ${auto ? 'ON' : 'OFF'}</button>
-          <input class="cs-hud-search" id="cs-search" type="text" placeholder="Filter bots…" value="${escHtml(searchQuery)}">
+          <div class="cs-search-wrap">
+            <input class="cs-hud-search" id="cs-search" type="text" placeholder="Filter bots…" value="${escHtml(searchQuery)}">
+            ${searchQuery ? '<button class="cs-search-clear" id="cs-search-clear" title="Clear search">&#xD7;</button>' : ''}
+          </div>
         </div>
         <div class="cs-captures-list" id="cs-captures-list">${capturesHtml}</div>
       </div>
@@ -1204,6 +1207,11 @@ function updateHUD() {
     hudEl.querySelectorAll('.cs-capture-row').forEach(row => {
       row.style.display = (row.dataset.botName || '').includes(term) ? '' : 'none'
     })
+  })
+
+  hudEl.querySelector('#cs-search-clear')?.addEventListener('click', () => {
+    searchQuery = ''
+    updateHUD()
   })
 
   // Apply filter on re-renders triggered by other events (new capture, remove, etc.)
@@ -1536,6 +1544,13 @@ function injectStyles() {
       margin-bottom: 6px;
       flex-shrink: 0;
     }
+    .cs-search-wrap {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
     .cs-hud-search {
       flex: 1;
       min-width: 0;
@@ -1544,12 +1559,25 @@ function injectStyles() {
       border-radius: 6px;
       color: #d6d3d1;
       font-size: 11px;
-      padding: 4px 8px;
+      padding: 4px 20px 4px 8px;
       outline: none;
       font-family: system-ui, sans-serif;
     }
     .cs-hud-search::placeholder { color: #57534e; }
     .cs-hud-search:focus { border-color: #78716c; }
+    .cs-search-clear {
+      position: absolute;
+      right: 5px;
+      background: none;
+      border: none;
+      color: #57534e;
+      font-size: 14px;
+      line-height: 1;
+      padding: 2px;
+      cursor: pointer;
+      transition: color 0.12s;
+    }
+    .cs-search-clear:hover { color: #d6d3d1; }
     .cs-captures-list {
       display: flex;
       flex-direction: column;
@@ -1906,4 +1934,4 @@ document.addEventListener('keydown', e => {
     applyProfileGate()
   }
 }, true)
-console.log('[CharSnap Capture] v2.9 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')
+console.log('[CharSnap Capture] v2.10 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')

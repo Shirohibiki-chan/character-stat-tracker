@@ -2,6 +2,9 @@
 
 ## 2026-05-23
 
+### Additions
+- **Clear button on all search bars:** every search/filter input in the app now shows an × button when you've typed something, so you can clear it in one click. Same in the userscript HUD's bot filter (userscript v2.10).
+
 ### Fixes
 - **Userscript v2.9 — scroll position resetting:** the bot list in the HUD no longer jumps back to the top when you export, remove a bot, or when CharSnap's page updates in the background. Your scroll position is now preserved across every HUD refresh.
 

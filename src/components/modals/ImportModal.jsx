@@ -104,13 +104,23 @@ function BotMatchDropdown({ value, onChange, capture, allBots }) {
       {isOpen && (
         <div className="mt-1 border border-border rounded bg-surface-alt overflow-hidden">
           <div className="px-2 pt-2 pb-1">
-            <input
-              autoFocus
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Filter bots…"
-              className="w-full bg-surface border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus-accent-border"
-            />
+            <div className="relative">
+              <input
+                autoFocus
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Filter bots…"
+                className="w-full bg-surface border border-border rounded pl-2 pr-6 py-1 text-xs text-text-primary focus:outline-none focus-accent-border"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch('')}
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition"
+                >
+                  <X size={10} />
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="max-h-[240px] overflow-y-auto scrollbar-thin">

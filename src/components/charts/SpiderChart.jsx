@@ -106,8 +106,16 @@ function BotPicker({ bots, value, onChange, placeholder, excludeIds = [] }) {
                 value={q}
                 onChange={e => setQ(e.target.value)}
                 placeholder="Search bots…"
-                className="w-full bg-surface-alt rounded pl-8 pr-2 py-1.5 text-xs text-text-primary focus:outline-none"
+                className="w-full bg-surface-alt rounded pl-8 pr-6 py-1.5 text-xs text-text-primary focus:outline-none"
               />
+              {q && (
+                <button
+                  onClick={() => setQ('')}
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition"
+                >
+                  <X size={10} />
+                </button>
+              )}
             </div>
           </div>
           <div className="max-h-56 overflow-y-auto">

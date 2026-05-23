@@ -216,7 +216,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                 src={bot.avatar}
                 alt=""
                 className="w-14 h-14 rounded-full object-cover"
-                style={{ backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
+                style={{ width: '3.5rem', height: '3.5rem', objectFit: 'cover', borderRadius: '9999px', backgroundColor: 'var(--color-surface-edge)', boxShadow: avatarGlow(aura) }}
                 onError={e => { e.target.style.display = 'none' }}
               />
             ) : (

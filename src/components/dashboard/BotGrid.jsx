@@ -58,13 +58,13 @@ export default function BotGrid({ sorted, onViewBot, selectMode, selectedIds, on
             onClick={() => selectMode ? onToggleSelect?.(bot.id) : onViewBot?.(bot.id)}
           >
             {/* Hero banner */}
-            <div className="relative h-[120px] rounded-t-lg overflow-hidden group bg-surface-edge">
+            <div className="relative h-[120px] rounded-t-lg overflow-hidden group bg-surface-edge" style={{ height: '120px' }}>
               {bot.avatar ? (
                 <img
                   src={bot.avatar}
                   alt=""
                   className="w-full h-full object-cover"
-                  style={{ objectPosition: 'center 20%' }}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
                   onError={e => { e.target.style.display = 'none' }}
                 />
               ) : (

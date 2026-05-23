@@ -146,7 +146,7 @@ export default function TrendingChart({ bots, onViewBot }) {
                   style={{ background: aura + '33', color: aura, border: `1.5px solid ${aura}55` }}
                 >
                   {bot.avatarUrl
-                    ? <img src={bot.avatarUrl} alt={bot.name} className="w-full h-full object-cover" />
+                    ? <img src={bot.avatarUrl} alt={bot.name} className="w-full h-full object-cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     : initial
                   }
                 </div>

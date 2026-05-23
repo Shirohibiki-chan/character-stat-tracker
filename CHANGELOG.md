@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-23 (6)
+
+### Additions
+- **Mobile bookmarklet (v1.0):** `userscript/charsnap-capture.bookmarklet.js` — a new tool for mobile users and anyone who can't install Tampermonkey. Save it as a browser bookmark (iOS Safari, Android Chrome, desktop), tap it on any CharSnap page, and the familiar 📊 capture HUD appears. Auto-capture, manual Capture button, export queue to clipboard, search, select mode, undo — all the same workflow as the Tampermonkey userscript. The queue persists in `localStorage` across the session. Tap the bookmark again if you hide the HUD and want it back.
+
 ## 2026-05-23 (5)
 
 ### Additions

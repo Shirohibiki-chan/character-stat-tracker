@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.8
+// @version      2.9
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -1085,6 +1085,8 @@ function updateHUD() {
     return
   }
 
+  const savedScroll = hudEl.querySelector('.cs-captures-list')?.scrollTop ?? 0
+
   const deltas   = computeDeltas(q)
   const selCount = selectedIds.size
 
@@ -1309,6 +1311,12 @@ function updateHUD() {
     updateHUD()
     showToast(`Copied ${n} capture${n !== 1 ? 's' : ''} to clipboard.`)
   })
+
+  // Restore scroll position lost by the innerHTML wipe
+  if (savedScroll > 0) {
+    const list = hudEl.querySelector('.cs-captures-list')
+    if (list) list.scrollTop = savedScroll
+  }
 
   // Apply persisted size and attach resize grip after panel DOM is ready
   applyHudSize()
@@ -1898,4 +1906,4 @@ document.addEventListener('keydown', e => {
     applyProfileGate()
   }
 }, true)
-console.log('[CharSnap Capture] v2.2 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')
+console.log('[CharSnap Capture] v2.9 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')

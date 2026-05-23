@@ -79,7 +79,7 @@ export default function TrendingChart({ bots, onViewBot }) {
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
           No snapshot history yet.<br />
-          <span className="text-text-muted/70 text-xs">Capture bot stats via the userscript to start seeing trending data.</span>
+          <span className="text-muted-70 text-xs">Capture bot stats via the userscript to start seeing trending data.</span>
         </p>
       </section>
     )
@@ -123,7 +123,7 @@ export default function TrendingChart({ bots, onViewBot }) {
         <div className="flex items-center justify-center py-20">
           <p className="text-text-muted text-sm text-center max-w-xs">
             No bots gained {metricObj?.label.toLowerCase()} in the last {windowDays} days.<br />
-            <span className="text-text-muted/70 text-xs">Try a wider window or a different metric.</span>
+            <span className="text-muted-70 text-xs">Try a wider window or a different metric.</span>
           </p>
         </div>
       ) : (
@@ -136,7 +136,7 @@ export default function TrendingChart({ bots, onViewBot }) {
               <button
                 key={bot.id}
                 onClick={() => onViewBot?.(bot.id)}
-                className="flex items-center gap-3 p-3 rounded-lg border border-border bg-surface-alt hover:border-accent/40 hover:bg-surface transition text-left"
+                className="flex items-center gap-3 p-3 rounded-lg border border-border bg-surface-alt hover-accent-border-40 hover:bg-surface transition text-left"
               >
                 <span className="text-[10px] font-bold text-text-muted w-4 shrink-0 text-right num">
                   {i + 1}

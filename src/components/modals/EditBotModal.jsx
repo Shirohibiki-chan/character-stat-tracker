@@ -41,7 +41,7 @@ export default function EditBotModal({ bot, onClose, onSave }) {
               value={name}
               onChange={e => setName(e.target.value)}
               onKeyDown={onKeyDown}
-              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus-accent-border"
             />
           </div>
           <div>
@@ -53,7 +53,7 @@ export default function EditBotModal({ bot, onClose, onSave }) {
               onChange={e => setTags(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder="e.g. event, collab"
-              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus-accent-border"
             />
           </div>
         </div>

@@ -49,7 +49,7 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
               type="date"
               value={date}
               onChange={e => setDate(e.target.value)}
-              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+              className="w-full bg-surface-alt border border-border rounded px-3 py-2 text-sm text-text-primary focus:outline-none focus-accent-border"
             />
           </div>
           <div>
@@ -60,19 +60,19 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
                 value={chats}
                 onChange={e => setChats(e.target.value)}
                 autoFocus
-                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus-accent-border"
               />
               <input
                 placeholder="messages"
                 value={messages}
                 onChange={e => setMessages(e.target.value)}
-                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus-accent-border"
               />
               <input
                 placeholder="favorites"
                 value={favorites}
                 onChange={e => setFavorites(e.target.value)}
-                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus:border-accent/50"
+                className="num bg-surface-alt border border-border rounded px-2 py-1.5 text-sm text-text-primary focus:outline-none focus-accent-border"
               />
             </div>
             <div className="flex items-center justify-between">
@@ -82,7 +82,7 @@ export default function AddSnapshotModal({ bot, onClose, onAdd }) {
               <select
                 value={scope}
                 onChange={e => setScope(e.target.value)}
-                className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus:border-accent/50"
+                className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus-accent-border"
               >
                 {SCOPES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>

@@ -107,7 +107,7 @@ function BotPicker({ allBots, selectedIds, onAdd, onRemove }) {
   )
 
   return (
-    <div className="flex flex-wrap items-center gap-2 px-5 py-3 border-b border-border bg-surface-alt/30">
+    <div className="flex flex-wrap items-center gap-2 px-5 py-3 border-b border-border bg-surface-dim">
       {selectedIds.map(id => {
         const bot = allBots.find(b => b.id === id)
         if (!bot) return null
@@ -130,7 +130,7 @@ function BotPicker({ allBots, selectedIds, onAdd, onRemove }) {
       <div ref={ref} className="relative">
         <button
           onClick={() => setOpen(v => !v)}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded border border-dashed border-border text-xs text-text-muted hover:text-text-secondary hover:border-accent/40 transition"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded border border-dashed border-border text-xs text-text-muted hover:text-text-secondary hover-accent-border-40 transition"
         >
           <Plus size={10} />
           Add bot…
@@ -252,7 +252,7 @@ export default function OverlayChart({ bots, onViewBot }) {
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
           No bots have Total-scope snapshots to plot.<br />
-          <span className="text-text-muted/70 text-xs">Add snapshots from the CharSnap "Total" tab.</span>
+          <span className="text-muted-70 text-xs">Add snapshots from the CharSnap "Total" tab.</span>
         </p>
       </section>
     )
@@ -345,8 +345,8 @@ export default function OverlayChart({ bots, onViewBot }) {
         <div className="flex items-center justify-center py-20">
           <p className="text-text-muted text-sm text-center max-w-xs">
             {topN === -1
-              ? <>No bots selected yet.<br /><span className="text-text-muted/70 text-xs">Use the search above to add bots to the chart.</span></>
-              : <>No bots have Total-scope snapshots to plot.<br /><span className="text-text-muted/70 text-xs">Add snapshots from the CharSnap "Total" tab.</span></>
+              ? <>No bots selected yet.<br /><span className="text-muted-70 text-xs">Use the search above to add bots to the chart.</span></>
+              : <>No bots have Total-scope snapshots to plot.<br /><span className="text-muted-70 text-xs">Add snapshots from the CharSnap "Total" tab.</span></>
             }
           </p>
         </div>

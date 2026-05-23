@@ -227,7 +227,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                 {bot.name?.[0]?.toUpperCase() || '?'}
               </div>
             )}
-            <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full bg-overlay-60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
               <Camera size={16} className="text-white" />
             </div>
             {bot.avatarIsManual && (
@@ -246,13 +246,13 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                 <input
                   value={metaName}
                   onChange={e => setMetaName(e.target.value)}
-                  className="bg-surface-alt border border-border rounded px-2 py-1 text-lg font-display text-text-primary focus:outline-none focus:border-accent/50"
+                  className="bg-surface-alt border border-border rounded px-2 py-1 text-lg font-display text-text-primary focus:outline-none focus-accent-border"
                 />
                 <input
                   value={metaTags}
                   onChange={e => setMetaTags(e.target.value)}
                   placeholder="tags, comma-separated"
-                  className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
+                  className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus-accent-border"
                 />
               </div>
             ) : (
@@ -305,13 +305,13 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                   value={pfpUrl}
                   onChange={e => { setPfpUrl(e.target.value); setPfpDataUrl(null); setPfpFileName('') }}
                   placeholder="https://…"
-                  className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary focus:outline-none focus:border-accent/50"
+                  className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary focus:outline-none focus-accent-border"
                 />
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => pfpFileRef.current?.click()}
-                  className="text-xs px-3 py-1.5 border border-border rounded hover:border-accent/40 text-text-secondary hover:text-text-primary transition shrink-0"
+                  className="text-xs px-3 py-1.5 border border-border rounded hover-accent-border-40 text-text-secondary hover:text-text-primary transition shrink-0"
                 >
                   Browse file…
                 </button>
@@ -398,7 +398,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
             <div className="mb-6 border border-border rounded-lg bg-surface overflow-hidden">
               <button
                 onClick={() => setReportOpen(o => !o)}
-                className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-surface-alt/40 transition"
+                className="w-full flex items-center justify-between px-4 py-3 text-left hover-bg-dim-40 transition"
               >
                 <div className="flex items-center gap-2 text-sm text-text-secondary font-semibold">
                   <Award size={16} className="text-accent opacity-60" />
@@ -574,7 +574,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
               </div>
               <button
                 onClick={() => setAddingSnap(a => !a)}
-                className="text-xs px-2 py-1 border border-border hover:border-accent/40 rounded flex items-center gap-1.5 text-text-secondary hover:text-text-primary transition"
+                className="text-xs px-2 py-1 border border-border hover-accent-border-40 rounded flex items-center gap-1.5 text-text-secondary hover:text-text-primary transition"
               >
                 <Plus size={12} /> Add manual snapshot
               </button>
@@ -587,25 +587,25 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                     type="date"
                     value={newSnap.date}
                     onChange={e => setNewSnap(s => ({ ...s, date: e.target.value }))}
-                    className="col-span-3 bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
+                    className="col-span-3 bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus-accent-border"
                   />
                   <input
                     placeholder="threads"
                     value={newSnap.chats}
                     onChange={e => setNewSnap(s => ({ ...s, chats: e.target.value }))}
-                    className="col-span-2 num bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
+                    className="col-span-2 num bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus-accent-border"
                   />
                   <input
                     placeholder="messages"
                     value={newSnap.messages}
                     onChange={e => setNewSnap(s => ({ ...s, messages: e.target.value }))}
-                    className="col-span-3 num bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
+                    className="col-span-3 num bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus-accent-border"
                   />
                   <input
                     placeholder="favs"
                     value={newSnap.favorites}
                     onChange={e => setNewSnap(s => ({ ...s, favorites: e.target.value }))}
-                    className="col-span-2 num bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus:border-accent/50"
+                    className="col-span-2 num bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-primary focus:outline-none focus-accent-border"
                   />
                   <div className="col-span-2 flex gap-1 justify-end">
                     <button onClick={submitSnap} className="p-1.5 text-emerald-400 hover:bg-surface-alt rounded transition">
@@ -623,7 +623,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                   <select
                     value={newSnap.scope}
                     onChange={e => setNewSnap(s => ({ ...s, scope: e.target.value }))}
-                    className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus:border-accent/50"
+                    className="bg-surface-alt border border-border rounded px-2 py-1 text-xs text-text-secondary focus:outline-none focus-accent-border"
                   >
                     {SCOPES.map(sc => <option key={sc} value={sc}>{sc}</option>)}
                   </select>
@@ -644,7 +644,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
               </thead>
               <tbody>
                 {[...sortedSnaps].reverse().map(s => (
-                  <tr key={s.id} className="border-b border-border-subtle hover:bg-surface-alt/50">
+                  <tr key={s.id} className="border-b border-border-subtle hover-bg-dim-50">
                     <td className="py-2 px-4 text-xs text-text-secondary font-semibold">{fmtDateTime(s.date)}</td>
                     <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmtFull(s.messages)}</td>
                     <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmtFull(s.chats)}</td>
@@ -656,7 +656,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                           <span className="text-text-secondary text-[10px] whitespace-nowrap">Delete?</span>
                           <button
                             onClick={() => { onDeleteSnapshot(s.id); setConfirmDeleteSnap(null) }}
-                            className="px-1.5 py-0.5 bg-red-500/20 text-red-300 rounded hover:bg-red-500/30 text-[10px] transition"
+                            className="px-1.5 py-0.5 bg-danger-20 text-red-300 rounded hover-danger-bg text-[10px] transition"
                           >
                             Yes
                           </button>
@@ -701,7 +701,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                 <span className="text-text-secondary">Delete &ldquo;{bot.name}&rdquo; and all snapshots?</span>
                 <button
                   onClick={onDelete}
-                  className="px-2 py-1 bg-red-500/20 text-red-300 rounded hover:bg-red-500/30 transition"
+                  className="px-2 py-1 bg-danger-20 text-red-300 rounded hover-danger-bg transition"
                 >
                   Yes, delete
                 </button>

@@ -25,7 +25,7 @@ export default function Modal({ onClose, isDirty = false, children }) {
     <>
       <div
         ref={backdropRef}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay-70 backdrop-blur-sm"
         onMouseDown={e => { downOnBackdrop.current = e.target === backdropRef.current }}
         onClick={() => { if (downOnBackdrop.current) tryClose() }}
       >
@@ -34,7 +34,7 @@ export default function Modal({ onClose, isDirty = false, children }) {
 
       {confirming && (
         <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-overlay-50 backdrop-blur-sm"
           onClick={() => setConfirming(false)}
         >
           <div
@@ -46,7 +46,7 @@ export default function Modal({ onClose, isDirty = false, children }) {
             <div className="flex gap-2 justify-center">
               <button
                 onClick={onClose}
-                className="px-4 py-2 text-xs uppercase tracking-wider bg-red-500/20 text-red-300 hover:bg-red-500/30 rounded transition"
+                className="px-4 py-2 text-xs uppercase tracking-wider bg-danger-20 text-red-300 hover-danger-bg rounded transition"
               >
                 Discard
               </button>

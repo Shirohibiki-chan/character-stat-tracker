@@ -121,8 +121,8 @@ export default function BackupModal({ onClose }) {
           </div>
 
           {/* Reset */}
-          <div className="border border-red-900/30 rounded-lg p-4 space-y-2">
-            <div className="text-[10px] uppercase tracking-[0.22em] font-bold text-red-400/70">Danger zone</div>
+          <div className="border border-danger-30 rounded-lg p-4 space-y-2">
+            <div className="text-[10px] uppercase tracking-[0.22em] font-bold text-danger-dim">Danger zone</div>
             <p className="text-sm text-text-secondary">
               Permanently delete all {botCount} bots and their snapshot history.
             </p>
@@ -130,7 +130,7 @@ export default function BackupModal({ onClose }) {
             {resetState === 'idle' && (
               <button
                 onClick={() => setResetState('confirm')}
-                className="flex items-center gap-2 px-3 py-2 text-xs uppercase tracking-wider text-red-400 hover:text-red-300 border border-red-900/40 hover:border-red-800 rounded transition"
+                className="flex items-center gap-2 px-3 py-2 text-xs uppercase tracking-wider text-red-400 hover:text-red-300 border border-danger-40 hover:border-red-800 rounded transition"
               >
                 <Trash2 size={13} /> Reset all data
               </button>
@@ -144,7 +144,7 @@ export default function BackupModal({ onClose }) {
                 <div className="flex gap-2">
                   <button
                     onClick={confirmReset}
-                    className="px-3 py-1.5 text-xs bg-red-500/20 text-red-300 hover:bg-red-500/30 rounded transition"
+                    className="px-3 py-1.5 text-xs bg-danger-20 text-red-300 hover-danger-bg rounded transition"
                   >
                     Yes, delete everything
                   </button>

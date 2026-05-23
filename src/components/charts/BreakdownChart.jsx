@@ -54,7 +54,7 @@ export default function BreakdownChart({ bots, onViewBot }) {
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
           No solo/group message breakdown found.<br />
-          <span className="text-text-muted/70 text-xs">Re-capture bots via the userscript — newer captures include the full message breakdown.</span>
+          <span className="text-muted-70 text-xs">Re-capture bots via the userscript — newer captures include the full message breakdown.</span>
         </p>
       </section>
     )

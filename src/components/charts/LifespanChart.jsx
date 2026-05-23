@@ -65,7 +65,7 @@ export default function LifespanChart({ bots, onViewBot }) {
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
           No snapshot history yet.<br />
-          <span className="text-text-muted/70 text-xs">Capture bot stats via the userscript to see the lifespan chart.</span>
+          <span className="text-muted-70 text-xs">Capture bot stats via the userscript to see the lifespan chart.</span>
         </p>
       </section>
     )

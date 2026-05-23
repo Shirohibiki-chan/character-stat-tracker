@@ -129,7 +129,7 @@ export default function BumpChart({ bots, onViewBot }) {
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
           Not enough bots to compare ranks.<br />
-          <span className="text-text-muted/70 text-xs">Need at least 2 bots with Total-scope snapshots.</span>
+          <span className="text-muted-70 text-xs">Need at least 2 bots with Total-scope snapshots.</span>
         </p>
       </section>
     )
@@ -140,7 +140,7 @@ export default function BumpChart({ bots, onViewBot }) {
       <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
         <p className="text-text-muted text-sm text-center max-w-xs">
           Need snapshot history across multiple dates to show rank changes.<br />
-          <span className="text-text-muted/70 text-xs">Capture snapshots on different days to see the rank chart populate.</span>
+          <span className="text-muted-70 text-xs">Capture snapshots on different days to see the rank chart populate.</span>
         </p>
       </section>
     )

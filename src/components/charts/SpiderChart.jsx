@@ -89,7 +89,7 @@ function BotPicker({ bots, value, onChange, placeholder, excludeIds = [] }) {
     <div ref={ref} className="relative">
       <button
         onClick={() => { setOpen(v => !v); setQ('') }}
-        className="flex items-center gap-2 px-3 py-1.5 bg-surface-alt border border-border rounded text-sm hover:border-accent/40 transition min-w-[160px] max-w-[240px]"
+        className="flex items-center gap-2 px-3 py-1.5 bg-surface-alt border border-border rounded text-sm hover-accent-border-40 transition min-w-[160px] max-w-[240px]"
       >
         <span className={`truncate flex-1 text-left ${selected ? 'text-text-primary font-semibold' : 'text-text-muted'}`}>
           {selected?.name ?? placeholder}
@@ -438,7 +438,7 @@ export default function SpiderChart({ bots, onViewBot, mode, setMode, selectedId
             {bots.map(bot => (
               <div
                 key={bot.id}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-border bg-surface-alt hover:border-accent/40 hover:bg-surface transition group"
+                className="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-border bg-surface-alt hover-accent-border-40 hover:bg-surface transition group"
               >
                 {/* Click the spider → Single mode with this bot */}
                 <div

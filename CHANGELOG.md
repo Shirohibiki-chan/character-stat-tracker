@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-23 (3)
+
+### Additions
+- **Breakdown — combined summary card:** the Breakdown tab now shows an "All bots combined" card above the per-bot chart. It displays your total solo %, total group %, raw counts, and a mini split bar — so you can compare your overall solo/group ratio at a glance without doing the math yourself.
+
 ## 2026-05-23 (2)
 
 ### Fixes

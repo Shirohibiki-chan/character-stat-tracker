@@ -127,6 +127,7 @@ html[data-compact="true"] {
 @layer base {
   body {
     font-family: 'Quicksand', system-ui, sans-serif;
+    font-weight: 500;
     background-color: var(--color-bg);
     color: var(--color-text-primary);
   }

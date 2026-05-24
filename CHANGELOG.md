@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-24 (4)
+
+### Adjustments
+- **Tag chips now show each tag's unique color:** Tags on bot cards, in the table, in the bot detail view, and in the edit form now display in each tag's own hash-assigned color instead of a flat blue. The color matches what you already see in the Tags chart — if HSR is pink there, it's pink everywhere.
+
 ## 2026-05-24 (3)
 
 ### Additions

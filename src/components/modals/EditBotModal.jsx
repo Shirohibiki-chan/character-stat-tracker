@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { X } from 'lucide-react'
 import Modal from './Modal.jsx'
+import { getAura } from '../../constants/auras.js'
 
 export default function EditBotModal({ bot, allTags = [], onClose, onSave }) {
   const [name, setName]       = useState(bot.name)
@@ -70,7 +71,7 @@ export default function EditBotModal({ bot, allTags = [], onClose, onSave }) {
               onClick={() => inputRef.current?.focus()}
             >
               {tags.map(t => (
-                <span key={t} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent-faint border border-accent-faint-border text-accent-light text-xs font-bold">
+                <span key={t} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold" style={{ background: `${getAura(t)}1a`, border: `1px solid ${getAura(t)}40`, color: getAura(t) }}>
                   {t}
                   <button
                     type="button"

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.14
+// @version      2.15
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -538,7 +538,7 @@ function applyPillPos() {
 // ── HUD size persistence ──────────────────────────────────────────────────────
 
 const HUD_MIN_W = 280
-const HUD_MIN_H = 360
+const HUD_MIN_H = 300
 
 function loadHudSize() {
   try { return JSON.parse(GM_getValue(HUD_SIZE_KEY, null)) } catch { return null }

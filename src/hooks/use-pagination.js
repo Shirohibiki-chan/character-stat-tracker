@@ -12,7 +12,7 @@ export function usePagination(items) {
     () => localStorage.getItem(VIEW_MODE_KEY) || 'list'
   )
 
-  useEffect(() => { setPage(1) }, [items])
+  useEffect(() => { setPage(1) }, [items.length])
   useEffect(() => { setPage(1) }, [pageSize])
 
   function setPageSize(n) {

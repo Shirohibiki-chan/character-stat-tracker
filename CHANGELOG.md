@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-25
+
+### Adjustments
+- **Growth chart — gradient area fills:** The "Growth over time" chart in a bot's detail view now has a gradient fill under each line, fading from the line's color down to transparent. Lines and always-on dots are unchanged.
+
 ## 2026-05-24
 
 ### Additions

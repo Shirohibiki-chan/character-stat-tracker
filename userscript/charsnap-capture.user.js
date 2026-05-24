@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.15
+// @version      2.16
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -1190,6 +1190,10 @@ function updateHUD() {
     selectedIds.clear()
     expandedCaptureId = null
     searchQuery = ''
+    hudEl.style.removeProperty('top')
+    hudEl.style.removeProperty('left')
+    hudEl.style.setProperty('bottom', '20px', 'important')
+    hudEl.style.setProperty('right',  '20px', 'important')
     updateHUD()
   })
   hudEl.querySelector('#cs-hud-settings').addEventListener('click', () => {
@@ -1211,6 +1215,10 @@ function updateHUD() {
     selectedIds.clear()
     expandedCaptureId = null
     searchQuery = ''
+    hudEl.style.removeProperty('top')
+    hudEl.style.removeProperty('left')
+    hudEl.style.setProperty('bottom', '20px', 'important')
+    hudEl.style.setProperty('right',  '20px', 'important')
     updateHUD()
   })
 

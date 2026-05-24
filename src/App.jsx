@@ -449,7 +449,7 @@ export default function App() {
       )}
       {showImport  && <ImportModal onClose={() => setShowImport(false)} />}
       {adding      && <AddBotModal onClose={() => setAdding(false)} onAdd={(bot) => { addBot(bot); setAdding(false) }} />}
-      {editingBot  && <EditBotModal bot={editingBot} onClose={() => setEditingBotId(null)} onSave={(patch) => { updateBot(editingBotId, patch); setEditingBotId(null) }} />}
+      {editingBot  && <EditBotModal bot={editingBot} allTags={allTags} onClose={() => setEditingBotId(null)} onSave={(patch) => { updateBot(editingBotId, patch); setEditingBotId(null) }} />}
       {snapshotBot && <AddSnapshotModal bot={snapshotBot} onClose={() => setAddingSnapshotForId(null)} onAdd={(snapshot) => { addSnapshot(addingSnapshotForId, snapshot); setAddingSnapshotForId(null) }} />}
       {showBackup    && <BackupModal onClose={() => setShowBackup(false)} />}
       {showChangelog && <ChangelogModal onClose={() => setShowChangelog(false)} />}

@@ -2,6 +2,12 @@
 
 ## 2026-05-24
 
+### Additions
+- **Edit bot — tag picker with existing tags:** The tag field is now a chip-based input. Current tags show as removable pills; your other existing tags appear as one-click "+" buttons below the field. Type a new tag and press Enter (or comma) to add it; Backspace on an empty input removes the last chip. The modal opens with focus in the tag field.
+
+### Fixes
+- **Pagination no longer resets when editing a bot:** Changing a bot's name or tags used to jump you back to page 1 because any store update recreated the sorted array reference. Now the page only resets when the number of results actually changes (filter/search/add/remove).
+
 ### Adjustments
 - **Userscript v2.14 — shorter default HUD height:** Default expanded height reduced from 480px to 400px so toasts stacking above the HUD are less likely to cover bot stat buttons in the bottom-right corner of the page. Existing saved sizes are unaffected; "Reset size to default" in Settings resets to the new 360×400.
 

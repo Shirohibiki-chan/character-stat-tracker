@@ -1,7 +1,9 @@
 # Changelog
 
-## 2026-05-25
+## 2026-05-24 (2)
 
+### Additions
+- **Snapshot list pagination:** The snapshot table inside a bot's detail view now paginates at 15 rows per page, with ‹ › controls and a count ("1–15 of 42") at the bottom. No more endless scroll.
 ### Adjustments
 - **Growth chart — gradient area fills:** The "Growth over time" chart in a bot's detail view now has a gradient fill under each line, fading from the line's color down to transparent. Lines and always-on dots are unchanged.
 

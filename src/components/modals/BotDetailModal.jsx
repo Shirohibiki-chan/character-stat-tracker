@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from 'react'
-import { X, ChevronLeft, ChevronDown, Award, Pencil, Check, Plus, Trash2, TrendingUp, Camera, ClipboardPlus } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, ChevronDown, Award, Pencil, Check, Plus, Trash2, TrendingUp, Camera, ClipboardPlus } from 'lucide-react'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Cell,
@@ -36,6 +36,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
   const [metaTags, setMetaTags] = useState((bot.tags || []).join(', '))
   const [confirmDeleteBot, setConfirmDeleteBot] = useState(false)
   const [confirmDeleteSnap, setConfirmDeleteSnap] = useState(null)
+  const [snapPage, setSnapPage] = useState(0)
   const [addingSnap, setAddingSnap] = useState(false)
   const [newSnap, setNewSnap] = useState({
     date: new Date().toISOString().slice(0, 10),
@@ -102,6 +103,12 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
       })),
     [sortedSnaps]
   )
+
+  const SNAP_PAGE_SIZE = 15
+  const snapReversed = useMemo(() => [...sortedSnaps].reverse(), [sortedSnaps])
+  const snapPageCount = Math.max(1, Math.ceil(snapReversed.length / SNAP_PAGE_SIZE))
+  const safePage = Math.min(snapPage, snapPageCount - 1)
+  const pagedSnaps = snapReversed.slice(safePage * SNAP_PAGE_SIZE, (safePage + 1) * SNAP_PAGE_SIZE)
 
   const latest = sortedSnaps[sortedSnaps.length - 1]
   const prev = sortedSnaps.length > 1 ? sortedSnaps[sortedSnaps.length - 2] : null
@@ -643,7 +650,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                 </tr>
               </thead>
               <tbody>
-                {[...sortedSnaps].reverse().map(s => (
+                {pagedSnaps.map(s => (
                   <tr key={s.id} className="border-b border-border-subtle hover-bg-dim-50">
                     <td className="py-2 px-4 text-xs text-text-secondary font-semibold">{fmtDateTime(s.date)}</td>
                     <td className="py-2 px-3 text-right num text-sm text-text-value font-bold">{fmtFull(s.messages)}</td>
@@ -684,6 +691,35 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                   </tr>
                 )}
               </tbody>
+              {snapPageCount > 1 && (
+                <tfoot>
+                  <tr>
+                    <td colSpan={6} className="px-4 py-2.5 border-t border-border">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-text-muted num">
+                          {safePage * SNAP_PAGE_SIZE + 1}–{Math.min((safePage + 1) * SNAP_PAGE_SIZE, sortedSnaps.length)} of {sortedSnaps.length}
+                        </span>
+                        <div className="flex gap-1">
+                          <button
+                            onClick={() => setSnapPage(p => Math.max(0, p - 1))}
+                            disabled={safePage === 0}
+                            className="p-1 rounded border border-border text-text-muted hover:text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition"
+                          >
+                            <ChevronLeft size={13} />
+                          </button>
+                          <button
+                            onClick={() => setSnapPage(p => Math.min(snapPageCount - 1, p + 1))}
+                            disabled={safePage >= snapPageCount - 1}
+                            className="p-1 rounded border border-border text-text-muted hover:text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition"
+                          >
+                            <ChevronRight size={13} />
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              )}
             </table>
           </div>
 

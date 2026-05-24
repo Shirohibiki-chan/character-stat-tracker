@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-25
+
+### Additions
+- **Snapshot list pagination:** The snapshot table inside a bot's detail view now paginates at 15 rows per page, with ‹ › controls and a count ("1–15 of 42") at the bottom. No more endless scroll.
+
 ## 2026-05-24
 
 ### Additions

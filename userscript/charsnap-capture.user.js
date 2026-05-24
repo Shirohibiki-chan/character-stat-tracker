@@ -596,10 +596,9 @@ function clampPos(top, left) {
   const rect = hudEl.getBoundingClientRect()
   const w = rect.width  || 220
   const h = rect.height || 40
-  const MIN = 10 // minimum px that must remain inside the viewport
   return {
-    top:  Math.max(-(h - MIN), Math.min(H - MIN, top)),
-    left: Math.max(-(w - MIN), Math.min(W - MIN, left)),
+    top:  Math.max(0, Math.min(H - h, top)),
+    left: Math.max(0, Math.min(W - w, left)),
   }
 }
 

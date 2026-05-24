@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-25
+
+### Adjustments
+- **Metric correlations — plain-English tooltips and centered layout:** Hovering a cell now shows a plain-English sentence explaining what the number means (e.g. "Bots with more Messages almost always also have more Threads"). The legend text now explains green vs. red in plain terms. The matrix is also centered instead of left-aligned.
+
 ## 2026-05-24 (2)
 
 ### Additions

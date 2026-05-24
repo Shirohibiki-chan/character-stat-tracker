@@ -1960,4 +1960,4 @@ document.addEventListener('keydown', e => {
     applyProfileGate()
   }
 }, true)
-console.log('[CharSnap Capture] v2.13 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')
+console.log('[CharSnap Capture] v2.16 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')

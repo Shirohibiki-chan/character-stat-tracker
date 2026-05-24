@@ -3,12 +3,12 @@
 ## 2026-05-24 (4)
 
 ### Adjustments
-- **Tag chips now show each tag’s unique color:** Tags on bot cards, in the table, in the bot detail view, and in the edit form now display in each tag’s own hash-assigned color instead of a flat blue. The color matches what you already see in the Tags chart — if HSR is pink there, it’s pink everywhere.
+- **Tag chips now show each tag's unique color:** Tags on bot cards, in the table, in the bot detail view, and in the edit form now display in each tag's own hash-assigned color instead of a flat blue. The color matches what you already see in the Tags chart — if HSR is pink there, it's pink everywhere.
 
 ## 2026-05-24 (3)
 
 ### Additions
-- **Chart descriptions — every chart now has a plain-English caption:** Each of the 14 charts in the Insights view now shows a one-line description directly under the chart title explaining what the chart tracks and how to read it. No more guessing what “Capture lifespan” or “Metric correlations” means.
+- **Chart descriptions — every chart now has a plain-English caption:** Each of the 14 charts in the Insights view now shows a one-line description directly under the chart title explaining what the chart tracks and how to read it. No more guessing what "Capture lifespan" or "Metric correlations" means.
 
 ## 2026-05-24 (2)
 
@@ -65,7 +65,7 @@
 
 ### Fixes
 - **Trending — avatars not showing:** bot profile pictures were missing from all Trending cards due to a wrong property name in the component. They now display correctly.
-- **Trending — momentum arrow almost always showing â†‘:** the Accelerating arrow was firing incorrectly for bots that had only one snapshot in the first half of the comparison window (giving them a gain-of-zero in the first half, which always resolved to â†‘). It now correctly falls back to Steady (–) when there isn't enough first-half data to compute a reliable ratio.
+- **Trending — momentum arrow almost always showing ↑:** the Accelerating arrow was firing incorrectly for bots that had only one snapshot in the first half of the comparison window (giving them a gain-of-zero in the first half, which always resolved to ↑). It now correctly falls back to Steady (–) when there isn't enough first-half data to compute a reliable ratio.
 - **Trending — default window changed to 7d:** the chart previously defaulted to 30 days, which required a full month of snapshots before most bots appeared. 7 days is a more practical default.
 
 ## 2026-05-23
@@ -86,7 +86,7 @@
 - **Report Card — Last 7 days:** the Report Card in bot detail now shows both a "Last 7 days" and "Last 30 days" column side by side. Each window only appears when you have at least 2 snapshots within it.
 - **Top gainers — 24h window:** the Top Gainers chart now has a "24h" time window option and defaults to it on page load.
 - **Userscript v2.8 — modal auto-close (fix):** the stats modal now correctly closes itself after capturing.
-- **Snapshot timestamps:** the snapshot history table now shows the exact time each snapshot was saved (e.g., "May 22, 2026 Â· 3:45 PM"), displayed in your local timezone. Snapshots captured via the userscript already had precise times; manually added snapshots now record the actual time of day when you click Save instead of defaulting to noon.
+- **Snapshot timestamps:** the snapshot history table now shows the exact time each snapshot was saved (e.g., "May 22, 2026 · 3:45 PM"), displayed in your local timezone. Snapshots captured via the userscript already had precise times; manually added snapshots now record the actual time of day when you click Save instead of defaulting to noon.
 
 ### Fixes
 - **"+N today" showing stale data:** the daily delta on stat cards was computing the difference between your two most recent snapshots even when neither was from today. It now only shows a value when your latest snapshot for that bot was actually captured after 0:00 UTC today.
@@ -96,25 +96,25 @@
 ## 2026-05-21 — Phase 8 (part 3)
 
 ### Additions
-- **Bot detail â†’ Report Card:** the bot detail modal now has a collapsible **Report Card** section (click to expand) between the metric cards and the growth chart. It shows:
-  - **Rankings** — a progress bar and "#N of M Â· top X%" label for each metric, so you can instantly see how this bot stacks up against everything else in your tracker.
+- **Bot detail → Report Card:** the bot detail modal now has a collapsible **Report Card** section (click to expand) between the metric cards and the growth chart. It shows:
+  - **Rankings** — a progress bar and "#N of M · top X%" label for each metric, so you can instantly see how this bot stacks up against everything else in your tracker.
   - **Last 30 days** — messages, threads, and favorites gained in the past 30 days (only shown when you have at least two Total snapshots within that window).
   - **Solo / Group donut** — a two-slice donut chart breaking down solo vs. group messages, with counts and percentages, pulled from the latest Total snapshot's breakdown data (only shown if you have breakdown data for this bot).
-  - **Snapshot streak** — count of consecutive days where at least one Total snapshot was captured (only shown when streak â‰¥ 2 days).
+  - **Snapshot streak** — count of consecutive days where at least one Total snapshot was captured (only shown when streak ≥ 2 days).
 
 ## 2026-05-21 — Phase 8 (part 2)
 
 ### Additions
-- **Scatter â†’ Bubble chart:** the Scatter tab now has a "Size" axis picker. Bubble radius is proportional to whichever metric you pick (Messages, Threads, or Favorites), scaled to a readable range so all dots stay visible. A new **By bot / By tag** color toggle lets you recolor the bubbles by each bot's first tag instead of its default aura — handy for spotting tag-level clusters. The tooltip now shows the bot's tag when one is set.
-- **Tags â†’ Detail mode:** the Tags tab now has a "Summary / Detail" toggle. Summary is the existing bar chart. Detail renders one card per tag, each showing total and avg-per-bot counts for all three metrics, the combined 30-day message gain, and a mini spider chart of the average stat profile across all bots in that tag.
-- **Timeline â†’ Cohort mode:** the Timeline tab now has a "Calendar / Cohort" toggle. In Cohort mode the X-axis switches from calendar dates to "days since first capture" per bot, so you can compare growth trajectories regardless of when each bot was first added.
+- **Scatter → Bubble chart:** the Scatter tab now has a "Size" axis picker. Bubble radius is proportional to whichever metric you pick (Messages, Threads, or Favorites), scaled to a readable range so all dots stay visible. A new **By bot / By tag** color toggle lets you recolor the bubbles by each bot's first tag instead of its default aura — handy for spotting tag-level clusters. The tooltip now shows the bot's tag when one is set.
+- **Tags → Detail mode:** the Tags tab now has a "Summary / Detail" toggle. Summary is the existing bar chart. Detail renders one card per tag, each showing total and avg-per-bot counts for all three metrics, the combined 30-day message gain, and a mini spider chart of the average stat profile across all bots in that tag.
+- **Timeline → Cohort mode:** the Timeline tab now has a "Calendar / Cohort" toggle. In Cohort mode the X-axis switches from calendar dates to "days since first capture" per bot, so you can compare growth trajectories regardless of when each bot was first added.
 
 ## 2026-05-21 — Phase 8 (part 1)
 
 ### Additions
 - **Velocity chart:** new "Velocity" tab shows growth *rate* (metric units per day) over time instead of cumulative totals. Each line is the point-to-point rate between consecutive snapshots, so you can immediately see which bots are accelerating vs. cooling off. Supports metric and Top N selectors.
 - **Breakdown chart:** new "Breakdown" tab shows a stacked bar for each bot split into Solo and Group messages. Toggle between absolute counts and 100% normalized view. Sort by Total, Solo%, or Group%.
-- **Trending chart:** new "Trending" tab (Hot right now) lists bots ranked by recent gain over a 7/14/30-day window. Each card shows avatar, name, how much they gained, and a momentum arrow — Accelerating (â†‘), Steady (â†’), or Slowing (â†“) — based on whether the growth rate sped up or slowed in the second half of the window.
+- **Trending chart:** new "Trending" tab (Hot right now) lists bots ranked by recent gain over a 7/14/30-day window. Each card shows avatar, name, how much they gained, and a momentum arrow — Accelerating (↑), Steady (→), or Slowing (↓) — based on whether the growth rate sped up or slowed in the second half of the window.
 - **Bump chart:** new "Bump" tab shows rank positions over time as a line chart. #1 is at the top; lines cross whenever bots overtake each other. Great for seeing which bots have climbed or fallen in your collection. Supports metric and Top N selectors.
 - **Lifespan chart:** new "Lifespan" tab shows a Gantt-style view — each bot is a horizontal bar spanning its first to last snapshot date. A dot marks every individual snapshot. Sort by Messages, First capture, Last capture, or Duration. Hover a row to see exact date range and snapshot count in the header.
 - **Heatmap chart:** new "Heatmap" tab shows a correlation matrix for all metrics (Messages, Threads, Favorites, Solo, Group, Avg/day, Favs/1K). Each cell shows the Pearson correlation coefficient, color-coded green (positive) to red (negative). Hover any cell for the full label and value. Solo/Group columns only appear if you have breakdown data.
@@ -180,7 +180,7 @@
 - **Theme/compact color flash:** settings (theme, compact mode) are now applied before React renders via an inline script in the page head, eliminating the flash of default styles on load.
 
 ### Additions
-- **Logo â†’ lander:** clicking the "CharSnap stats" wordmark when you have bots shows the feature overview / how-to-start screen. Click it again, or use Import / Add bot from that screen, to return to the dashboard.
+- **Logo → lander:** clicking the "CharSnap stats" wordmark when you have bots shows the feature overview / how-to-start screen. Click it again, or use Import / Add bot from that screen, to return to the dashboard.
 
 ---
 
@@ -198,7 +198,7 @@
 ## 2026-05-20 (Userscript v2.2 — settings panel)
 
 ### Additions
-- **Userscript v2.2 — settings panel:** clicking the gear icon in the expanded HUD header opens a settings view. A `â† Back` button returns to the captures list. Settings include:
+- **Userscript v2.2 — settings panel:** clicking the gear icon in the expanded HUD header opens a settings view. A `← Back` button returns to the captures list. Settings include:
   - **Default state on load** — choose whether the HUD starts as Pill, Expanded, or Hidden when you land on your own creator profile page. Defaults to Pill. Persists across page loads.
   - **Auto-capture toggle** — same ON/OFF toggle as the toolbar, mirrored here for discoverability. Auto-capture is event-driven (fires when you open a bot's stats modal) — no interval to configure.
   - **Reset position** — returns the HUD to its default bottom-right corner without losing other settings.
@@ -218,7 +218,7 @@
 ## 2026-05-20 (Userscript v2.1 — captures list, per-row remove, inline preview, search, multi-select)
 
 ### Additions
-- **Userscript v2.1 — captures list:** the HUD body now renders all queued captures as a scrollable list. Each row shows the bot's avatar (letter-initials fallback), name, and a secondary line with relative timestamp, scope, and compact stat summary (e.g. `3.1M msgs Â· 8.9K threads Â· 1.3K favs`). If the same bot appears multiple times in the queue, subsequent entries show positive deltas in green (e.g. `+24K msgs`).
+- **Userscript v2.1 — captures list:** the HUD body now renders all queued captures as a scrollable list. Each row shows the bot's avatar (letter-initials fallback), name, and a secondary line with relative timestamp, scope, and compact stat summary (e.g. `3.1M msgs · 8.9K threads · 1.3K favs`). If the same bot appears multiple times in the queue, subsequent entries show positive deltas in green (e.g. `+24K msgs`).
 - **Userscript v2.1 — per-row remove:** each capture row has a `×` button that removes that single capture from the queue. A toast fires immediately: "Removed [name]. Undo" — clicking Undo re-inserts the capture. Undo window is 8 seconds (matches toast duration).
 - **Userscript v2.1 — inline preview:** clicking anywhere on a row (except the × button or checkbox) expands an inline JSON preview directly below that row, pushing following rows down. Click again to collapse. No modal involved.
 - **Userscript v2.1 — search/filter:** a text input in the toolbar (next to AUTO) filters the list in real-time by bot name substring (case-insensitive). Filter state persists across HUD re-renders so typing is never interrupted by new captures arriving.
@@ -267,7 +267,7 @@
 ## 2026-05-20 (Fix: userscript v1.17 — messages group count still zero)
 
 ### Fixes
-- **Userscript v1.17 — messagesGroup capturing as 0:** the â„¹ï¸ icon in CharSnap's breakdown span moved to appear between the solo count and the `+` sign (e.g. `(2,613,440 â„¹ï¸ + 518,222)`), which broke the `\s*` whitespace match in the breakdown regex and caused the real breakdown span to not match. A false-positive span elsewhere in the modal (with a `+ 0` pattern) was winning instead, giving the wrong total. Fixed by widening the regex gap between the first number and `+` to accept any non-digit non-paren characters (`[^0-9+(]*`), so the â„¹ï¸ icon no longer prevents a match. Added a `Math.max(domElement, breakdownSum)` safety net: if the DOM element happens to hold the real total and the breakdown sum is lower (false positive), the DOM value wins automatically.
+- **Userscript v1.17 — messagesGroup capturing as 0:** the ℹ️ icon in CharSnap's breakdown span moved to appear between the solo count and the `+` sign (e.g. `(2,613,440 ℹ️ + 518,222)`), which broke the `\s*` whitespace match in the breakdown regex and caused the real breakdown span to not match. A false-positive span elsewhere in the modal (with a `+ 0` pattern) was winning instead, giving the wrong total. Fixed by widening the regex gap between the first number and `+` to accept any non-digit non-paren characters (`[^0-9+(]*`), so the ℹ️ icon no longer prevents a match. Added a `Math.max(domElement, breakdownSum)` safety net: if the DOM element happens to hold the real total and the breakdown sum is lower (false positive), the DOM value wins automatically.
 
 ---
 
@@ -281,7 +281,7 @@
 ## 2026-05-20 (Fix: userscript v1.16 — wrong message count; export queue UI reset)
 
 ### Fixes
-- **Userscript v1.16 — messages capturing solo count instead of total:** CharSnap's DOM places the solo messages count in the large stat element; the all-time total was being skipped. When the `(solo + group)` breakdown is present in the modal, the total is now derived as `solo + group` — always correct regardless of which value the DOM element holds. The breakdown regex no longer requires a closing `)`, tolerating the â„¹ï¸ icon that may appear inside the parentheses. Among multiple breakdown-looking spans, the one with the largest total is used to avoid false positives from other elements.
+- **Userscript v1.16 — messages capturing solo count instead of total:** CharSnap's DOM places the solo messages count in the large stat element; the all-time total was being skipped. When the `(solo + group)` breakdown is present in the modal, the total is now derived as `solo + group` — always correct regardless of which value the DOM element holds. The breakdown regex no longer requires a closing `)`, tolerating the ℹ️ icon that may appear inside the parentheses. Among multiple breakdown-looking spans, the one with the largest total is used to avoid false positives from other elements.
 - **Userscript v1.16 — Export queue "Clear?" UI immediately reverting:** the profile-gate `MutationObserver` was watching all of `document.body` including the HUD element itself. Replacing the HUD's inner HTML (e.g. switching to the "Clear?" view) triggered a mutation, which called `updateHUD()` 300 ms later and reset the HUD to its default state. The observer now ignores mutations that originate inside the HUD's own elements.
 
 ---
@@ -307,7 +307,7 @@
 ## 2026-05-19 (Import — richer bot-match dropdown)
 
 ### Changes
-- **Custom bot-match dropdown:** the "which bot does this belong to?" chooser in the import review step has been redesigned from a plain `<select>` to a custom component. Each bot option now shows a PFP thumbnail (24 px circle), the bot name, and a secondary info row with latest message count, snapshot count, up to 2 tags, and last-updated relative date (e.g. `3.1M messages Â· 2 snaps Â· HSR Â· updated 2d ago`).
+- **Custom bot-match dropdown:** the "which bot does this belong to?" chooser in the import review step has been redesigned from a plain `<select>` to a custom component. Each bot option now shows a PFP thumbnail (24 px circle), the bot name, and a secondary info row with latest message count, snapshot count, up to 2 tags, and last-updated relative date (e.g. `3.1M messages · 2 snaps · HSR · updated 2d ago`).
 - **Type-ahead filter:** a search field at the top of the open dropdown filters bot options by name or tag as you type. The two pinned options (skip / create new) remain visible at all times regardless of filter state.
 - **Smart ranking:** bots are ordered by how closely their latest message count matches the incoming snapshot — the likeliest match appears first. The top result gets a "Closest match" badge. After the top 3 closest matches, the remaining bots sort alphabetically.
 - **Current selection preview:** the closed dropdown button shows the selected bot's PFP thumbnail alongside the name so you can confirm the selection at a glance without reopening the panel.
@@ -365,14 +365,14 @@
 - **Profile gate:** the capture box (HUD) now only appears when you are viewing your own creator profile page. On any other page — another creator's profile, explore, settings, etc. — the box is hidden. It reappears automatically when you navigate back to your own profile. The gate checks for owner-only buttons in the creator banner (the "Announce" button is the primary signal).
 - **Resizable box:** drag the bottom-right corner grip to resize the expanded panel to any size you prefer. Minimum size is 280 × 200 px; the box cannot be dragged beyond the viewport edge. Size is saved and restored on reload.
 - **Hide / restore:** clicking the × in the panel header now hides the box entirely. A small 📊 icon appears in the bottom-right corner as a restore affordance. Click it to bring the box back. The hidden/visible state is persisted across page loads. The restore icon also respects the profile gate — it only shows on your own profile.
-- **Position persistence (existing):** position was already saved from drag. The âˆ’ button collapses the expanded panel back to the pill (as before); × hides it entirely.
+- **Position persistence (existing):** position was already saved from drag. The − button collapses the expanded panel back to the pill (as before); × hides it entirely.
 
 ---
 
 ## 2026-05-19 (Tag filter, manual PFP, bulk tags, pagination + grid view)
 
 ### Additions
-- **Tag Totals â†’ filter:** clicking a tag name or bar in the Tags chart navigates to the bot list and filters it to that tag. The active filter appears as a removable chip above the table; click the × to clear it.
+- **Tag Totals → filter:** clicking a tag name or bar in the Tags chart navigates to the bot list and filters it to that tag. The active filter appears as a removable chip above the table; click the × to clear it.
 - **Manual PFP override:** click the avatar in any bot's detail view to open a PFP editor. Paste an image URL or browse for a file. The new picture is saved as a manual override (indicated by a small pencil badge on the avatar) and will NOT be overwritten by future snapshot imports. Use "Allow future imports to update PFP" to clear the lock without removing the image.
 - **Bulk tag editing:** a "Select" toggle in the table/grid header switches the bot list into multi-select mode. After selecting bots, a bottom action bar appears with "Add tags…" and "Remove tags…" pickers. Adding is additive (doesn't remove existing tags); removing only strips the chosen tags. "Select all visible" selects the current page. Selections persist as you navigate pages; "Done" or "Clear selection" exits the mode.
 - **Pagination:** the bot list is now paginated. Default is 50 bots per page; choose 25, 50, or 100 from the page-size selector. Pagination controls appear below the list. Search, filter, and sort changes reset to page 1. Page size preference is saved in localStorage.
@@ -404,7 +404,7 @@
 ### Adjustments
 - New typography and color system applied from sandbox: Manrope for stat numbers and table figures, Lora for the wordmark, Outfit for card labels, Poppins for body text. Accent palette shifted to cool slate-blue with per-metric tints (teal for bots, green for messages, purple for threads, pink for favorites). Avatar glow preserved.
 - Stat card gradients are now visible — cards were using pre-tinted dark backgrounds that hid the overlay; switched to neutral surfaces so the top-to-bottom color fade shows properly.
-- Each stat card now shows "+N this week" (green) or "âˆ’N this week" (red) below the main number, compared to 7 days ago.
+- Each stat card now shows "+N this week" (green) or "−N this week" (red) below the main number, compared to 7 days ago.
 - "Total Bots" card now has a bot icon and shows how many new bots were added this week, matching the metric card style.
 - Abbreviated numbers (K / M / B) now always show one decimal place — e.g. 89.6M instead of 90M.
 - Full unabbreviated number removed from below stat card values — cleaner layout with room for the weekly delta line.
@@ -472,7 +472,7 @@
 ## 2026-05-17 (Polish — metric ordering + bug fixes)
 
 ### Adjustments
-- Metric order changed to Messages â†’ Threads â†’ Favorites everywhere in the app (stat columns, chart pickers, tooltips, dropdowns).
+- Metric order changed to Messages → Threads → Favorites everywhere in the app (stat columns, chart pickers, tooltips, dropdowns).
 
 ### Fixes
 - Charts: removed a thin white rectangular border that appeared around chart components (Recharts default focus outline).
@@ -512,14 +512,14 @@
 ## 2026-05-16 (Phase 7, v1.3)
 
 ### Fixes
-- Userscript: auto-switch now tries two techniques before giving up. Primary: full PointerEvent chain (pointerdown â†’ pointerup â†’ click). Fallback at ~1.5 s: keyboard activation (focus + Enter keydown) — Radix tabs are keyboard-accessible by design, so this often succeeds when pointer dispatch is ignored. The "Click the Total tab" hint is now deferred to ~3 s (after both techniques have had time to run) rather than appearing immediately at 1.5 s.
+- Userscript: auto-switch now tries two techniques before giving up. Primary: full PointerEvent chain (pointerdown → pointerup → click). Fallback at ~1.5 s: keyboard activation (focus + Enter keydown) — Radix tabs are keyboard-accessible by design, so this often succeeds when pointer dispatch is ignored. The "Click the Total tab" hint is now deferred to ~3 s (after both techniques have had time to run) rather than appearing immediately at 1.5 s.
 
 ---
 
 ## 2026-05-16 (Phase 7, v1.2)
 
 ### Fixes
-- Userscript: programmatic tab switch now dispatches a full `pointerdown â†’ pointerup â†’ click` PointerEvent chain instead of a bare `.click()` — Radix UI tab components listen on `pointerdown` and were silently ignoring `.click()`.
+- Userscript: programmatic tab switch now dispatches a full `pointerdown → pointerup → click` PointerEvent chain instead of a bare `.click()` — Radix UI tab components listen on `pointerdown` and were silently ignoring `.click()`.
 - Userscript: capture no longer depends on the programmatic switch succeeding. A `MutationObserver` watches for the Total tab's `data-state` to become `"active"` (regardless of what caused it), so the capture fires even if the script's click was ignored and the user clicked manually instead. A hint toast appears after 1.5 s if the tab still hasn't switched, telling the user to click Total themselves.
 
 ---
@@ -549,7 +549,7 @@
 ### Additions
 - Enhanced empty state — richer first-time lander with feature-highlight cards and a two-step "how to start" guide; Import paste is now the primary CTA.
 - Onboarding banner — dismissible tip bar that appears for users who already have bots, pointing to the Import button; stored in localStorage so it only shows once.
-- Data & Backup modal (âš™ icon in header) — export full JSON backup, import from backup file (with replace-all confirmation), and reset all data (two-step confirm).
+- Data & Backup modal (⚙ icon in header) — export full JSON backup, import from backup file (with replace-all confirmation), and reset all data (two-step confirm).
 - What's New modal (newspaper icon in header) — renders this changelog in-app via Vite raw import; no external dependency.
 - Tab bar now scrolls horizontally on narrow screens.
 - README with project description, feature list, screenshot placeholders, and quick-start guide.

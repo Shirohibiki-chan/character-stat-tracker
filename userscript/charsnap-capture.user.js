@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.17
+// @version      2.18
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -596,10 +596,9 @@ function clampPos(top, left) {
   const rect = hudEl.getBoundingClientRect()
   const w = rect.width  || 220
   const h = rect.height || 40
-  const MIN = 10 // minimum px that must remain inside the viewport
   return {
-    top:  Math.max(-(h - MIN), Math.min(H - MIN, top)),
-    left: Math.max(-(w - MIN), Math.min(W - MIN, left)),
+    top:  Math.max(0, Math.min(H - h, top)),
+    left: Math.max(0, Math.min(W - w, left)),
   }
 }
 
@@ -1960,4 +1959,4 @@ document.addEventListener('keydown', e => {
     applyProfileGate()
   }
 }, true)
-console.log('[CharSnap Capture] v2.17 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')
+console.log('[CharSnap Capture] v2.18 | Ctrl+Shift+Alt+R → reset pill position | Ctrl+Shift+Alt+H → force-show HUD')

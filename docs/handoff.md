@@ -28,6 +28,7 @@ Phases 0–7 from `docs/plan.md` are complete. Polish roadmap (this doc) is most
 - **BotDetailModal — Report Card 7-day window:** Added `momentum7` alongside `momentum30` in the report card `useMemo`. JSX updated to render both windows side by side when data exists; each window requires ≥2 snapshots within it. Fixed the label/value gap bug (was `flex-1` + `justify-between` stretching the block; now `shrink-0` + `flex gap-3`).
 - **GainsChart — 24h window:** Added `{ label: '24h', days: 1 }` as first option in `WINDOWS`; default `windowDays` changed from `30` to `1`.
 - **GainsChart — controls always visible (2026-05-24):** Removed the early-return empty state that hid the window/metric controls when a window had no data. Controls now render in the section header unconditionally; only the chart area swaps for the "no gains" message.
+- **Userscript v2.14 (2026-05-24):** Default expanded HUD height reduced from 480px to 400px. Toasts stack above the HUD; the taller default was causing them to obscure bot stat buttons in the bottom-right corner. "Reset size" in Settings resets to new 360×400 default.
 
 ## Phase 8 App Changes (2026-05-21 — PR A: new chart tabs)
 

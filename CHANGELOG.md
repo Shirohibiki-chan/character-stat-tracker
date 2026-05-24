@@ -2,6 +2,9 @@
 
 ## 2026-05-24
 
+### Adjustments
+- **Userscript v2.14 — shorter default HUD height:** Default expanded height reduced from 480px to 400px so toasts stacking above the HUD are less likely to cover bot stat buttons in the bottom-right corner of the page. Existing saved sizes are unaffected; "Reset size to default" in Settings resets to the new 360×400.
+
 ### Fixes
 - **Gains — window controls now visible when empty:** The 24h/7d/30d/90d/All and metric selector buttons no longer disappear when a window has no gains to show. Previously the empty state replaced the entire chart including the controls, making it impossible to switch to a wider window even though the message told you to. Now the controls stay visible so you can switch windows without any data being present.
 - **Muted text legibility — global fix:** Raised `--color-text-muted` from `#6e7787` to `#8898b2` (~6:1 contrast ratio, up from ~3.6:1). This was below the readable threshold everywhere it appeared — empty state messages, form labels, footer, chart captions. Also updated the `text-muted-70` and `text-muted-60` utility classes to use the new base color so they remain slightly dimmed without becoming illegible.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-25
+
+### Adjustments
+- **Trending — momentum indicator more visible:** Each trending card now has a subtle color wash fading in from the right edge in the momentum color (green for accelerating, red for slowing, gray for steady), and the arrow icon sits inside a small tinted circle instead of floating bare. The indicator is much easier to spot at a glance.
+
 ## 2026-05-24 (2)
 
 ### Additions

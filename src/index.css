@@ -66,7 +66,7 @@
   --color-text-value:     #e0e6f0;
   --color-text-secondary: #a7bad2;
   --color-text-tertiary:  #8b95a6;
-  --color-text-muted:     #6e7787;
+  --color-text-muted:     #8898b2;
 
   /* Accent */
   --color-accent:              #4ba8c4;
@@ -181,8 +181,8 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.08); }
 
 /* Muted / subtle tinted text */
 .text-emerald-dim { color: rgba(  0, 210, 148, 0.60); }
-.text-muted-60    { color: rgba(110, 119, 135, 0.60); }
-.text-muted-70    { color: rgba(110, 119, 135, 0.70); }
+.text-muted-60    { color: rgba(136, 152, 178, 0.70); }
+.text-muted-70    { color: rgba(136, 152, 178, 0.82); }
 
 .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
 .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }

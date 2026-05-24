@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-24
+
+### Fixes
+- **Gains — window controls now visible when empty:** The 24h/7d/30d/90d/All and metric selector buttons no longer disappear when a window has no gains to show. Previously the empty state replaced the entire chart including the controls, making it impossible to switch to a wider window even though the message told you to. Now the controls stay visible so you can switch windows without any data being present.
+
 ## 2026-05-23 (7)
 
 ### Additions

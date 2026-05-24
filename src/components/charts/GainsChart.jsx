@@ -65,19 +65,6 @@ export default function GainsChart({ bots, onViewBot }) {
 
   const windowLabel = WINDOWS.find(w => w.days === windowDays)?.label ?? ''
 
-  if (data.length === 0) {
-    return (
-      <section className="border border-border rounded-lg bg-surface flex items-center justify-center py-20">
-        <p className="text-text-muted text-sm text-center max-w-xs">
-          No gains found in this window.<br />
-          <span className="text-muted-70 text-xs">
-            Bots need at least 2 Total-scope snapshots to compute gains. Try a wider window.
-          </span>
-        </p>
-      </section>
-    )
-  }
-
   const chartHeight = Math.max(300, data.length * 32 + 40)
 
   return (
@@ -114,6 +101,16 @@ export default function GainsChart({ bots, onViewBot }) {
         </div>
       </div>
       <div className="p-5">
+        {data.length === 0 ? (
+          <div className="flex items-center justify-center py-16">
+            <p className="text-text-muted text-sm text-center max-w-xs">
+              No gains found in this window.<br />
+              <span className="text-muted-70 text-xs">
+                Bots need at least 2 Total-scope snapshots to compute gains. Try a wider window.
+              </span>
+            </p>
+          </div>
+        ) : (
         <div style={{ height: chartHeight }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} layout="vertical" margin={{ top: 5, right: 70, left: 0, bottom: 5 }}>
@@ -172,6 +169,7 @@ export default function GainsChart({ bots, onViewBot }) {
             </BarChart>
           </ResponsiveContainer>
         </div>
+        )}
       </div>
     </section>
   )

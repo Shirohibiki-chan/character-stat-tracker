@@ -6,14 +6,15 @@
 - **Edit bot — tag picker with existing tags:** The tag field is now a chip-based input. Current tags show as removable pills; your other existing tags appear as one-click "+" buttons below the field. Type a new tag and press Enter (or comma) to add it; Backspace on an empty input removes the last chip. The modal opens with focus in the tag field.
 
 ### Fixes
+- **Gains — window controls now visible when empty:** The 24h/7d/30d/90d/All and metric selector buttons no longer disappear when a window has no gains to show. Previously the empty state replaced the entire chart including the controls, making it impossible to switch to a wider window even though the message told you to. Now the controls stay visible so you can switch windows without any data being present.
 - **Pagination no longer resets when editing a bot:** Changing a bot's name or tags used to jump you back to page 1 because any store update recreated the sorted array reference. Now the page only resets when the number of results actually changes (filter/search/add/remove).
 
 ### Adjustments
+- **Primary text color — light cyan tint:** Main text is now a soft cyan (`#c8e4f0`) instead of plain white. Subtle enough not to clash with anything but adds a gentle color to the palette.
+- **Muted text legibility — global fix:** Raised `--color-text-muted` to `#96a8c0` (from `#6e7787`, which was below readable contrast on dark backgrounds). Also updated the `text-muted-70` and `text-muted-60` utility classes to match. Applies everywhere muted text appears — empty states, form labels, footer, chart captions.
+- **Body text weight bumped to semibold:** All text now uses font-weight 600 (Quicksand semibold) for better legibility across the app.
 - **Userscript v2.14 — shorter default HUD height:** Default expanded height reduced from 480px to 400px so toasts stacking above the HUD are less likely to cover bot stat buttons in the bottom-right corner of the page. Existing saved sizes are unaffected; "Reset size to default" in Settings resets to the new 360×400.
-
-### Fixes
-- **Gains — window controls now visible when empty:** The 24h/7d/30d/90d/All and metric selector buttons no longer disappear when a window has no gains to show. Previously the empty state replaced the entire chart including the controls, making it impossible to switch to a wider window even though the message told you to. Now the controls stay visible so you can switch windows without any data being present.
-- **Muted text legibility — global fix:** Raised `--color-text-muted` from `#6e7787` to `#8898b2` (~6:1 contrast ratio, up from ~3.6:1). This was below the readable threshold everywhere it appeared — empty state messages, form labels, footer, chart captions. Also updated the `text-muted-70` and `text-muted-60` utility classes to use the new base color so they remain slightly dimmed without becoming illegible.
+- **Removed misleading camera icon from grid cards:** The hover camera button on bot cards has been removed. It only opened the bot detail view (same as clicking the card) and implied PFP editing was possible there — it isn't, that's done on the CharSnap profile page directly.
 
 ## 2026-05-23 (7)
 

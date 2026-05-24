@@ -14,13 +14,14 @@ function avatarGlow(color) {
   return `0 0 0 1.5px ${color}, 0 0 10px 1px ${color}8c, 0 0 18px 2px ${color}38`
 }
 
-function ChartTooltip({ active, payload }) {
+function ChartTooltip({ active, payload, metric }) {
   if (!active || !payload?.length) return null
   const d = payload[0].payload
+  const rows = metric ? [metric] : METRICS
   return (
     <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
       <div className="text-xs text-text-secondary font-medium mb-1">{d.dateLabel}</div>
-      {METRICS.map(m => (
+      {rows.map(m => (
         <div key={m.key} className="flex justify-between gap-6 text-xs">
           <span className="text-text-secondary font-medium">{m.label}</span>
           <span className="num font-semibold" style={{ color: m.color }}>{fmtFull(d[m.key])}</span>
@@ -49,6 +50,14 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
   const [pfpDataUrl, setPfpDataUrl] = useState(null)
   const pfpFileRef = useRef(null)
   const [reportOpen, setReportOpen] = useState(false)
+  const [chartView, setChartView] = useState(() => localStorage.getItem('bot-chart-view') || 'all')
+
+  function setChartViewPersisted(v) {
+    setChartView(v)
+    localStorage.setItem('bot-chart-view', v)
+  }
+
+  const activeMetric = chartView === 'all' ? null : (METRICS.find(m => m.key === chartView) ?? METRICS[0])
 
   const isDirty = addingSnap && !!(newSnap.chats || newSnap.messages || newSnap.favorites)
 
@@ -520,66 +529,126 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
           {/* Growth chart */}
           {chartSnaps.length >= 2 && (
             <div className="mb-6 border border-border rounded-lg p-4 bg-surface">
-              <div className="flex items-center gap-2 text-sm text-text-secondary font-semibold mb-3">
-                <TrendingUp size={16} className="text-accent opacity-60" />
-                Growth over time
+              <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
+                <div className="flex items-center gap-2 text-sm text-text-secondary font-semibold">
+                  <TrendingUp size={16} className="text-accent opacity-60" />
+                  Growth over time
+                </div>
+                <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
+                  <button
+                    onClick={() => setChartViewPersisted('all')}
+                    className={`px-2.5 py-1 text-xs font-semibold rounded transition ${chartView === 'all' ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                  >
+                    All
+                  </button>
+                  {METRICS.map(m => (
+                    <button
+                      key={m.key}
+                      onClick={() => setChartViewPersisted(m.key)}
+                      className={`px-2.5 py-1 text-xs font-semibold rounded transition ${chartView === m.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                      style={chartView === m.key ? { boxShadow: `inset 0 0 0 1px ${m.color}40` } : {}}
+                    >
+                      {m.label}
+                    </button>
+                  ))}
+                </div>
               </div>
               <div style={{ height: 280, overflow: 'hidden' }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartSnaps} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-                    <defs>
-                      {METRICS.map(m => (
-                        <linearGradient key={m.key} id={`grad-${m.key}`} x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor={m.color} stopOpacity={0.25} />
-                          <stop offset="95%" stopColor={m.color} stopOpacity={0} />
-                        </linearGradient>
-                      ))}
-                    </defs>
-                    <CartesianGrid stroke="var(--color-border-subtle)" />
-                    <XAxis
-                      dataKey="date"
-                      type="number"
-                      domain={['dataMin', 'dataMax']}
-                      tickFormatter={t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                      stroke="var(--color-text-muted)"
-                      style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
-                    />
-                    <YAxis
-                      yAxisId="left"
-                      tickFormatter={fmt}
-                      stroke="var(--color-text-muted)"
-                      style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
-                    />
-                    <YAxis
-                      yAxisId="right"
-                      orientation="right"
-                      tickFormatter={fmt}
-                      stroke="var(--color-text-muted)"
-                      style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
-                    />
-                    <Tooltip content={<ChartTooltip />} />
-                    <Legend wrapperStyle={{ fontSize: 11, fontWeight: 700 }} />
-                    {METRICS.map(m => (
-                      <Area
-                        key={m.key}
-                        yAxisId={m.key === 'messages' ? 'right' : 'left'}
-                        type="monotone"
-                        dataKey={m.key}
-                        stroke={m.color}
-                        strokeWidth={2}
-                        fill={`url(#grad-${m.key})`}
-                        fillOpacity={1}
-                        dot={{ r: 3, fill: m.color, strokeWidth: 0 }}
-                        activeDot={{ r: 5, strokeWidth: 0 }}
-                        name={m.label}
+                  {chartView === 'all' ? (
+                    <AreaChart data={chartSnaps} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                      <defs>
+                        {METRICS.map(m => (
+                          <linearGradient key={m.key} id={`grad-${m.key}`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={m.color} stopOpacity={0.25} />
+                            <stop offset="95%" stopColor={m.color} stopOpacity={0} />
+                          </linearGradient>
+                        ))}
+                      </defs>
+                      <CartesianGrid stroke="var(--color-border-subtle)" />
+                      <XAxis
+                        dataKey="date"
+                        type="number"
+                        domain={['dataMin', 'dataMax']}
+                        tickFormatter={t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        stroke="var(--color-text-muted)"
+                        style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
                       />
-                    ))}
-                  </AreaChart>
+                      <YAxis
+                        yAxisId="left"
+                        tickFormatter={fmt}
+                        stroke="var(--color-text-muted)"
+                        style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
+                      />
+                      <YAxis
+                        yAxisId="right"
+                        orientation="right"
+                        tickFormatter={fmt}
+                        stroke="var(--color-text-muted)"
+                        style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
+                      />
+                      <Tooltip content={<ChartTooltip />} />
+                      <Legend wrapperStyle={{ fontSize: 11, fontWeight: 700 }} />
+                      {METRICS.map(m => (
+                        <Area
+                          key={m.key}
+                          yAxisId={m.key === 'messages' ? 'right' : 'left'}
+                          type="monotone"
+                          dataKey={m.key}
+                          stroke={m.color}
+                          strokeWidth={2}
+                          fill={`url(#grad-${m.key})`}
+                          fillOpacity={1}
+                          dot={{ r: 3, fill: m.color, strokeWidth: 0 }}
+                          activeDot={{ r: 5, strokeWidth: 0 }}
+                          name={m.label}
+                        />
+                      ))}
+                    </AreaChart>
+                  ) : (
+                    <AreaChart data={chartSnaps} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                      <defs>
+                        <linearGradient id="grad-single" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={activeMetric.color} stopOpacity={0.25} />
+                          <stop offset="95%" stopColor={activeMetric.color} stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid stroke="var(--color-border-subtle)" />
+                      <XAxis
+                        dataKey="date"
+                        type="number"
+                        domain={['dataMin', 'dataMax']}
+                        tickFormatter={t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        stroke="var(--color-text-muted)"
+                        style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
+                      />
+                      <YAxis
+                        tickFormatter={fmt}
+                        stroke="var(--color-text-muted)"
+                        style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
+                        width={52}
+                      />
+                      <Tooltip content={<ChartTooltip metric={activeMetric} />} />
+                      <Area
+                        type="monotone"
+                        dataKey={activeMetric.key}
+                        stroke={activeMetric.color}
+                        strokeWidth={2}
+                        fill="url(#grad-single)"
+                        fillOpacity={1}
+                        dot={{ r: 3, fill: activeMetric.color, strokeWidth: 0 }}
+                        activeDot={{ r: 5, strokeWidth: 0 }}
+                        name={activeMetric.label}
+                      />
+                    </AreaChart>
+                  )}
                 </ResponsiveContainer>
               </div>
-              <p className="text-[10px] text-text-muted mt-2">
-                Threads &amp; favorites use left axis; messages use right axis (different scales).
-              </p>
+              {chartView === 'all' && (
+                <p className="text-[10px] text-text-muted mt-2">
+                  Threads &amp; favorites use left axis; messages use right axis (different scales).
+                </p>
+              )}
             </div>
           )}
 

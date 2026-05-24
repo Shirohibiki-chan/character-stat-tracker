@@ -138,8 +138,12 @@ export default function TrendingChart({ bots, onViewBot }) {
               <button
                 key={bot.id}
                 onClick={() => onViewBot?.(bot.id)}
-                className="flex items-center gap-3 p-3 rounded-lg border border-border bg-surface-alt hover-accent-border-40 hover:bg-surface transition text-left"
+                className="relative overflow-hidden flex items-center gap-3 p-3 rounded-lg border border-border bg-surface-alt hover-accent-border-40 hover:bg-surface transition text-left"
               >
+                <div
+                  className="absolute inset-y-0 right-0 w-24 pointer-events-none"
+                  style={{ background: `linear-gradient(to right, transparent, ${color}1a)` }}
+                />
                 <span className="text-[10px] font-bold text-text-muted w-4 shrink-0 text-right num">
                   {i + 1}
                 </span>
@@ -158,8 +162,12 @@ export default function TrendingChart({ bots, onViewBot }) {
                     +{fmtFull(bot.gain)} {metricObj?.label.toLowerCase()}
                   </div>
                 </div>
-                <div className="shrink-0" title={label}>
-                  <Icon size={14} style={{ color }} />
+                <div
+                  className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center"
+                  style={{ background: `${color}22` }}
+                  title={label}
+                >
+                  <Icon size={13} style={{ color }} />
                 </div>
               </button>
             )

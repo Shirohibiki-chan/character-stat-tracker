@@ -255,9 +255,9 @@ export default function BotTable({ sorted, sortBy, sortDir, toggleSort, onViewBo
                           key={t}
                           className="text-[10px] px-[7px] py-[2px] rounded-[3px] font-bold uppercase tracking-[0.1em]"
                           style={{
-                            background: 'var(--color-accent-faint)',
-                            border: '1px solid var(--color-accent-faint-border)',
-                            color: 'var(--color-accent-faint-text)',
+                            background: `${getAura(t)}1a`,
+                            border: `1px solid ${getAura(t)}40`,
+                            color: getAura(t),
                           }}
                         >
                           {t}

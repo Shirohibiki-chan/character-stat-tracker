@@ -111,7 +111,7 @@ export default function BotGrid({ sorted, onViewBot, selectMode, selectedIds, on
                     <span
                       key={t}
                       className="text-[10px] px-2 py-0.5 rounded font-semibold uppercase tracking-wide"
-                      style={{ background: 'var(--color-accent-faint)', color: 'var(--color-accent-faint-text)' }}
+                      style={{ background: `${getAura(t)}1a`, color: getAura(t) }}
                     >
                       {t}
                     </span>
@@ -135,7 +135,7 @@ export default function BotGrid({ sorted, onViewBot, selectMode, selectedIds, on
                               <span
                                 key={t}
                                 className="text-[10px] px-2 py-0.5 rounded font-semibold uppercase tracking-wide"
-                                style={{ background: 'var(--color-accent-faint)', color: 'var(--color-accent-faint-text)' }}
+                                style={{ background: `${getAura(t)}1a`, color: getAura(t) }}
                               >
                                 {t}
                               </span>

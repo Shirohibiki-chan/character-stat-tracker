@@ -59,7 +59,7 @@ export default function BotGrid({ sorted, onViewBot, selectMode, selectedIds, on
           >
             {/* Hero banner — background-image avoids layout shifts during progressive image loading */}
             <div
-              className="relative h-[120px] rounded-t-lg overflow-hidden group bg-surface-edge"
+              className="relative h-[120px] rounded-t-lg overflow-hidden bg-surface-edge"
               style={bot.avatar ? {
                 backgroundImage: `url(${bot.avatar})`,
                 backgroundSize: 'cover',
@@ -71,15 +71,6 @@ export default function BotGrid({ sorted, onViewBot, selectMode, selectedIds, on
                   <Camera size={28} className="text-text-muted opacity-40" />
                 </div>
               )}
-
-              {/* PFP edit affordance — bottom-right, visible on hover */}
-              <button
-                className="absolute bottom-2 right-2 w-7 h-7 rounded-full flex items-center justify-center bg-overlay-50 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                title="Edit PFP"
-                onClick={e => { e.stopPropagation(); onViewBot?.(bot.id) }}
-              >
-                <Camera size={13} className="text-white" />
-              </button>
 
               {/* Bulk-select checkbox — top-left, only in select mode */}
               {selectMode && (

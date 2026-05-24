@@ -2,6 +2,8 @@
 
 ## 2026-05-24 (3)
 
+### Additions
+- **Chart descriptions — every chart now has a plain-English caption:** Each of the 14 charts in the Insights view now shows a one-line description directly under the chart title explaining what the chart tracks and how to read it. No more guessing what "Capture lifespan" or "Metric correlations" means.
 ### Adjustments
 - **Metric correlations — plain-English tooltips and centered layout:** Hovering a cell now shows a plain-English sentence explaining what the number means (e.g. "Bots with more Messages almost always also have more Threads"). The legend text now explains green vs. red in plain terms. The matrix is also centered instead of left-aligned.
 - **Trending — momentum indicator more visible:** Each trending card now has a subtle color wash fading in from the right edge in the momentum color (green for accelerating, red for slowing, gray for steady), and the arrow icon sits inside a small tinted circle instead of floating bare. The indicator is much easier to spot at a glance.

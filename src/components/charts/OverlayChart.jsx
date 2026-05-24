@@ -279,11 +279,14 @@ export default function OverlayChart({ bots, onViewBot }) {
 
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
-          <TrendingUp size={16} className="text-accent opacity-60" />
-          {titleText} · {metricObj?.label}
-          {relative && <span className="text-text-muted text-xs ml-1">(growth from first snapshot)</span>}
-          {cohortMode && !relative && <span className="text-text-muted text-xs ml-1">(days since first capture)</span>}
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
+            <TrendingUp size={16} className="text-accent opacity-60" />
+            {titleText} · {metricObj?.label}
+            {relative && <span className="text-text-muted text-xs ml-1">(growth from first snapshot)</span>}
+            {cohortMode && !relative && <span className="text-text-muted text-xs ml-1">(days since first capture)</span>}
+          </div>
+          <p className="text-[11px] text-text-muted pl-6">Plots multiple bots on the same timeline so you can compare growth side by side. Switch to Growth to see how much each bot gained from its first snapshot. Cohort mode lines them up by days since first capture instead of calendar date.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

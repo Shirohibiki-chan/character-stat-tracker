@@ -290,9 +290,12 @@ export default function SpiderChart({ bots, onViewBot, mode, setMode, selectedId
 
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
-          <Hexagon size={16} className="text-accent opacity-60" />
-          Spider chart · {bots.length} bot{bots.length !== 1 ? 's' : ''}
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
+            <Hexagon size={16} className="text-accent opacity-60" />
+            Spider chart · {bots.length} bot{bots.length !== 1 ? 's' : ''}
+          </div>
+          <p className="text-[11px] text-text-muted pl-6">Shows a bot's profile across six metrics at once. The further a point extends from the center, the higher that metric is relative to your other bots. Compare up to four bots side by side.</p>
         </div>
         <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
           <button

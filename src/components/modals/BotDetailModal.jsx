@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef } from 'react'
 import { X, ChevronLeft, ChevronRight, ChevronDown, Award, Pencil, Check, Plus, Trash2, TrendingUp, Camera, ClipboardPlus } from 'lucide-react'
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Cell,
 } from 'recharts'
 import { METRICS } from '../../constants/metrics.js'
@@ -526,7 +526,15 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
               </div>
               <div style={{ height: 280, overflow: 'hidden' }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartSnaps} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                  <AreaChart data={chartSnaps} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                    <defs>
+                      {METRICS.map(m => (
+                        <linearGradient key={m.key} id={`grad-${m.key}`} x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={m.color} stopOpacity={0.25} />
+                          <stop offset="95%" stopColor={m.color} stopOpacity={0} />
+                        </linearGradient>
+                      ))}
+                    </defs>
                     <CartesianGrid stroke="var(--color-border-subtle)" />
                     <XAxis
                       dataKey="date"
@@ -552,18 +560,21 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                     <Tooltip content={<ChartTooltip />} />
                     <Legend wrapperStyle={{ fontSize: 11, fontWeight: 700 }} />
                     {METRICS.map(m => (
-                      <Line
+                      <Area
                         key={m.key}
                         yAxisId={m.key === 'messages' ? 'right' : 'left'}
                         type="monotone"
                         dataKey={m.key}
                         stroke={m.color}
                         strokeWidth={2}
-                        dot={{ r: 3 }}
+                        fill={`url(#grad-${m.key})`}
+                        fillOpacity={1}
+                        dot={{ r: 3, fill: m.color, strokeWidth: 0 }}
+                        activeDot={{ r: 5, strokeWidth: 0 }}
                         name={m.label}
                       />
                     ))}
-                  </LineChart>
+                  </AreaChart>
                 </ResponsiveContainer>
               </div>
               <p className="text-[10px] text-text-muted mt-2">

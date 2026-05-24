@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CharSnap Stats Capture
 // @namespace    https://github.com/Shirohibiki-chan/character-stat-tracker
-// @version      2.13
+// @version      2.14
 // @description  Personal use only — do not redistribute. Auto-captures stats when you open a CharSnap bot's stats modal; queues Total-scope snapshots for paste-import into CharSnap Stats Tracker.
 // @author       Shirohibiki
 // @updateURL    https://raw.githubusercontent.com/Shirohibiki-chan/character-stat-tracker/main/userscript/charsnap-capture.user.js
@@ -556,7 +556,7 @@ function applyHudSize() {
     hudEl.style.setProperty('height', size.h + 'px', 'important')
   } else {
     hudEl.style.setProperty('width',  '360px', 'important')
-    hudEl.style.setProperty('height', '480px', 'important')
+    hudEl.style.setProperty('height', '400px', 'important')
   }
 }
 
@@ -1011,7 +1011,7 @@ function updateHUD() {
           <div class="cs-settings-section">
             <div class="cs-settings-label">HUD</div>
             <button class="cs-hud-action cs-settings-action" id="cs-reset-pos">Reset position to default corner</button>
-            <button class="cs-hud-action cs-settings-action" id="cs-reset-size">Reset size to default (360×480)</button>
+            <button class="cs-hud-action cs-settings-action" id="cs-reset-size">Reset size to default (360×400)</button>
           </div>
           <div class="cs-settings-section">
             <div class="cs-settings-label">Data</div>
@@ -1044,7 +1044,7 @@ function updateHUD() {
 
     hudEl.querySelector('#cs-reset-size').addEventListener('click', () => {
       resetHudSize()
-      showToast('Size reset to default (360×480).')
+      showToast('Size reset to default (360×400).')
     })
 
     const setupSettingsConfirm = (btnId, confirmMsg, onConfirm) => {

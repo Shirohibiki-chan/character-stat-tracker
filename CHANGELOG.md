@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-25
+
+### Additions
+- **Growth chart — metric tab switcher:** The "Growth over time" chart now has All · Messages · Threads · Favorites tabs. All shows the existing three-line dual-axis view; each individual tab shows just that metric on its own axis with a full gradient fill. Your last-used tab is remembered across sessions.
+
 ## 2026-05-24 (2)
 
 ### Additions

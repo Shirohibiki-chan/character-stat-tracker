@@ -14,6 +14,8 @@
 - **Muted text legibility — global fix:** Raised `--color-text-muted` to `#96a8c0` (from `#6e7787`, which was below readable contrast on dark backgrounds). Also updated the `text-muted-70` and `text-muted-60` utility classes to match. Applies everywhere muted text appears — empty states, form labels, footer, chart captions.
 - **Body text weight bumped to semibold:** All text now uses font-weight 600 (Quicksand semibold) for better legibility across the app.
 - **Userscript v2.14 — shorter default HUD height:** Default expanded height reduced from 480px to 400px so toasts stacking above the HUD are less likely to cover bot stat buttons in the bottom-right corner of the page. Existing saved sizes are unaffected; "Reset size to default" in Settings resets to the new 360×400.
+- **Userscript v2.15 — lower minimum HUD height:** Minimum drag height reduced from 360px to 300px, so you can resize the HUD more compact than before.
+- **Userscript v2.18 — HUD stays inside the browser window:** The HUD can no longer be dragged off-screen. Position is now fully clamped to the viewport. Collapsing to pill also snaps it back to the bottom-right corner.
 - **Removed misleading camera icon from grid cards:** The hover camera button on bot cards has been removed. It only opened the bot detail view (same as clicking the card) and implied PFP editing was possible there — it isn't, that's done on the CharSnap profile page directly.
 
 ## 2026-05-23 (7)

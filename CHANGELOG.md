@@ -1,19 +1,22 @@
 ﻿# Changelog
 
-## 2026-05-24 (4)
-
-### Adjustments
-- **Tag chips now show each tag's unique color:** Tags on bot cards, in the table, in the bot detail view, and in the edit form now display in each tag's own hash-assigned color instead of a flat blue. The color matches what you already see in the Tags chart — if HSR is pink there, it's pink everywhere.
-
 ## 2026-05-24 (3)
 
 ### Additions
 - **Chart descriptions â€” every chart now has a plain-English caption:** Each of the 14 charts in the Insights view now shows a one-line description directly under the chart title explaining what the chart tracks and how to read it. No more guessing what "Capture lifespan" or "Metric correlations" means.
+- **Chart descriptions — every chart now has a plain-English caption:** Each of the 14 charts in the Insights view now shows a one-line description directly under the chart title explaining what the chart tracks and how to read it. No more guessing what "Capture lifespan" or "Metric correlations" means.
+- - **Tag chips now show each tag's unique color:** Tags on bot cards, in the table, in the bot detail view, and in the edit form now display in each tag's own hash-assigned color instead of a flat blue. The color matches what you already see in the Tags chart — if HSR is pink there, it's pink everywhere.
+- **Growth chart — metric tab switcher:** The "Growth over time" chart now has All · Messages · Threads · Favorites tabs. All shows the existing three-line dual-axis view; each individual tab shows just that metric on its own axis with a full gradient fill. Your last-used tab is remembered across sessions.
+
+### Adjustments
+- **Metric correlations — plain-English tooltips and centered layout:** Hovering a cell now shows a plain-English sentence explaining what the number means (e.g. "Bots with more Messages almost always also have more Threads"). The legend text now explains green vs. red in plain terms. The matrix is also centered instead of left-aligned.
+- **Trending — momentum indicator more visible:** Each trending card now has a subtle color wash fading in from the right edge in the momentum color (green for accelerating, red for slowing, gray for steady), and the arrow icon sits inside a small tinted circle instead of floating bare. The indicator is much easier to spot at a glance.
 
 ## 2026-05-24 (2)
 
 ### Additions
 - **Snapshot list pagination:** The snapshot table inside a bot's detail view now paginates at 15 rows per page, with â€¹ â€º controls and a count ("1â€“15 of 42") at the bottom. No more endless scroll.
+
 ### Adjustments
 - **Growth chart â€” gradient area fills:** The "Growth over time" chart in a bot's detail view now has a gradient fill under each line, fading from the line's color down to transparent. Lines and always-on dots are unchanged.
 

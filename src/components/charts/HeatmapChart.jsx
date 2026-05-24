@@ -68,6 +68,16 @@ function computeMatrix(bots) {
   return { matrix, metrics, n: enriched.length }
 }
 
+function describeCorrelation(r, rowLabel, colLabel) {
+  if (r === null) return 'Not enough data to calculate.'
+  if (r === 1) return 'This is the same metric compared with itself — always a perfect match.'
+  const abs = Math.abs(r)
+  if (abs < 0.1) return `${rowLabel} and ${colLabel} show no meaningful connection across your bots.`
+  const strength = abs >= 0.8 ? 'almost always' : abs >= 0.6 ? 'strongly tend to' : abs >= 0.4 ? 'tend to' : 'slightly tend to'
+  if (r > 0) return `Bots with more ${rowLabel} ${strength} also have more ${colLabel}.`
+  return `Bots with more ${rowLabel} ${strength} have fewer ${colLabel}.`
+}
+
 function rToBackground(r) {
   if (r === null) return 'var(--color-surface-alt)'
   if (r === 1) return 'rgba(148, 163, 184, 0.15)'
@@ -114,23 +124,30 @@ export default function HeatmapChart({ bots }) {
           </div>
           <p className="text-[11px] text-text-muted pl-6">Shows how closely pairs of metrics move together across your bots. Green = they tend to rise together; red = when one is high, the other tends to be low. Hover any cell for a plain-English explanation.</p>
         </div>
-        {hovered && hovR !== null && hovRowM && hovColM && (
-          <div className="text-xs text-text-muted">
-            <span className="text-text-secondary font-semibold">{hovRowM.label}</span>
-            {' ↔ '}
-            <span className="text-text-secondary font-semibold">{hovColM.label}</span>
-            {': '}
-            <span
-              className="font-bold num"
-              style={{ color: (hovR ?? 0) >= 0 ? '#34d399' : '#fb7185' }}
-            >
-              {hovR === 1 ? 'same metric' : hovR.toFixed(2)}
-            </span>
+        {hovered && hovRowM && hovColM && (
+          <div className="text-xs text-right max-w-xs">
+            <div>
+              <span className="text-text-secondary font-semibold">{hovRowM.label}</span>
+              <span className="text-text-muted"> ↔ </span>
+              <span className="text-text-secondary font-semibold">{hovColM.label}</span>
+              {hovR !== null && hovR !== 1 && (
+                <span
+                  className="font-bold num ml-1.5"
+                  style={{ color: (hovR ?? 0) >= 0 ? '#34d399' : '#fb7185' }}
+                >
+                  {hovR.toFixed(2)}
+                </span>
+              )}
+            </div>
+            <div className="text-text-muted text-[11px] mt-0.5">
+              {describeCorrelation(hovR, hovRowM.label, hovColM.label)}
+            </div>
           </div>
         )}
       </div>
       <div className="p-5">
         <div className="overflow-x-auto">
+          <div className="flex justify-center">
           <table style={{ borderCollapse: 'separate', borderSpacing: '5px' }}>
             <thead>
               <tr>
@@ -186,6 +203,7 @@ export default function HeatmapChart({ bots }) {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
         <div className="flex items-center gap-3 mt-5 flex-wrap text-xs text-text-muted">
           <div className="flex items-center gap-1.5">
@@ -196,7 +214,7 @@ export default function HeatmapChart({ bots }) {
             <span>−1 · 0 · +1</span>
           </div>
           <span className="text-muted-60">
-            Hover a cell for details · diagonal (·) = same metric
+            Green = these metrics rise together · Red = when one rises the other tends to fall · Hover any cell for a plain-English explanation
           </span>
         </div>
       </div>

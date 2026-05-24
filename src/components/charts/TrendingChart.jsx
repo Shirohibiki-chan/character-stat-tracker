@@ -90,9 +90,12 @@ export default function TrendingChart({ bots, onViewBot }) {
   return (
     <section className="border border-border rounded-lg bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
-          <Zap size={16} className="text-accent opacity-60" />
-          Hot right now · {data.length} bot{data.length !== 1 ? 's' : ''} gaining · last {windowDays}d
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
+            <Zap size={16} className="text-accent opacity-60" />
+            Hot right now · {data.length} bot{data.length !== 1 ? 's' : ''} gaining · last {windowDays}d
+          </div>
+          <p className="text-[11px] text-text-muted pl-6">Ranks your bots by how much they gained in the selected window. The icon on each card shows whether growth is speeding up (↑), holding steady (—), or slowing down (↓).</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

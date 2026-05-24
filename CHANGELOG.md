@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-24 (3)
+
+### Additions
+- **Chart descriptions — every chart now has a plain-English caption:** Each of the 14 charts in the Insights view now shows a one-line description directly under the chart title explaining what the chart tracks and how to read it. No more guessing what "Capture lifespan" or "Metric correlations" means.
+
 ## 2026-05-24 (2)
 
 ### Additions

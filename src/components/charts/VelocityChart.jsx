@@ -126,12 +126,15 @@ export default function VelocityChart({ bots, onViewBot }) {
   return (
     <section className="border border-border rounded-lg bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
-          <Activity size={16} className="text-accent opacity-60" />
-          {topN === 0 || eligibleBots.length >= totalEligible
-            ? `${eligibleBots.length} bot${eligibleBots.length !== 1 ? 's' : ''}`
-            : `Top ${eligibleBots.length} of ${totalEligible}`
-          } · {metricObj?.label} per day
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
+            <Activity size={16} className="text-accent opacity-60" />
+            {topN === 0 || eligibleBots.length >= totalEligible
+              ? `${eligibleBots.length} bot${eligibleBots.length !== 1 ? 's' : ''}`
+              : `Top ${eligibleBots.length} of ${totalEligible}`
+            } · {metricObj?.label} per day
+          </div>
+          <p className="text-[11px] text-text-muted pl-6">Shows how fast each bot's stats are growing day by day. A rising line means the bot is gaining faster over time; spikes often mark when a bot went viral or got shared.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

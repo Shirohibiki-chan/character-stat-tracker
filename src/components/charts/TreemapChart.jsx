@@ -85,10 +85,13 @@ export default function TreemapChart({ bots, onViewBot }) {
   return (
     <section className="border border-border rounded-lg bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
-          <LayoutGrid size={16} className="text-accent opacity-60" />
-          All bots · {m?.label}
-          <span className="text-text-muted text-xs font-normal ml-1">· {data.length} bots</span>
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
+            <LayoutGrid size={16} className="text-accent opacity-60" />
+            All bots · {m?.label}
+            <span className="text-text-muted text-xs font-normal ml-1">· {data.length} bots</span>
+          </div>
+          <p className="text-[11px] text-text-muted pl-6">Each box is one bot — bigger box means a higher value in the selected metric. Gives a quick visual sense of who dominates your collection at a glance.</p>
         </div>
         <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
           {METRICS.map(mx => (

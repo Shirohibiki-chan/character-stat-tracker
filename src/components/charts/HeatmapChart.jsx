@@ -107,9 +107,12 @@ export default function HeatmapChart({ bots }) {
   return (
     <section className="border border-border rounded-lg bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
-          <LayoutGrid size={16} className="text-accent opacity-60" />
-          Metric correlations · {n} bot{n !== 1 ? 's' : ''}
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
+            <LayoutGrid size={16} className="text-accent opacity-60" />
+            Metric correlations · {n} bot{n !== 1 ? 's' : ''}
+          </div>
+          <p className="text-[11px] text-text-muted pl-6">Shows how closely pairs of metrics move together across your bots. Green = they tend to rise together; red = when one is high, the other tends to be low. Hover any cell for a plain-English explanation.</p>
         </div>
         {hovered && hovR !== null && hovRowM && hovColM && (
           <div className="text-xs text-text-muted">

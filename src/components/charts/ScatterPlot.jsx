@@ -57,10 +57,13 @@ export default function ScatterPlot({ bots, onViewBot }) {
   return (
     <section className="border border-border rounded-lg bg-surface">
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-border">
-        <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
-          <Crosshair size={16} className="text-accent opacity-60" />
-          {xM?.label} vs {yM?.label}
-          <span className="text-text-muted text-xs font-normal ml-1">· {data.length} bots</span>
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2 text-sm font-bold text-text-secondary">
+            <Crosshair size={16} className="text-accent opacity-60" />
+            {xM?.label} vs {yM?.label}
+            <span className="text-text-muted text-xs font-normal ml-1">· {data.length} bots</span>
+          </div>
+          <p className="text-[11px] text-text-muted pl-6">Each bubble is one bot. Its position is set by two metrics you choose — bots in the top-right corner rank high in both. Bubble size represents a third metric.</p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-1.5">

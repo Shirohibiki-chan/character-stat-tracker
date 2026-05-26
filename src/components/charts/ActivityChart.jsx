@@ -54,7 +54,7 @@ function ActivityTooltip({ active, payload, label, mode }) {
 }
 
 export default function ActivityChart({ bots }) {
-  const [mode, setMode] = useState('capture')
+  const [mode, setMode] = useState('growth')
 
   const data = useMemo(
     () => mode === 'growth' ? buildGrowthData(bots) : buildCaptureData(bots),

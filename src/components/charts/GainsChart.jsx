@@ -40,12 +40,21 @@ function computeGains(bots, metric, windowDays) {
       const gain = (recent[metric] ?? 0) - (baseline[metric] ?? 0)
       if (gain <= 0) return null
 
+      const gainGroup = (recent.messagesGroup != null && baseline.messagesGroup != null)
+        ? (recent.messagesGroup ?? 0) - (baseline.messagesGroup ?? 0)
+        : null
+      const gainSolo = (recent.messagesSolo != null && baseline.messagesSolo != null)
+        ? (recent.messagesSolo ?? 0) - (baseline.messagesSolo ?? 0)
+        : null
+
       return {
         ...bot,
         gain,
         _val: gain,
         fromDate: baseline.date,
         toDate: recent.date,
+        gainGroup,
+        gainSolo,
       }
     })
     .filter(Boolean)
@@ -146,10 +155,31 @@ export default function GainsChart({ bots, onViewBot }) {
                       <div className="text-xs text-text-secondary font-medium mb-1.5">
                         {fmtDate(d.fromDate)} → {fmtDate(d.toDate)}
                       </div>
-                      <div className="flex justify-between gap-6 text-sm">
-                        <span className="text-text-secondary font-medium">{m?.label} gained</span>
-                        <span className="num font-semibold" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
-                      </div>
+                      {metric === 'messages' && (d.gainGroup != null || d.gainSolo != null) ? (
+                        <div className="space-y-0.5 text-sm">
+                          <div className="flex justify-between gap-6">
+                            <span className="text-text-secondary font-medium">Total msgs gained</span>
+                            <span className="num font-semibold" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
+                          </div>
+                          {d.gainSolo != null && (
+                            <div className="flex justify-between gap-6 text-xs">
+                              <span className="text-text-muted">Solo</span>
+                              <span className="num text-text-secondary">{d.gainSolo >= 0 ? '+' : ''}{fmtFull(d.gainSolo)}</span>
+                            </div>
+                          )}
+                          {d.gainGroup != null && (
+                            <div className="flex justify-between gap-6 text-xs">
+                              <span className="text-text-muted">Group</span>
+                              <span className="num text-text-secondary">{d.gainGroup >= 0 ? '+' : ''}{fmtFull(d.gainGroup)}</span>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex justify-between gap-6 text-sm">
+                          <span className="text-text-secondary font-medium">{m?.label} gained</span>
+                          <span className="num font-semibold" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
+                        </div>
+                      )}
                     </div>
                   )
                 }}

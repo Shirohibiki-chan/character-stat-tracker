@@ -236,7 +236,7 @@ export default function App() {
 
             {/* View tabs */}
             <div className="-mx-1 px-1 mb-5">
-              <div className="flex flex-wrap items-center gap-1">
+              <div className="flex flex-wrap items-center justify-center gap-1">
                 {VIEWS.map(v => (
                   <button
                     key={v.id}

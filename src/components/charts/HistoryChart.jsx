@@ -80,7 +80,12 @@ export default function HistoryChart({ bots, onViewBot }) {
   )
 
   const hasCapturesToday = useMemo(
-    () => bots.some(b => (b.snapshots || []).some(s => s.scope === 'Total' && s.date.startsWith(targetDate))),
+    () => bots.some(b => (b.snapshots || []).some(s => {
+      if (s.scope !== 'Total') return false
+      // Compare local date (en-CA gives YYYY-MM-DD) so a late-night UTC+1-day capture
+      // doesn't register as a capture on the next local calendar day.
+      return new Date(s.date).toLocaleDateString('en-CA') === targetDate
+    })),
     [bots, targetDate]
   )
   const noDataYet = targetDate >= today && !hasCapturesToday

@@ -28,6 +28,7 @@ If new parked features get added later that each have substantive rationale + de
 
 ## Queued Adjustments
 
+- **Activity chart — done 2026-05-25.** New "Activity" tab with day-of-week bar chart. Two modes: Captures (snapshot count per day, shows check-in rhythm) and Growth (average message gain logged per day, proxy for bot activity patterns). Peak day highlighted in accent color. Useful for timing bot launches.
 - **Snapshot timestamps — done 2026-05-22.** Snapshot history table now shows exact time alongside date, displayed in local timezone. Manual snapshot save now stamps current time of day rather than hardcoded noon. `fmtDateTime` helper added to `format.js`.
 - **Spider chart view — done 2026-05-21.** Replaced the Treemap tab with a radar/spider chart. Six axes (solo msgs, group msgs, threads, favorites, avg msgs/day, favs per 1K msgs), all normalized to dataset max. Gallery mode: small-multiples grid, click to open bot detail. Single mode: primary bot + up to 3 comparison overlays with semi-transparent fills; selected bots persist across navigation. Treemap removed.
 - **Dashboard visual refresh (locked design tokens) — done 2026-05-18.** Applied sandbox-finalized tokens: Manrope/Lora/Outfit/Poppins typography, accent-colored table numbers, top-to-bottom gradient overlays on stat cards, row-banding composition fix through colored columns.

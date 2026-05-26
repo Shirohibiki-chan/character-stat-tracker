@@ -241,7 +241,7 @@ export default function App() {
                   <button
                     key={v.id}
                     onClick={() => setActiveView(v.id)}
-                    className={`px-3 py-1.5 text-xs uppercase tracking-wider rounded transition font-bold ${
+                    className={`px-2 py-1 text-[11px] uppercase tracking-wide rounded transition font-bold ${
                       activeView === v.id
                         ? 'bg-accent-faint text-accent-light border border-accent-faint-border'
                         : 'text-text-muted hover:text-text-secondary border border-transparent'

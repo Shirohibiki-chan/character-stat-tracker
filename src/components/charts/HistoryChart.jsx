@@ -79,6 +79,12 @@ export default function HistoryChart({ bots, onViewBot }) {
     [bots, effectiveMetric, targetDate]
   )
 
+  const hasCapturesToday = useMemo(
+    () => bots.some(b => (b.snapshots || []).some(s => s.scope === 'Total' && s.date.startsWith(targetDate))),
+    [bots, targetDate]
+  )
+  const noDataYet = targetDate >= today && !hasCapturesToday
+
   const chartHeight = Math.max(300, data.length * 32 + 40)
 
   return (
@@ -144,13 +150,13 @@ export default function HistoryChart({ bots, onViewBot }) {
         </div>
       </div>
 
-      {data.length === 0 ? (
+      {noDataYet || data.length === 0 ? (
         <div className="flex items-center justify-center py-20">
           <p className="text-text-muted text-sm text-center max-w-xs">
-            No gains found on or before this date.<br />
-            <span className="text-muted-70 text-xs">
-              Each bot needs at least 2 Total-scope snapshots at or before the selected date.
-            </span>
+            {noDataYet
+              ? <>No captures yet for this date.<br /><span className="text-muted-70 text-xs">Come back after your next snapshot.</span></>
+              : <>No gains found on or before this date.<br /><span className="text-muted-70 text-xs">Each bot needs at least 2 Total-scope snapshots at or before the selected date.</span></>
+            }
           </p>
         </div>
       ) : (

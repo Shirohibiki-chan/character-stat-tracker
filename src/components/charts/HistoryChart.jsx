@@ -56,10 +56,13 @@ export default function HistoryChart({ bots, onViewBot }) {
 
   const m = METRICS.find(mx => mx.key === metric)
 
+  const today = new Date().toISOString().slice(0, 10)
+
   function stepDate(delta) {
     const d = new Date(targetDate + 'T12:00:00')
     d.setDate(d.getDate() + delta)
-    setTargetDate(d.toISOString().slice(0, 10))
+    const next = d.toISOString().slice(0, 10)
+    setTargetDate(next > today ? today : next)
   }
 
   const hasBreakdown = useMemo(
@@ -126,7 +129,8 @@ export default function HistoryChart({ bots, onViewBot }) {
             <input
               type="date"
               value={targetDate}
-              onChange={e => setTargetDate(e.target.value)}
+              max={today}
+              onChange={e => e.target.value <= today && setTargetDate(e.target.value)}
               className="bg-transparent text-xs text-text-secondary focus:outline-none px-1 py-1"
             />
             <button

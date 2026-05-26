@@ -37,12 +37,21 @@ function computeHistory(bots, metric, targetDate) {
       const gain = (snap[metric] ?? 0) - (prev[metric] ?? 0)
       if (gain <= 0) return null
 
+      const gainGroup = (snap.messagesGroup != null && prev.messagesGroup != null)
+        ? (snap.messagesGroup ?? 0) - (prev.messagesGroup ?? 0)
+        : null
+      const gainSolo = (snap.messagesSolo != null && prev.messagesSolo != null)
+        ? (snap.messagesSolo ?? 0) - (prev.messagesSolo ?? 0)
+        : null
+
       return {
         ...bot,
         gain,
         _val: gain,
         snapDate: snap.date,
         prevSnapDate: prev.date,
+        gainGroup,
+        gainSolo,
       }
     })
     .filter(Boolean)
@@ -198,12 +207,33 @@ export default function HistoryChart({ bots, onViewBot }) {
                         <div className="text-xs text-text-secondary font-medium mb-1.5">
                           {fmtDate(d.prevSnapDate)} → {fmtDate(d.snapDate)}
                         </div>
-                        <div className="flex justify-between gap-6 text-sm">
-                          <span className="text-text-secondary font-medium">
-                            {effectiveMetric === 'messagesGroup' ? 'Group msgs gained' : effectiveMetric === 'messagesSolo' ? 'Solo msgs gained' : `${m?.label} gained`}
-                          </span>
-                          <span className="num font-semibold" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
-                        </div>
+                        {effectiveMetric === 'messages' && (d.gainGroup != null || d.gainSolo != null) ? (
+                          <div className="space-y-0.5 text-sm">
+                            <div className="flex justify-between gap-6">
+                              <span className="text-text-secondary font-medium">Total msgs gained</span>
+                              <span className="num font-semibold" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
+                            </div>
+                            {d.gainSolo != null && (
+                              <div className="flex justify-between gap-6 text-xs">
+                                <span className="text-text-muted">Solo</span>
+                                <span className="num text-text-secondary">{d.gainSolo >= 0 ? '+' : ''}{fmtFull(d.gainSolo)}</span>
+                              </div>
+                            )}
+                            {d.gainGroup != null && (
+                              <div className="flex justify-between gap-6 text-xs">
+                                <span className="text-text-muted">Group</span>
+                                <span className="num text-text-secondary">{d.gainGroup >= 0 ? '+' : ''}{fmtFull(d.gainGroup)}</span>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="flex justify-between gap-6 text-sm">
+                            <span className="text-text-secondary font-medium">
+                              {effectiveMetric === 'messagesGroup' ? 'Group msgs gained' : effectiveMetric === 'messagesSolo' ? 'Solo msgs gained' : `${m?.label} gained`}
+                            </span>
+                            <span className="num font-semibold" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
+                          </div>
+                        )}
                       </div>
                     )
                   }}

@@ -235,8 +235,8 @@ export default function App() {
             </section>
 
             {/* View tabs */}
-            <div className="overflow-x-auto -mx-1 px-1 mb-5">
-              <div className="flex items-center gap-1 w-max min-w-full">
+            <div className="-mx-1 px-1 mb-5">
+              <div className="flex flex-wrap items-center gap-1">
                 {VIEWS.map(v => (
                   <button
                     key={v.id}

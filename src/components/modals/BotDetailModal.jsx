@@ -119,6 +119,17 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
   const safePage = Math.min(snapPage, snapPageCount - 1)
   const pagedSnaps = snapReversed.slice(safePage * SNAP_PAGE_SIZE, (safePage + 1) * SNAP_PAGE_SIZE)
 
+  const dailyTicks = useMemo(() => {
+    if (chartSnaps.length < 2) return undefined
+    const first = chartSnaps[0].date
+    const last = chartSnaps[chartSnaps.length - 1].date
+    const DAY = 86400000
+    const ticks = []
+    for (let t = first; t <= last; t += DAY) ticks.push(t)
+    const interval = ticks.length > 30 ? Math.ceil(ticks.length / 10) : 1
+    return ticks.filter((_, i) => i % interval === 0 || i === ticks.length - 1)
+  }, [chartSnaps])
+
   const latest = sortedSnaps[sortedSnaps.length - 1]
   const prev = sortedSnaps.length > 1 ? sortedSnaps[sortedSnaps.length - 2] : null
 
@@ -570,6 +581,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                         dataKey="date"
                         type="number"
                         domain={['dataMin', 'dataMax']}
+                        ticks={dailyTicks}
                         tickFormatter={t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                         stroke="var(--color-text-muted)"
                         style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
@@ -618,6 +630,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                         dataKey="date"
                         type="number"
                         domain={['dataMin', 'dataMax']}
+                        ticks={dailyTicks}
                         tickFormatter={t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                         stroke="var(--color-text-muted)"
                         style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}

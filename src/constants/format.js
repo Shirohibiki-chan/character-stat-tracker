@@ -17,7 +17,10 @@ export function fmtFull(n) {
 
 export function fmtDate(iso) {
   if (!iso) return '—'
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  // Date-only strings (YYYY-MM-DD) parse as UTC midnight, which shows as the previous day in
+  // timezones behind UTC. Append local noon to force correct local-date display.
+  const d = iso.length === 10 ? new Date(iso + 'T12:00:00') : new Date(iso)
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
 export function fmtDateTime(iso) {

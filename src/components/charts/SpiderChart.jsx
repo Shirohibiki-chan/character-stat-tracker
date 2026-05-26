@@ -295,7 +295,7 @@ export default function SpiderChart({ bots, onViewBot, mode, setMode, selectedId
             <Hexagon size={16} className="text-accent opacity-60" />
             Spider chart · {bots.length} bot{bots.length !== 1 ? 's' : ''}
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Shows a bot's profile across six metrics at once. The further a point extends from the center, the higher that metric is relative to your other bots. Compare up to four bots side by side.</p>
+          <p className="text-[13px] text-text-muted pl-6">Shows a bot's profile across six metrics at once. The further a point extends from the center, the higher that metric is relative to your other bots. Compare up to four bots side by side.</p>
         </div>
         <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
           <button
@@ -434,7 +434,7 @@ export default function SpiderChart({ bots, onViewBot, mode, setMode, selectedId
                   </div>
                 ))}
               </div>
-              <p className="text-text-muted text-[11px] mt-2 text-center">
+              <p className="text-text-muted text-xs mt-2 text-center">
                 Axes normalized to dataset max · hover a vertex to see raw values
               </p>
             </>
@@ -472,7 +472,7 @@ export default function SpiderChart({ bots, onViewBot, mode, setMode, selectedId
               </div>
             ))}
           </div>
-          <p className="text-text-muted text-[11px] mt-4 text-center">
+          <p className="text-text-muted text-xs mt-4 text-center">
             Axes normalized to dataset max · click a spider to open Single view · click the name to open bot details
           </p>
         </div>

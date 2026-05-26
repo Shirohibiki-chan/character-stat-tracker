@@ -63,7 +63,7 @@ export default function ScatterPlot({ bots, onViewBot }) {
             {xM?.label} vs {yM?.label}
             <span className="text-text-muted text-xs font-normal ml-1">· {data.length} bots</span>
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Each bubble is one bot. Its position is set by two metrics you choose — bots in the top-right corner rank high in both. Bubble size represents a third metric.</p>
+          <p className="text-[13px] text-text-muted pl-6">Each bubble is one bot. Its position is set by two metrics you choose — bots in the top-right corner rank high in both. Bubble size represents a third metric.</p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-1.5">
@@ -188,7 +188,7 @@ export default function ScatterPlot({ bots, onViewBot }) {
             </ScatterChart>
           </ResponsiveContainer>
         </div>
-        <p className="text-text-muted text-[11px] mt-1 text-center">
+        <p className="text-text-muted text-xs mt-1 text-center">
           Dashed lines mark averages · bubble size = {zM?.label} · click any dot to open bot details
         </p>
       </div>

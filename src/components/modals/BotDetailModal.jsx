@@ -645,7 +645,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                 </ResponsiveContainer>
               </div>
               {chartView === 'all' && (
-                <p className="text-[10px] text-text-muted mt-2">
+                <p className="text-xs text-text-muted mt-2">
                   Threads &amp; favorites use left axis; messages use right axis (different scales).
                 </p>
               )}

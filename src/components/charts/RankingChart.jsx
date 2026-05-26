@@ -39,7 +39,7 @@ export default function RankingChart({ bots, onViewBot }) {
             <BarChart3 size={16} className="text-accent opacity-60" />
             Top {data.length} by {m?.label.toLowerCase()}
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Simple ranking of your bots by a chosen metric. Longer bar = more of that stat. Use the controls to switch metrics and adjust how many bots to show.</p>
+          <p className="text-[13px] text-text-muted pl-6">Simple ranking of your bots by a chosen metric. Longer bar = more of that stat. Use the controls to switch metrics and adjust how many bots to show.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

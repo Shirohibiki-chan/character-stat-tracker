@@ -75,7 +75,7 @@ export default function GainsChart({ bots, onViewBot }) {
             <TrendingUp size={16} className="text-accent opacity-60" />
             Top gainers · {m?.label} · {windowDays === 0 ? 'all time' : `last ${windowLabel}`}
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Shows which bots gained the most in a rolling time window. Wider windows show longer-term growth; narrower windows highlight recent activity.</p>
+          <p className="text-[13px] text-text-muted pl-6">Shows which bots gained the most in a rolling time window. Wider windows show longer-term growth; narrower windows highlight recent activity.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

@@ -172,6 +172,8 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.08); }
 .hover-accent-border-40:hover  { border-color: rgba(75, 168, 196, 0.40); }
 .focus-accent-border:focus     { border-color: rgba(75, 168, 196, 0.50); }
 
+button, [role="button"], label[for], select { cursor: pointer; }
+
 /* Danger zone (BackupModal, delete confirm buttons, BulkActionBar) */
 .bg-danger-20              { background-color: rgba(251,  44,  54, 0.20); }
 .hover-danger-bg:hover     { background-color: rgba(251,  44,  54, 0.30); }

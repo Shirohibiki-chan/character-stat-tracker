@@ -87,7 +87,7 @@ export default function ActivityChart({ bots }) {
               <span className="text-text-muted text-xs ml-1 font-normal">· peak: {peakDay.label}</span>
             )}
           </div>
-          <p className="text-[11px] text-text-muted pl-6">
+          <p className="text-[13px] text-text-muted pl-6">
             {mode === 'capture'
               ? 'How many Total-scope snapshots were captured on each day of the week — shows your check-in rhythm.'
               : 'Average message gain recorded per snapshot by day of week — a rough proxy for when your bots tend to grow.'}
@@ -143,7 +143,7 @@ export default function ActivityChart({ bots }) {
           </ResponsiveContainer>
         </div>
         {mode === 'growth' && (
-          <p className="text-[10px] text-text-muted mt-3 text-center">
+          <p className="text-xs text-text-muted mt-3 text-center">
             Growth reflects gains logged at capture time vs. the previous snapshot for the same bot — not raw platform traffic.
           </p>
         )}

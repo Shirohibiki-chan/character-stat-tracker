@@ -95,7 +95,7 @@ export default function TrendingChart({ bots, onViewBot }) {
             <Zap size={16} className="text-accent opacity-60" />
             Hot right now · {data.length} bot{data.length !== 1 ? 's' : ''} gaining · last {windowDays}d
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Ranks your bots by how much they gained in the selected window. The icon on each card shows whether growth is speeding up (↑), holding steady (—), or slowing down (↓).</p>
+          <p className="text-[13px] text-text-muted pl-6">Ranks your bots by how much they gained in the selected window. The icon on each card shows whether growth is speeding up (↑), holding steady (—), or slowing down (↓).</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

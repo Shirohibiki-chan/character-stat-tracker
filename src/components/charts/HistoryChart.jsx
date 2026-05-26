@@ -86,7 +86,7 @@ export default function HistoryChart({ bots, onViewBot }) {
             <Calendar size={16} className="text-accent opacity-60" />
             Top gainers on {fmtDate(targetDate)} · {effectiveMetric === 'messagesGroup' ? 'Messages (group)' : effectiveMetric === 'messagesSolo' ? 'Messages (solo)' : m?.label}
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Compares each bot's two most recent snapshots on or before the selected date and ranks by how much they gained between those two captures. Use the date picker to look back in time.</p>
+          <p className="text-[13px] text-text-muted pl-6">Compares each bot's two most recent snapshots on or before the selected date and ranks by how much they gained between those two captures. Use the date picker to look back in time.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

@@ -99,7 +99,7 @@ export default function LifespanChart({ bots, onViewBot }) {
             <Calendar size={16} className="text-accent opacity-60" />
             Capture lifespan · {data.length} bot{data.length !== 1 ? 's' : ''}
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Shows when you started and stopped tracking each bot, with dots marking every snapshot you took. Helps you see which bots have consistent coverage and which have gaps.</p>
+          <p className="text-[13px] text-text-muted pl-6">Shows when you started and stopped tracking each bot, with dots marking every snapshot you took. Helps you see which bots have consistent coverage and which have gaps.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {hoveredBot && (

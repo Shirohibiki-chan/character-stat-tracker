@@ -135,7 +135,7 @@ export default function ActivityChart({ bots }) {
                   <Cell
                     key={i}
                     fill="var(--color-accent)"
-                    fillOpacity={d.value === maxVal ? 0.7 : Math.max(0.12, 0.5 * (d.value / maxVal))}
+                    fillOpacity={d.value === maxVal ? 1 : Math.max(0.15, 0.55 * (d.value / maxVal))}
                   />
                 ))}
               </Bar>

@@ -103,13 +103,17 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
   const chartSnaps = useMemo(
     () => sortedSnaps
       .filter(s => s.scope === 'Total')
-      .map(s => ({
-        date: new Date(s.date).getTime(),
-        dateLabel: fmtDate(s.date),
-        chats: s.chats,
-        messages: s.messages,
-        favorites: s.favorites,
-      })),
+      .map(s => {
+        const DAY = 86400000
+        const utcMidnight = Math.floor(new Date(s.date).getTime() / DAY) * DAY
+        return {
+          date: utcMidnight,
+          dateLabel: new Date(s.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }),
+          chats: s.chats,
+          messages: s.messages,
+          favorites: s.favorites,
+        }
+      }),
     [sortedSnaps]
   )
 
@@ -582,7 +586,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                         type="number"
                         domain={['dataMin', 'dataMax']}
                         ticks={dailyTicks}
-                        tickFormatter={t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        tickFormatter={t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}
                         stroke="var(--color-text-muted)"
                         style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
                       />
@@ -631,7 +635,7 @@ export default function BotDetailModal({ bot, allBots, onClose, onAddSnapshot, o
                         type="number"
                         domain={['dataMin', 'dataMax']}
                         ticks={dailyTicks}
-                        tickFormatter={t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        tickFormatter={t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}
                         stroke="var(--color-text-muted)"
                         style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, system-ui, sans-serif' }}
                       />

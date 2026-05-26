@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-25
+
+### Additions
+- **Activity chart — day-of-week breakdown:** New "Activity" tab shows how your snapshot captures and message growth are distributed across the days of the week. Captures mode shows your check-in rhythm; Growth mode shows average message gain logged per day — useful for figuring out when your bots tend to be most active and when to time a launch.
+
 ## 2026-05-24 (4)
 
 ### Adjustments

@@ -134,7 +134,7 @@ export default function VelocityChart({ bots, onViewBot }) {
               : `Top ${eligibleBots.length} of ${totalEligible}`
             } · {metricObj?.label} per day
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Shows how fast each bot's stats are growing day by day. A rising line means the bot is gaining faster over time; spikes often mark when a bot went viral or got shared.</p>
+          <p className="text-[13px] text-text-muted pl-6">Shows how fast each bot's stats are growing day by day. A rising line means the bot is gaining faster over time; spikes often mark when a bot went viral or got shared.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

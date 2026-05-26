@@ -91,7 +91,7 @@ export default function TreemapChart({ bots, onViewBot }) {
             All bots · {m?.label}
             <span className="text-text-muted text-xs font-normal ml-1">· {data.length} bots</span>
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Each box is one bot — bigger box means a higher value in the selected metric. Gives a quick visual sense of who dominates your collection at a glance.</p>
+          <p className="text-[13px] text-text-muted pl-6">Each box is one bot — bigger box means a higher value in the selected metric. Gives a quick visual sense of who dominates your collection at a glance.</p>
         </div>
         <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
           {METRICS.map(mx => (
@@ -124,7 +124,7 @@ export default function TreemapChart({ bots, onViewBot }) {
             />
           </ResponsiveContainer>
         </div>
-        <p className="text-text-muted text-[11px] mt-1 text-center">
+        <p className="text-text-muted text-xs mt-1 text-center">
           Box size = {m?.label.toLowerCase()} · click any box to open bot details
         </p>
       </div>

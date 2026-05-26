@@ -80,7 +80,7 @@ export default function BreakdownChart({ bots, onViewBot }) {
             <BarChart2 size={16} className="text-accent opacity-60" />
             Solo vs. Group · {data.length} bot{data.length !== 1 ? 's' : ''}
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Shows how each bot's messages split between solo chats (one-on-one) and group chats. Toggle between raw counts and percentages to compare ratios across bots.</p>
+          <p className="text-[13px] text-text-muted pl-6">Shows how each bot's messages split between solo chats (one-on-one) and group chats. Toggle between raw counts and percentages to compare ratios across bots.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

@@ -254,7 +254,7 @@ export default function TagsChart({ bots, onTagClick }) {
             <Tag size={16} className="text-accent opacity-60" />
             Tag totals · {tagCount} tag{tagCount !== 1 ? 's' : ''}
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Compares stats across your custom tags. Summary view shows totals and averages per tag; Detail view breaks each tag into its individual bots.</p>
+          <p className="text-[13px] text-text-muted pl-6">Compares stats across your custom tags. Summary view shows totals and averages per tag; Detail view breaks each tag into its individual bots.</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
@@ -338,7 +338,7 @@ export default function TagsChart({ bots, onTagClick }) {
               )
             })}
           </div>
-          <p className="text-text-muted text-[11px] mt-4 text-center">
+          <p className="text-text-muted text-xs mt-4 text-center">
             Spider shows avg normalized profile across bots in tag · sorted by {m?.label}
           </p>
         </div>

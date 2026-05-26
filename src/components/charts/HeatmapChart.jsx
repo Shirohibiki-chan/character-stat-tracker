@@ -122,7 +122,7 @@ export default function HeatmapChart({ bots }) {
             <LayoutGrid size={16} className="text-accent opacity-60" />
             Metric correlations · {n} bot{n !== 1 ? 's' : ''}
           </div>
-          <p className="text-[11px] text-text-muted pl-6">Shows how closely pairs of metrics move together across your bots. Green = they tend to rise together; red = when one is high, the other tends to be low. Hover any cell for a plain-English explanation.</p>
+          <p className="text-[13px] text-text-muted pl-6">Shows how closely pairs of metrics move together across your bots. Green = they tend to rise together; red = when one is high, the other tends to be low. Hover any cell for a plain-English explanation.</p>
         </div>
         {hovered && hovRowM && hovColM && (
           <div className="text-xs text-right max-w-xs">
@@ -139,7 +139,7 @@ export default function HeatmapChart({ bots }) {
                 </span>
               )}
             </div>
-            <div className="text-text-muted text-[11px] mt-0.5">
+            <div className="text-text-muted text-xs mt-0.5">
               {describeCorrelation(hovR, hovRowM.label, hovColM.label)}
             </div>
           </div>

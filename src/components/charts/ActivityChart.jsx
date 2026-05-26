@@ -95,16 +95,16 @@ export default function ActivityChart({ bots }) {
         </div>
         <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
           <button
-            onClick={() => setMode('capture')}
-            className={`px-2.5 py-1 text-xs font-semibold rounded transition ${mode === 'capture' ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
-          >
-            Captures
-          </button>
-          <button
             onClick={() => setMode('growth')}
             className={`px-2.5 py-1 text-xs font-semibold rounded transition ${mode === 'growth' ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
           >
             Growth
+          </button>
+          <button
+            onClick={() => setMode('capture')}
+            className={`px-2.5 py-1 text-xs font-semibold rounded transition ${mode === 'capture' ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+          >
+            Captures
           </button>
         </div>
       </div>

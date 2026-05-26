@@ -15,7 +15,7 @@
 - **Growth chart — dots misaligned from their date label:** snapshot dots were plotted at their exact capture time (e.g. 3:30 PM) but daily ticks sat at UTC midnight, so dots appeared slightly to the right of their label. Dots now snap to UTC midnight and align correctly.
 
 ### Adjustments
-- **Activity chart — Growth mode is now the default:** the Activity chart opens on Growth instead of Captures, since if you capture every day the Captures chart is always flat.
+- **Activity chart — Growth mode is now the default:** the Activity chart opens on Growth instead of Captures, since if you capture every day the Captures chart is always flat. Growth button now appears on the left to match.
 - **Activity chart — peak bar at full brightness:** the busiest day's bar now renders at full opacity instead of 70%, making the peak immediately obvious.
 - **Chart subtitle font size:** all 15 chart description captions increased from 11px to 13px for easier reading.
 - **Cursor and hover highlights on clickable elements:** buttons and clickable labels now show a pointer cursor on hover, plus a subtle background highlight so interactive elements are easier to spot throughout the app.

@@ -130,7 +130,7 @@ export default function ActivityChart({ bots }) {
                 width={48}
               />
               <Tooltip content={props => <ActivityTooltip {...props} mode={mode} />} />
-              <Bar dataKey="value" radius={[4, 4, 0, 0]} maxBarSize={56}>
+              <Bar dataKey="value" radius={[4, 4, 0, 0]} maxBarSize={56} cursor={{ fill: 'rgba(255,255,255,0.03)' }}>
                 {data.map((d, i) => (
                   <Cell
                     key={i}

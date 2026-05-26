@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-05-26
+
+### Additions
+- **GainsChart tooltip — solo/group message breakdown:** hovering a bar in the Top Gainers chart now shows three rows when Messages is selected — Total, Solo, and Group. Falls back to the single-row format for other metrics or older snapshots without breakdown data.
+- **History tooltip — solo/group message breakdown:** same breakdown added to the History (top gainers by date) chart tooltip.
+
+### Fixes
+- **History chart — can't navigate past today:** the date navigator was missing a cap, allowing you to step forward into future dates. The picker now stops at today.
+- **History chart — date header and picker showing different days:** the chart title said "Top gainers on May 25" while the date input showed May 26. Root cause: date-only strings parse as UTC midnight, which shows as the previous calendar day in US timezones. Fixed by using local noon when parsing date-only strings for display.
+- **History chart — empty state when no captures yet for today:** when today is selected but no snapshots have been captured yet for that local calendar day, the chart now shows "No captures yet for this date. Come back after your next snapshot." instead of showing the previous day's data.
+- **History chart — late-night captures registering as the wrong local day:** a capture made at 11 PM local time is stored as the next UTC day. The empty-state check was comparing UTC date strings, so a May 25 capture at 11 PM local was falsely counting as a May 26 capture. Fixed by comparing local calendar dates.
+- **Growth chart — missing intermediate date labels:** the X-axis only showed ticks for dates that had an actual snapshot, leaving long blank stretches between widely-spaced captures. The axis now shows a tick for every calendar day between the first and last snapshot, with automatic thinning when there are more than 30 days.
+- **Growth chart — dots misaligned from their date label:** snapshot dots were plotted at their exact capture time (e.g. 3:30 PM) but daily ticks sat at UTC midnight, so dots appeared slightly to the right of their label. Dots now snap to UTC midnight and align correctly.
+
+### Adjustments
+- **Activity chart — Growth mode is now the default:** the Activity chart opens on Growth instead of Captures, since if you capture every day the Captures chart is always flat.
+- **Activity chart — peak bar at full brightness:** the busiest day's bar now renders at full opacity instead of 70%, making the peak immediately obvious.
+- **Chart subtitle font size:** all 15 chart description captions increased from 11px to 13px for easier reading.
+- **Cursor and hover highlights on clickable elements:** buttons and clickable labels now show a pointer cursor on hover, plus a subtle background highlight so interactive elements are easier to spot throughout the app.
+- **Tab bar — all tabs visible without scrolling:** the Insights tab bar now wraps and centers instead of scrolling horizontally, so all 15 chart tabs are reachable without left-right scrolling.
+
 ## 2026-05-25
 
 ### Additions

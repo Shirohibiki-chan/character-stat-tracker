@@ -2,6 +2,11 @@
 
 ## 2026-05-28
 
+### Fixes
+- **Chart tooltips — avatar banner showing torso instead of face:** the avatar image was cropped to the centre of the image, which cuts off character faces on portrait-style art. Now crops from the top so the face shows.
+
+
+
 ### Additions
 - **Avatar banners in chart tooltips:** hovering a bar in any single-bot chart now shows the bot's avatar as a landscape banner at the top of the tooltip, with a gradient that fades into the tooltip background. Applies to Top Gainers, History, Ranking, Scatter, Breakdown, Compare Ranking, and Compare Gains. The Lifespan hover also now shows a small avatar circle beside the bot name in the toolbar.
 - **Compare tab:** Load a friend's backup file and compare your full bot libraries head-to-head. Seven sub-views: **Overview** (combined totals, higher stat highlighted), **Table** (two ranked lists side by side), **Ranking** (all bots from both exports on one leaderboard, colour-coded by owner), **Gains** (top gainers from both exports, 7d / 30d / all-time window), **Tags** (each person's tag totals side by side), **Breakdown** (solo vs group split for each person), **1v1** (pick any two bots for a detailed stat table and growth chart). Name labels in the toolbar are editable so you can replace "You / Them" with your actual names.

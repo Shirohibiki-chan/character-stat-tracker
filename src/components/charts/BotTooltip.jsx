@@ -3,7 +3,7 @@ export default function BotTooltip({ avatar, name, children }) {
     <div className="bg-bg border border-border rounded shadow-xl overflow-hidden" style={{ minWidth: 210, maxWidth: 260 }}>
       {avatar && (
         <div className="relative h-16 overflow-hidden">
-          <img src={avatar} alt="" className="absolute inset-0 w-full h-full object-cover object-center" />
+          <img src={avatar} alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 40%, var(--color-bg) 90%)' }} />
         </div>
       )}

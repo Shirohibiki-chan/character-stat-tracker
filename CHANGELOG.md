@@ -4,6 +4,7 @@
 
 ### Fixes
 - **Chart tooltips — avatar banner showing hands instead of face:** `object-top` was cropping to the very top edge of portrait images (hands, accessories). Changed to `center 15%` to reliably land on the face area.
+- **Chart tooltips — avatar banner taller:** increased banner height from 64px to 96px so more of the character portrait is visible.
 
 
 

@@ -124,7 +124,7 @@ export default function Compare1v1({
       )}
 
       {myBot && friendBot && (
-        <div className="p-3 space-y-3">
+        <div className="p-4 space-y-4 max-w-xl mx-auto">
           {/* Metric + relative controls */}
           <div className="flex flex-wrap items-center justify-center gap-2">
             <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

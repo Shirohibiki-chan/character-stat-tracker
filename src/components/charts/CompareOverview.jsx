@@ -31,7 +31,7 @@ export default function CompareOverview({ myBotList, friendBotList, myTotals, fr
   const friendTopBot = [...friendBotList].sort((a, b) => (b.messages || 0) - (a.messages || 0))[0] ?? null
 
   return (
-    <div className="p-3 space-y-0">
+    <div className="p-4 space-y-0 max-w-xl mx-auto">
       {/* Name headers */}
       <div className="grid grid-cols-3 items-end pb-2 border-b border-border">
         <div className="text-right pr-4">

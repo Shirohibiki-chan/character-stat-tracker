@@ -9,6 +9,7 @@
 - **Export for sharing:** The export description in Data & Backup now explains you can send the downloaded file to a friend for use in the Compare tab.
 
 ### Fixes
+- **Compare toolbar — "You vs Them" inputs spreading apart on wide screens:** the four toolbar items (● You, vs, ● Them, reset button) were loose flex siblings with `flex-wrap`, so when the button wrapped to a new line the three remaining items spread across the full width. The name inputs are now a single `flex-nowrap` group so they always stay together.
 - **Compare Overview and 1v1 — numbers too far from center label:** the 3-column grid was stretching full-width, pushing the stat values miles away from the metric label in the center. Content is now constrained to a max-width of 576px and centred.
 - **Lifespan chart — avatar not loading for hovered bot:** the Lifespan data builder was looking for `bot.avatarUrl` instead of the correct `bot.avatar` field, so avatar images never appeared in the hover display.
 - **Chart tooltips — avatar banner crop:** fixed the banner cropping to the wrong part of portrait-style character art; now lands on the face area.

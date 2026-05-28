@@ -9,6 +9,7 @@
 - **Export for sharing:** The export description in Data & Backup now explains you can send the downloaded file to a friend for use in the Compare tab.
 
 ### Fixes
+- **Compare 1v1 — bot name truncated in stat table header:** long names like "Dan Heng, Imbibitor Lunae" were cut off with an ellipsis. Name now wraps to a second line instead.
 - **Compare Overview and 1v1 — numbers too far from center label:** the 3-column grid was stretching full-width, pushing the stat values miles away from the metric label in the center. Content is now constrained to a max-width of 576px and centred.
 - **Lifespan chart — avatar not loading for hovered bot:** the Lifespan data builder was looking for `bot.avatarUrl` instead of the correct `bot.avatar` field, so avatar images never appeared in the hover display.
 - **Chart tooltips — avatar banner crop:** fixed the banner cropping to the wrong part of portrait-style character art; now lands on the face area.

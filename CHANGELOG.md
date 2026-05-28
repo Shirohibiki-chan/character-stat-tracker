@@ -2,6 +2,10 @@
 
 ## 2026-05-28
 
+### Additions
+- **Chart tooltips — Cloudflare face-crop on avatar banners:** tooltip banners now request a face-detected crop directly from CharSnap's CDN using Cloudflare Images' `gravity=face` transform. Falls back to the original image with a best-effort CSS crop if face detection isn't supported or the avatar isn't a CDN URL (e.g. manual upload).
+
+
 ### Fixes
 - **Chart tooltips — avatar banner showing hands instead of face:** `object-top` was cropping to the very top edge of portrait images (hands, accessories). Changed to `center 15%` to reliably land on the face area.
 - **Chart tooltips — avatar banner taller:** increased banner height from 64px to 96px so more of the character portrait is visible.

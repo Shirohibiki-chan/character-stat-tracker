@@ -5,6 +5,7 @@ import {
 import { METRICS } from '../../constants/metrics.js'
 import { fmt, fmtFull } from '../../constants/format.js'
 import { computeGain } from '../../hooks/use-compare.js'
+import BotTooltip from './BotTooltip.jsx'
 
 const WINDOWS = [
   { label: '7d',       days: 7  },
@@ -124,9 +125,8 @@ export default function CompareGains({ myBotList, friendBotList, myName, friendN
                     const ownerColor = d._owner === 'my' ? myColor : friendColor
                     const gain = computeGain(d, days)
                     return (
-                      <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
-                        <div className="font-bold text-sm mb-0.5 truncate max-w-[220px]">{d.name}</div>
-                        <div className="text-[10px] font-bold mb-2" style={{ color: ownerColor }}>{ownerName}</div>
+                      <BotTooltip avatar={d.avatar} name={d.name}>
+                        <div className="text-[10px] font-bold mb-1.5" style={{ color: ownerColor }}>{ownerName}</div>
                         {METRICS.map(mx => {
                           const g = gain[mx.key]
                           if (g == null) return null
@@ -137,7 +137,7 @@ export default function CompareGains({ myBotList, friendBotList, myName, friendN
                             </div>
                           )
                         })}
-                      </div>
+                      </BotTooltip>
                     )
                   }}
                 />

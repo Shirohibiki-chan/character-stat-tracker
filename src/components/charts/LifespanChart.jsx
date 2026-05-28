@@ -27,7 +27,7 @@ function buildLifespanData(bots, sortBy) {
       return {
         id:       bot.id,
         name:     bot.name,
-        avatarUrl: bot.avatarUrl,
+        avatar: bot.avatar,
         firstDate,
         lastDate,
         snapDates: snaps.map(s => new Date(s.date)),
@@ -103,14 +103,19 @@ export default function LifespanChart({ bots, onViewBot }) {
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {hoveredBot && (
-            <span className="text-xs text-text-muted mr-1">
-              <span className="text-text-secondary font-semibold">{hoveredBot.name}</span>
-              {' · '}
-              {fmtDate(hoveredBot.firstDate.toISOString())} → {fmtDate(hoveredBot.lastDate.toISOString())}
-              {' · '}
-              {msToHuman(hoveredBot.duration)}
-              {' · '}
-              {hoveredBot.snapCount} snapshot{hoveredBot.snapCount !== 1 ? 's' : ''}
+            <span className="flex items-center gap-2 text-xs text-text-muted mr-1">
+              {hoveredBot.avatar && (
+                <img src={hoveredBot.avatar} alt="" className="w-5 h-5 rounded-full object-cover shrink-0" />
+              )}
+              <span>
+                <span className="text-text-secondary font-semibold">{hoveredBot.name}</span>
+                {' · '}
+                {fmtDate(hoveredBot.firstDate.toISOString())} → {fmtDate(hoveredBot.lastDate.toISOString())}
+                {' · '}
+                {msToHuman(hoveredBot.duration)}
+                {' · '}
+                {hoveredBot.snapCount} snapshot{hoveredBot.snapCount !== 1 ? 's' : ''}
+              </span>
             </span>
           )}
           <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

@@ -4,6 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
 import { fmtFull, fmt } from '../../constants/format.js'
+import BotTooltip from './BotTooltip.jsx'
 
 const SORT_OPTIONS = [
   { value: 'total',   label: 'Total'   },
@@ -180,11 +181,11 @@ export default function BreakdownChart({ bots, onViewBot }) {
                 content={({ active, payload }) => {
                   if (!active || !payload?.length) return null
                   const d = payload[0].payload
+                  const bot = bots.find(b => b.id === d.id)
                   const soloPct = d.total > 0 ? (d.solo / d.total * 100).toFixed(1) : '0.0'
                   const groupPct = d.total > 0 ? (d.group / d.total * 100).toFixed(1) : '0.0'
                   return (
-                    <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
-                      <div className="font-bold text-sm mb-1.5 truncate max-w-[220px]">{d.name}</div>
+                    <BotTooltip avatar={bot?.avatar} name={d.name}>
                       <div className="flex justify-between gap-6 text-xs mb-0.5">
                         <span style={{ color: SOLO_COLOR }}>Solo</span>
                         <span className="num">{fmtFull(d.solo)} ({soloPct}%)</span>
@@ -193,7 +194,7 @@ export default function BreakdownChart({ bots, onViewBot }) {
                         <span style={{ color: GROUP_COLOR }}>Group</span>
                         <span className="num">{fmtFull(d.group)} ({groupPct}%)</span>
                       </div>
-                    </div>
+                    </BotTooltip>
                   )
                 }}
               />

@@ -50,7 +50,7 @@ export default function BackupModal({ onClose }) {
           <div className="border border-border rounded-lg p-4 space-y-2">
             <div className="text-[10px] uppercase tracking-[0.22em] font-bold text-text-muted">Export</div>
             <p className="text-sm text-text-secondary">
-              Download all your bots and snapshot history as a JSON file.
+              Download all your bots and snapshot history as a JSON file. You can also send this to a friend so they can load it in the Compare tab for a head-to-head.
             </p>
             <button
               onClick={exportBots}

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-05-28
+
+### Additions
+- **Compare tab:** Load a friend's backup file and compare your full bot libraries head-to-head. Seven sub-views: **Overview** (combined totals, higher stat highlighted), **Table** (two ranked lists side by side), **Ranking** (all bots from both exports on one leaderboard, colour-coded by owner), **Gains** (top gainers from both exports, 7d / 30d / all-time window), **Tags** (each person's tag totals side by side), **Breakdown** (solo vs group split for each person), **1v1** (pick any two bots for a detailed stat table and growth chart). Name labels in the toolbar are editable so you can replace "You / Them" with your actual names.
+- **Export for sharing:** The export description in Data & Backup now explains you can send the downloaded file to a friend for use in the Compare tab.
+
 ## 2026-05-26
 
 ### Additions

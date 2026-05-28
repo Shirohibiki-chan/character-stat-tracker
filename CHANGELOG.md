@@ -2,12 +2,6 @@
 
 ## 2026-05-28
 
-### Fixes
-- **Chart tooltips — avatar banner showing hands instead of face:** `object-top` was cropping to the very top edge of portrait images (hands, accessories). Changed to `center 15%` to reliably land on the face area.
-- **Chart tooltips — avatar banner taller:** increased banner height from 64px to 96px so more of the character portrait is visible.
-
-
-
 ### Additions
 - **Avatar banners in chart tooltips:** hovering a bar in any single-bot chart now shows the bot's avatar as a landscape banner at the top of the tooltip, with a gradient that fades into the tooltip background. Applies to Top Gainers, History, Ranking, Scatter, Breakdown, Compare Ranking, and Compare Gains. The Lifespan hover also now shows a small avatar circle beside the bot name in the toolbar.
 - **Compare tab:** Load a friend's backup file and compare your full bot libraries head-to-head. Seven sub-views: **Overview** (combined totals, higher stat highlighted), **Table** (two ranked lists side by side), **Ranking** (all bots from both exports on one leaderboard, colour-coded by owner), **Gains** (top gainers from both exports, 7d / 30d / all-time window), **Tags** (each person's tag totals side by side), **Breakdown** (solo vs group split for each person), **1v1** (pick any two bots for a detailed stat table and growth chart). Name labels in the toolbar are editable so you can replace "You / Them" with your actual names.
@@ -15,6 +9,8 @@
 
 ### Fixes
 - **Lifespan chart — avatar not loading for hovered bot:** the Lifespan data builder was looking for `bot.avatarUrl` instead of the correct `bot.avatar` field, so avatar images never appeared in the hover display.
+- **Chart tooltips — avatar banner crop:** fixed the banner cropping to the wrong part of portrait-style character art; now lands on the face area.
+- **Chart tooltips — avatar banner height:** increased from 64 px to 96 px so more of the portrait is visible.
 
 ## 2026-05-26
 

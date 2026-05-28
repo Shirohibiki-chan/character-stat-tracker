@@ -5,16 +5,16 @@ function StatRow({ label, myVal, friendVal, color }) {
   const myAhead = myVal != null && friendVal != null && myVal > friendVal
   const friendAhead = myVal != null && friendVal != null && friendVal > myVal
   return (
-    <div className="grid grid-cols-3 items-center py-2 border-b border-border last:border-0">
+    <div className="grid grid-cols-3 items-center py-1.5 border-b border-border last:border-0">
       <div
-        className="text-right pr-5 num font-bold text-base"
+        className="text-right pr-4 num font-bold text-sm"
         style={{ color: myAhead ? color : 'var(--color-text-primary)' }}
       >
         {fmt(myVal)}
       </div>
       <div className="text-center text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold">{label}</div>
       <div
-        className="text-left pl-5 num font-bold text-base"
+        className="text-left pl-4 num font-bold text-sm"
         style={{ color: friendAhead ? color : 'var(--color-text-primary)' }}
       >
         {fmt(friendVal)}
@@ -31,10 +31,10 @@ export default function CompareOverview({ myBotList, friendBotList, myTotals, fr
   const friendTopBot = [...friendBotList].sort((a, b) => (b.messages || 0) - (a.messages || 0))[0] ?? null
 
   return (
-    <div className="p-4 space-y-0">
+    <div className="p-3 space-y-0">
       {/* Name headers */}
-      <div className="grid grid-cols-3 items-end pb-3 border-b border-border">
-        <div className="text-right pr-5">
+      <div className="grid grid-cols-3 items-end pb-2 border-b border-border">
+        <div className="text-right pr-4">
           <div className="font-bold text-base" style={{ color: myColor }}>{myName}</div>
           <div className="text-[11px] text-text-muted mt-0.5">{myCount} bot{myCount !== 1 ? 's' : ''}</div>
           {myTopBot && (
@@ -44,7 +44,7 @@ export default function CompareOverview({ myBotList, friendBotList, myTotals, fr
           )}
         </div>
         <div className="text-center text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold">Totals</div>
-        <div className="text-left pl-5">
+        <div className="text-left pl-4">
           <div className="font-bold text-base" style={{ color: friendColor }}>{friendName}</div>
           <div className="text-[11px] text-text-muted mt-0.5">{friendCount} bot{friendCount !== 1 ? 's' : ''}</div>
           {friendTopBot && (

@@ -124,94 +124,97 @@ export default function Compare1v1({
       )}
 
       {myBot && friendBot && (
-        <div className="p-4 space-y-4 max-w-xl mx-auto">
-          {/* Metric + relative controls */}
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
-              {METRICS.map(m => (
-                <button
-                  key={m.key}
-                  onClick={() => setMetric(m.key)}
-                  className={`px-2.5 py-1 text-xs font-semibold rounded transition ${metric === m.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
-                  style={metric === m.key ? { boxShadow: `inset 0 0 0 1px ${m.color}40` } : {}}
-                >
-                  {m.label}
-                </button>
-              ))}
-            </div>
-            <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
-              <button
-                onClick={() => setRelative(false)}
-                className={`px-2.5 py-1 text-xs font-semibold rounded transition ${!relative ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
-              >
-                Total
-              </button>
-              <button
-                onClick={() => setRelative(true)}
-                className={`px-2.5 py-1 text-xs font-semibold rounded transition ${relative ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
-              >
-                Growth
-              </button>
-            </div>
-          </div>
-
-          {/* Headers */}
-          <div className="grid grid-cols-3 items-center">
-            <div className="flex items-center justify-end gap-3 pr-4">
-              <div className="text-right">
-                <div className="font-bold text-text-primary text-sm leading-tight">{myBot.name}</div>
-                <div className="text-[10px] text-text-muted mt-0.5">
-                  {myBot._totalSnaps?.length ?? 0} snapshots · last {fmtRelative(myBot.lastCapturedAt)}
-                </div>
-              </div>
-              <BotAvatar bot={myBot} size={36} />
-            </div>
-            <div className="text-center text-xs uppercase tracking-widest text-text-muted font-bold">vs</div>
-            <div className="flex items-center gap-3 pl-4">
-              <BotAvatar bot={friendBot} size={36} />
-              <div>
-                <div className="font-bold text-text-primary text-sm leading-tight">{friendBot.name}</div>
-                <div className="text-[10px] text-text-muted mt-0.5">
-                  {friendBot._totalSnaps?.length ?? 0} snapshots · last {fmtRelative(friendBot.lastCapturedAt)}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Stat rows */}
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="grid grid-cols-3 py-2 bg-surface-alt border-b border-border">
-              <div className="text-right pr-4 text-[10px] uppercase tracking-[0.2em] font-bold truncate" style={{ color: myColor }}>
-                {myBot.name}
-              </div>
-              <div className="text-center text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold">Stats</div>
-              <div className="text-left pl-4 text-[10px] uppercase tracking-[0.2em] font-bold truncate" style={{ color: friendColor }}>
-                {friendBot.name}
-              </div>
-            </div>
-            <div className="px-2">
-              {METRICS.map(m => {
-                const cap = m.key.charAt(0).toUpperCase() + m.key.slice(1)
-                return (
-                  <StatRow
+        <>
+          {/* Constrained: controls + headers + stat table */}
+          <div className="p-4 pb-0 space-y-4 max-w-xl mx-auto">
+            {/* Metric + relative controls */}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
+                {METRICS.map(m => (
+                  <button
                     key={m.key}
-                    label={m.label}
-                    myVal={myBot[m.key]}
-                    friendVal={friendBot[m.key]}
-                    myDelta={myBot[`delta${cap}`]}
-                    friendDelta={friendBot[`delta${cap}`]}
-                    color={m.color}
-                    myColor={myColor}
-                    friendColor={friendColor}
-                  />
-                )
-              })}
+                    onClick={() => setMetric(m.key)}
+                    className={`px-2.5 py-1 text-xs font-semibold rounded transition ${metric === m.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                    style={metric === m.key ? { boxShadow: `inset 0 0 0 1px ${m.color}40` } : {}}
+                  >
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
+                <button
+                  onClick={() => setRelative(false)}
+                  className={`px-2.5 py-1 text-xs font-semibold rounded transition ${!relative ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                >
+                  Total
+                </button>
+                <button
+                  onClick={() => setRelative(true)}
+                  className={`px-2.5 py-1 text-xs font-semibold rounded transition ${relative ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
+                >
+                  Growth
+                </button>
+              </div>
+            </div>
+
+            {/* Headers */}
+            <div className="grid grid-cols-3 items-center">
+              <div className="flex items-center justify-end gap-3 pr-4">
+                <div className="text-right">
+                  <div className="font-bold text-text-primary text-sm leading-tight">{myBot.name}</div>
+                  <div className="text-[10px] text-text-muted mt-0.5">
+                    {myBot._totalSnaps?.length ?? 0} snapshots · last {fmtRelative(myBot.lastCapturedAt)}
+                  </div>
+                </div>
+                <BotAvatar bot={myBot} size={36} />
+              </div>
+              <div className="text-center text-xs uppercase tracking-widest text-text-muted font-bold">vs</div>
+              <div className="flex items-center gap-3 pl-4">
+                <BotAvatar bot={friendBot} size={36} />
+                <div>
+                  <div className="font-bold text-text-primary text-sm leading-tight">{friendBot.name}</div>
+                  <div className="text-[10px] text-text-muted mt-0.5">
+                    {friendBot._totalSnaps?.length ?? 0} snapshots · last {fmtRelative(friendBot.lastCapturedAt)}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Stat rows */}
+            <div className="border border-border rounded-lg overflow-hidden">
+              <div className="grid grid-cols-3 py-2 bg-surface-alt border-b border-border">
+                <div className="text-right pr-4 text-[10px] uppercase tracking-[0.2em] font-bold truncate" style={{ color: myColor }}>
+                  {myBot.name}
+                </div>
+                <div className="text-center text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold">Stats</div>
+                <div className="text-left pl-4 text-[10px] uppercase tracking-[0.2em] font-bold truncate" style={{ color: friendColor }}>
+                  {friendBot.name}
+                </div>
+              </div>
+              <div className="px-2">
+                {METRICS.map(m => {
+                  const cap = m.key.charAt(0).toUpperCase() + m.key.slice(1)
+                  return (
+                    <StatRow
+                      key={m.key}
+                      label={m.label}
+                      myVal={myBot[m.key]}
+                      friendVal={friendBot[m.key]}
+                      myDelta={myBot[`delta${cap}`]}
+                      friendDelta={friendBot[`delta${cap}`]}
+                      color={m.color}
+                      myColor={myColor}
+                      friendColor={friendColor}
+                    />
+                  )
+                })}
+              </div>
             </div>
           </div>
 
-          {/* Chart */}
+          {/* Chart — full width */}
           {chartData.length > 0 ? (
-            <div>
+            <div className="p-4 pt-4">
               <div className="text-xs text-text-muted mb-3 font-semibold uppercase tracking-widest">
                 {metricObj?.label} over time{relative ? ' (growth from first snapshot)' : ''}
               </div>
@@ -257,7 +260,7 @@ export default function Compare1v1({
               <p className="text-text-muted text-sm">Neither bot has Total-scope snapshots yet.</p>
             </div>
           )}
-        </div>
+        </>
       )}
     </div>
   )

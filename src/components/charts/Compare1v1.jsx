@@ -124,7 +124,7 @@ export default function Compare1v1({
       )}
 
       {myBot && friendBot && (
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-3">
           {/* Metric + relative controls */}
           <div className="flex flex-wrap items-center justify-center gap-2">
             <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
@@ -189,7 +189,7 @@ export default function Compare1v1({
                 {friendBot.name}
               </div>
             </div>
-            <div className="px-5">
+            <div className="px-2">
               {METRICS.map(m => {
                 const cap = m.key.charAt(0).toUpperCase() + m.key.slice(1)
                 return (

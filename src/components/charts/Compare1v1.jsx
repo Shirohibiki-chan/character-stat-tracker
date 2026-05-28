@@ -31,7 +31,7 @@ function StatRow({ label, myVal, friendVal, myDelta, friendDelta, color, myColor
   const myAhead = myVal != null && friendVal != null && myVal > friendVal
   const friendAhead = myVal != null && friendVal != null && friendVal > myVal
   return (
-    <div className="grid grid-cols-3 items-center py-1.5 border-b border-border last:border-0">
+    <div className="grid grid-cols-3 items-center py-1 border-b border-border last:border-0">
       <div className="text-right pr-4">
         <div className="num font-bold text-sm" style={{ color: myAhead ? color : 'var(--color-text-primary)' }}>
           {fmt(myVal)}
@@ -124,7 +124,7 @@ export default function Compare1v1({
       )}
 
       {myBot && friendBot && (
-        <div className="p-4 space-y-3">
+        <div className="p-3 space-y-3">
           {/* Metric + relative controls */}
           <div className="flex flex-wrap items-center justify-center gap-2">
             <div className="flex gap-1 p-0.5 bg-surface-alt rounded">

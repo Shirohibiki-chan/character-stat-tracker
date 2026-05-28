@@ -7,6 +7,7 @@ import {
 import { METRICS } from '../../constants/metrics.js'
 import { getAura, getBarColor } from '../../constants/auras.js'
 import { fmt, fmtFull } from '../../constants/format.js'
+import BotTooltip from './BotTooltip.jsx'
 
 export default function ScatterPlot({ bots, onViewBot }) {
   const [xKey, setXKey] = useState('messages')
@@ -162,9 +163,9 @@ export default function ScatterPlot({ bots, onViewBot }) {
                 content={({ active, payload }) => {
                   if (!active || !payload?.length) return null
                   const d = payload[0].payload
+                  const bot = bots.find(b => b.id === d.id)
                   return (
-                    <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
-                      <div className="font-bold text-base mb-1.5 truncate max-w-[220px]">{d.name}</div>
+                    <BotTooltip avatar={bot?.avatar} name={d.name}>
                       {d.tag && <div className="text-xs text-text-muted mb-1.5">#{d.tag}</div>}
                       {METRICS.map(mx => (
                         <div key={mx.key} className="flex justify-between gap-6 text-sm">
@@ -172,7 +173,7 @@ export default function ScatterPlot({ bots, onViewBot }) {
                           <span className="num font-semibold" style={{ color: mx.color }}>{fmtFull(d[mx.key])}</span>
                         </div>
                       ))}
-                    </div>
+                    </BotTooltip>
                   )
                 }}
               />

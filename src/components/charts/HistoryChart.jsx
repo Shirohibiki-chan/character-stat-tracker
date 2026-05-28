@@ -6,6 +6,7 @@ import {
 import { METRICS } from '../../constants/metrics.js'
 import { getBarColor } from '../../constants/auras.js'
 import { fmt, fmtFull, fmtDate } from '../../constants/format.js'
+import BotTooltip from './BotTooltip.jsx'
 
 function latestTotalDate(bots) {
   let latest = null
@@ -202,8 +203,7 @@ export default function HistoryChart({ bots, onViewBot }) {
                     if (!active || !payload?.length) return null
                     const d = payload[0].payload
                     return (
-                      <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
-                        <div className="font-bold text-base mb-1 truncate max-w-[220px]">{d.name}</div>
+                      <BotTooltip avatar={d.avatar} name={d.name}>
                         <div className="text-xs text-text-secondary font-medium mb-1.5">
                           {fmtDate(d.prevSnapDate)} → {fmtDate(d.snapDate)}
                         </div>
@@ -234,7 +234,7 @@ export default function HistoryChart({ bots, onViewBot }) {
                             <span className="num font-semibold" style={{ color: m?.color }}>+{fmtFull(d.gain)}</span>
                           </div>
                         )}
-                      </div>
+                      </BotTooltip>
                     )
                   }}
                 />

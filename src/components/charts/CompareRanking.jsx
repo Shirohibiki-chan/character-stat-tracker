@@ -4,6 +4,7 @@ import {
 } from 'recharts'
 import { METRICS } from '../../constants/metrics.js'
 import { fmt, fmtFull } from '../../constants/format.js'
+import BotTooltip from './BotTooltip.jsx'
 
 export default function CompareRanking({ myBotList, friendBotList, myName, friendName, myColor, friendColor }) {
   const [metric, setMetric] = useState('messages')
@@ -97,16 +98,15 @@ export default function CompareRanking({ myBotList, friendBotList, myName, frien
                   const ownerName = d._owner === 'my' ? myName : friendName
                   const ownerColor = d._owner === 'my' ? myColor : friendColor
                   return (
-                    <div className="bg-bg border border-border rounded px-3 py-2 shadow-xl">
-                      <div className="font-bold text-sm mb-0.5 truncate max-w-[220px]">{d.name}</div>
-                      <div className="text-[10px] font-bold mb-2" style={{ color: ownerColor }}>{ownerName}</div>
+                    <BotTooltip avatar={d.avatar} name={d.name}>
+                      <div className="text-[10px] font-bold mb-1.5" style={{ color: ownerColor }}>{ownerName}</div>
                       {METRICS.map(mx => (
                         <div key={mx.key} className="flex justify-between gap-6 text-sm">
                           <span className="text-text-secondary font-medium">{mx.label}</span>
                           <span className="num font-semibold" style={{ color: mx.color }}>{fmtFull(d[mx.key] || 0)}</span>
                         </div>
                       ))}
-                    </div>
+                    </BotTooltip>
                   )
                 }}
               />

@@ -9,6 +9,7 @@
 - **Export for sharing:** The export description in Data & Backup now explains you can send the downloaded file to a friend for use in the Compare tab.
 
 ### Fixes
+- **Compare 1v1 — excessive spacing:** the stat table rows and bot header were too spread out, making the view feel empty. Rows are now tighter, the bot header is a compact horizontal layout (avatar + name side by side) instead of a tall stacked column, and section gaps are reduced.
 - **Lifespan chart — avatar not loading for hovered bot:** the Lifespan data builder was looking for `bot.avatarUrl` instead of the correct `bot.avatar` field, so avatar images never appeared in the hover display.
 - **Chart tooltips — avatar banner crop:** fixed the banner cropping to the wrong part of portrait-style character art; now lands on the face area.
 - **Chart tooltips — avatar banner height:** increased from 64 px to 96 px so more of the portrait is visible.

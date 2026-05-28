@@ -31,7 +31,7 @@ function StatRow({ label, myVal, friendVal, myDelta, friendDelta, color, myColor
   const myAhead = myVal != null && friendVal != null && myVal > friendVal
   const friendAhead = myVal != null && friendVal != null && friendVal > myVal
   return (
-    <div className="grid grid-cols-3 items-center py-2.5 border-b border-border last:border-0">
+    <div className="grid grid-cols-3 items-center py-1.5 border-b border-border last:border-0">
       <div className="text-right pr-4">
         <div className="num font-bold text-sm" style={{ color: myAhead ? color : 'var(--color-text-primary)' }}>
           {fmt(myVal)}
@@ -124,7 +124,7 @@ export default function Compare1v1({
       )}
 
       {myBot && friendBot && (
-        <div className="p-5 space-y-6">
+        <div className="p-4 space-y-4">
           {/* Metric + relative controls */}
           <div className="flex flex-wrap items-center justify-center gap-2">
             <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
@@ -157,18 +157,18 @@ export default function Compare1v1({
 
           {/* Headers */}
           <div className="grid grid-cols-3 items-center">
-            <div className="flex flex-col items-end gap-2 text-right pr-6">
-              <BotAvatar bot={myBot} />
-              <div>
+            <div className="flex items-center justify-end gap-3 pr-4">
+              <div className="text-right">
                 <div className="font-bold text-text-primary text-sm leading-tight">{myBot.name}</div>
                 <div className="text-[10px] text-text-muted mt-0.5">
                   {myBot._totalSnaps?.length ?? 0} snapshots · last {fmtRelative(myBot.lastCapturedAt)}
                 </div>
               </div>
+              <BotAvatar bot={myBot} size={36} />
             </div>
             <div className="text-center text-xs uppercase tracking-widest text-text-muted font-bold">vs</div>
-            <div className="flex flex-col items-start gap-2 text-left pl-6">
-              <BotAvatar bot={friendBot} />
+            <div className="flex items-center gap-3 pl-4">
+              <BotAvatar bot={friendBot} size={36} />
               <div>
                 <div className="font-bold text-text-primary text-sm leading-tight">{friendBot.name}</div>
                 <div className="text-[10px] text-text-muted mt-0.5">

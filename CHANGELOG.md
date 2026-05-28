@@ -3,7 +3,7 @@
 ## 2026-05-28
 
 ### Fixes
-- **Chart tooltips — avatar banner showing torso instead of face:** the avatar image was cropped to the centre of the image, which cuts off character faces on portrait-style art. Now crops from the top so the face shows.
+- **Chart tooltips — avatar banner showing hands instead of face:** `object-top` was cropping to the very top edge of portrait images (hands, accessories). Changed to `center 15%` to reliably land on the face area.
 
 
 

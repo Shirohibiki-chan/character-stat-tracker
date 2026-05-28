@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-05-28
+
+### Additions
+- **Compare tab:** Load a friend's backup file and compare any two bots head-to-head. Shows side-by-side stat rows (Messages, Threads, Favorites — with delta-since-last-snapshot) and a dual-line chart so you can see whose bot grew faster. Supports a Growth toggle that normalises both bots to their first snapshot so different starting points don't skew the chart. The higher number in each stat row is highlighted.
+- **Export for sharing:** The export description in Data & Backup now explains you can send the downloaded file to a friend for use in their Compare tab.
+
 ## 2026-05-26
 
 ### Additions

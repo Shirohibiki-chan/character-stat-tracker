@@ -5,7 +5,7 @@ function sortedSnapshots(bot) {
   return [...bot.snapshots].sort((a, b) => new Date(a.date) - new Date(b.date))
 }
 
-function enrichBot(bot) {
+export function enrichBot(bot) {
   const snaps = sortedSnapshots(bot)
   // Stats and deltas must use only Total-scope snapshots so we always compare
   // cumulative all-time values, never period-specific counts (24h, 7d, 30d).

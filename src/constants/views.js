@@ -14,4 +14,5 @@ export const VIEWS = [
   { id: 'lifespan',  label: 'Lifespan'  },
   { id: 'heatmap',   label: 'Heatmap'   },
   { id: 'activity',  label: 'Activity'  },
+  { id: 'compare',   label: 'Compare'   },
 ]

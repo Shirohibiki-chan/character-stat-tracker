@@ -5,16 +5,16 @@ function StatRow({ label, myVal, friendVal, color }) {
   const myAhead = myVal != null && friendVal != null && myVal > friendVal
   const friendAhead = myVal != null && friendVal != null && friendVal > myVal
   return (
-    <div className="grid grid-cols-3 items-center py-1.5 border-b border-border last:border-0">
+    <div className="grid grid-cols-3 items-center py-3 border-b border-border last:border-0">
       <div
-        className="text-right pr-4 num font-bold text-sm"
+        className="text-right pr-4 num font-bold text-lg"
         style={{ color: myAhead ? color : 'var(--color-text-primary)' }}
       >
         {fmt(myVal)}
       </div>
       <div className="text-center text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold">{label}</div>
       <div
-        className="text-left pl-4 num font-bold text-sm"
+        className="text-left pl-4 num font-bold text-lg"
         style={{ color: friendAhead ? color : 'var(--color-text-primary)' }}
       >
         {fmt(friendVal)}

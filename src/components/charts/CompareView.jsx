@@ -85,25 +85,29 @@ export default function CompareView({ bots }) {
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap justify-end">
-          {/* Name labels — single nowrap group so the dots/vs never spread */}
+          {/* Name labels — each side is a tight dot+name group; vs sits between them */}
           <div className="flex items-center gap-2 flex-nowrap shrink-0">
-            <div className="w-2 h-2 rounded-full shrink-0" style={{ background: MY_COLOR }} />
-            <input
-              value={myName}
-              onChange={e => setMyName(e.target.value || 'You')}
-              className="bg-transparent text-xs font-bold text-text-secondary focus:outline-none border-b border-transparent focus:border-border"
-              style={{ width: `${Math.max(myName.length, 2) + 1}ch` }}
-              title="Your display name"
-            />
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full shrink-0" style={{ background: MY_COLOR }} />
+              <input
+                value={myName}
+                onChange={e => setMyName(e.target.value || 'You')}
+                className="bg-transparent text-xs font-bold text-text-secondary focus:outline-none border-b border-transparent focus:border-border"
+                style={{ width: `${Math.max(myName.length, 2) + 1}ch` }}
+                title="Your display name"
+              />
+            </div>
             <span className="text-text-muted text-xs">vs</span>
-            <div className="w-2 h-2 rounded-full shrink-0" style={{ background: FRIEND_COLOR }} />
-            <input
-              value={friendName}
-              onChange={e => setFriendName(e.target.value || 'Them')}
-              className="bg-transparent text-xs font-bold text-text-secondary focus:outline-none border-b border-transparent focus:border-border"
-              style={{ width: `${Math.max(friendName.length, 2) + 1}ch` }}
-              title="Their display name"
-            />
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full shrink-0" style={{ background: FRIEND_COLOR }} />
+              <input
+                value={friendName}
+                onChange={e => setFriendName(e.target.value || 'Them')}
+                className="bg-transparent text-xs font-bold text-text-secondary focus:outline-none border-b border-transparent focus:border-border"
+                style={{ width: `${Math.max(friendName.length, 2) + 1}ch` }}
+                title="Their display name"
+              />
+            </div>
           </div>
           <button
             onClick={reset}

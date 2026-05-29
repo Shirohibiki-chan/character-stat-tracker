@@ -91,7 +91,8 @@ export default function CompareView({ bots }) {
             <input
               value={myName}
               onChange={e => setMyName(e.target.value || 'You')}
-              className="bg-transparent text-xs font-bold text-text-secondary focus:outline-none w-20 border-b border-transparent focus:border-border"
+              className="bg-transparent text-xs font-bold text-text-secondary focus:outline-none border-b border-transparent focus:border-border"
+              style={{ width: `${Math.max(myName.length, 2) + 1}ch` }}
               title="Your display name"
             />
             <span className="text-text-muted text-xs">vs</span>
@@ -99,7 +100,8 @@ export default function CompareView({ bots }) {
             <input
               value={friendName}
               onChange={e => setFriendName(e.target.value || 'Them')}
-              className="bg-transparent text-xs font-bold text-text-secondary focus:outline-none w-20 border-b border-transparent focus:border-border"
+              className="bg-transparent text-xs font-bold text-text-secondary focus:outline-none border-b border-transparent focus:border-border"
+              style={{ width: `${Math.max(friendName.length, 2) + 1}ch` }}
               title="Their display name"
             />
           </div>

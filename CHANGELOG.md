@@ -10,6 +10,8 @@
 
 ### Fixes
 - **Compare 1v1 — bot name truncated in stat table header:** long names like "Dan Heng, Imbibitor Lunae" were cut off with an ellipsis. Name now wraps to a second line instead.
+- **Compare toolbar — "You vs Them" inputs spreading apart:** the name inputs and vs label were loose flex siblings; when the filename button wrapped to a new line the three remaining items spread across the full width. Consolidated into a single nowrap group.
+- **Compare 1v1 — growth chart constrained to narrow width:** the chart was inside the max-width wrapper so it rendered at 576px instead of full width. Chart now breaks out to full section width.
 - **Compare Overview and 1v1 — numbers too far from center label:** the 3-column grid was stretching full-width, pushing the stat values miles away from the metric label in the center. Content is now constrained to a max-width of 576px and centred.
 - **Lifespan chart — avatar not loading for hovered bot:** the Lifespan data builder was looking for `bot.avatarUrl` instead of the correct `bot.avatar` field, so avatar images never appeared in the hover display.
 - **Chart tooltips — avatar banner crop:** fixed the banner cropping to the wrong part of portrait-style character art; now lands on the face area.

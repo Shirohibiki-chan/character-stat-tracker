@@ -84,9 +84,9 @@ export default function CompareView({ bots }) {
             Head-to-head across all bots. Use the tabs below to switch views.
           </p>
         </div>
-        <div className="flex items-center gap-3 flex-wrap">
-          {/* Name labels */}
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 flex-wrap justify-end">
+          {/* Name labels — single nowrap group so the dots/vs never spread */}
+          <div className="flex items-center gap-2 flex-nowrap shrink-0">
             <div className="w-2 h-2 rounded-full shrink-0" style={{ background: MY_COLOR }} />
             <input
               value={myName}
@@ -94,9 +94,7 @@ export default function CompareView({ bots }) {
               className="bg-transparent text-xs font-bold text-text-secondary focus:outline-none w-20 border-b border-transparent focus:border-border"
               title="Your display name"
             />
-          </div>
-          <span className="text-text-muted text-xs">vs</span>
-          <div className="flex items-center gap-2">
+            <span className="text-text-muted text-xs">vs</span>
             <div className="w-2 h-2 rounded-full shrink-0" style={{ background: FRIEND_COLOR }} />
             <input
               value={friendName}

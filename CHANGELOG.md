@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-29
+
+### Fixes
+- **Compare toolbar — "You" name too far from "vs":** the name inputs had a fixed 80px width, so short labels like "You" left a huge gap before the vs label. Inputs now size to their content.
+
 ## 2026-05-28
 
 ### Additions

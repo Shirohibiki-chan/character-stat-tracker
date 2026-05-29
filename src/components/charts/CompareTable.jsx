@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react'
 import { METRICS } from '../../constants/metrics.js'
 import { fmt, fmtRelative } from '../../constants/format.js'
 
+const PAGE_SIZE = 20
+
 function BotRow({ bot, rank, color }) {
   return (
     <div className="flex items-center gap-3 py-2 border-b border-border last:border-0">
@@ -27,9 +29,42 @@ function BotRow({ bot, rank, color }) {
   )
 }
 
+function PageControls({ page, pageCount, total, onPrev, onNext }) {
+  if (pageCount <= 1) return null
+  const from = page * PAGE_SIZE + 1
+  const to = Math.min((page + 1) * PAGE_SIZE, total)
+  return (
+    <div className="flex items-center justify-between pt-3 mt-1 border-t border-border">
+      <button
+        onClick={onPrev}
+        disabled={page === 0}
+        className="px-2 py-1 text-[11px] font-bold text-text-muted hover:text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition"
+      >
+        ← Prev
+      </button>
+      <span className="text-[11px] text-text-muted num">{from}–{to} of {total}</span>
+      <button
+        onClick={onNext}
+        disabled={page === pageCount - 1}
+        className="px-2 py-1 text-[11px] font-bold text-text-muted hover:text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition"
+      >
+        Next →
+      </button>
+    </div>
+  )
+}
+
 export default function CompareTable({ myBotList, friendBotList, myName, friendName, myColor, friendColor }) {
   const [metric, setMetric] = useState('messages')
+  const [myPage, setMyPage] = useState(0)
+  const [friendPage, setFriendPage] = useState(0)
   const m = METRICS.find(mx => mx.key === metric)
+
+  function handleMetricChange(key) {
+    setMetric(key)
+    setMyPage(0)
+    setFriendPage(0)
+  }
 
   const myRanked = useMemo(() =>
     [...myBotList]
@@ -47,6 +82,11 @@ export default function CompareTable({ myBotList, friendBotList, myName, friendN
     [friendBotList, metric]
   )
 
+  const myPageCount   = Math.ceil(myRanked.length / PAGE_SIZE)
+  const friendPageCount = Math.ceil(friendRanked.length / PAGE_SIZE)
+  const mySlice     = myRanked.slice(myPage * PAGE_SIZE, (myPage + 1) * PAGE_SIZE)
+  const friendSlice = friendRanked.slice(friendPage * PAGE_SIZE, (friendPage + 1) * PAGE_SIZE)
+
   return (
     <div>
       {/* Metric toggle */}
@@ -55,7 +95,7 @@ export default function CompareTable({ myBotList, friendBotList, myName, friendN
           {METRICS.map(mx => (
             <button
               key={mx.key}
-              onClick={() => setMetric(mx.key)}
+              onClick={() => handleMetricChange(mx.key)}
               className={`px-2.5 py-1 text-xs font-semibold rounded transition ${metric === mx.key ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
               style={metric === mx.key ? { boxShadow: `inset 0 0 0 1px ${mx.color}40` } : {}}
             >
@@ -74,9 +114,16 @@ export default function CompareTable({ myBotList, friendBotList, myName, friendN
           {myRanked.length === 0 ? (
             <p className="text-text-muted text-xs py-4">No bots with snapshot data.</p>
           ) : (
-            myRanked.map((b, i) => (
-              <BotRow key={b.id} bot={b} rank={i + 1} color={myColor} />
-            ))
+            <>
+              {mySlice.map((b, i) => (
+                <BotRow key={b.id} bot={b} rank={myPage * PAGE_SIZE + i + 1} color={myColor} />
+              ))}
+              <PageControls
+                page={myPage} pageCount={myPageCount} total={myRanked.length}
+                onPrev={() => setMyPage(p => p - 1)}
+                onNext={() => setMyPage(p => p + 1)}
+              />
+            </>
           )}
         </div>
 
@@ -88,9 +135,16 @@ export default function CompareTable({ myBotList, friendBotList, myName, friendN
           {friendRanked.length === 0 ? (
             <p className="text-text-muted text-xs py-4">No bots with snapshot data.</p>
           ) : (
-            friendRanked.map((b, i) => (
-              <BotRow key={b.id} bot={b} rank={i + 1} color={friendColor} />
-            ))
+            <>
+              {friendSlice.map((b, i) => (
+                <BotRow key={b.id} bot={b} rank={friendPage * PAGE_SIZE + i + 1} color={friendColor} />
+              ))}
+              <PageControls
+                page={friendPage} pageCount={friendPageCount} total={friendRanked.length}
+                onPrev={() => setFriendPage(p => p - 1)}
+                onNext={() => setFriendPage(p => p + 1)}
+              />
+            </>
           )}
         </div>
       </div>

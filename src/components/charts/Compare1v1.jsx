@@ -124,7 +124,8 @@ export default function Compare1v1({
       )}
 
       {myBot && friendBot && (
-        <div className="p-4 space-y-4 max-w-xl mx-auto">
+        <>
+        <div className="p-4 pb-0 space-y-4 max-w-xl mx-auto">
           {/* Metric + relative controls */}
           <div className="flex flex-wrap items-center justify-center gap-2">
             <div className="flex gap-1 p-0.5 bg-surface-alt rounded">
@@ -209,55 +210,57 @@ export default function Compare1v1({
             </div>
           </div>
 
-          {/* Chart */}
-          {chartData.length > 0 ? (
-            <div>
-              <div className="text-xs text-text-muted mb-3 font-semibold uppercase tracking-widest">
-                {metricObj?.label} over time{relative ? ' (growth from first snapshot)' : ''}
-              </div>
-              <div style={{ height: 280 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                    <CartesianGrid stroke="var(--color-border-subtle)" strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="date"
-                      tickFormatter={d => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                      stroke="var(--color-text-muted)"
-                      style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
-                      axisLine={{ stroke: 'var(--color-border)' }}
-                      tickLine={{ stroke: 'var(--color-border)' }}
-                    />
-                    <YAxis
-                      tickFormatter={fmt}
-                      stroke="var(--color-text-muted)"
-                      style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
-                      axisLine={{ stroke: 'var(--color-border)' }}
-                      tickLine={{ stroke: 'var(--color-border)' }}
-                      width={52}
-                    />
-                    <Tooltip content={props => <CompareTooltip {...props} />} />
-                    <Line type="monotone" dataKey="my" name={myBot.name} stroke={myColor} strokeWidth={2} dot={false} activeDot={{ r: 4, strokeWidth: 0 }} connectNulls />
-                    <Line type="monotone" dataKey="friend" name={friendBot.name} stroke={friendColor} strokeWidth={2} dot={false} activeDot={{ r: 4, strokeWidth: 0 }} connectNulls />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="flex gap-5 mt-3">
-                <div className="flex items-center gap-2 text-xs text-text-tertiary font-semibold">
-                  <div className="w-4 h-0.5 rounded-full shrink-0" style={{ backgroundColor: myColor }} />
-                  {myBot.name}
-                </div>
-                <div className="flex items-center gap-2 text-xs text-text-tertiary font-semibold">
-                  <div className="w-4 h-0.5 rounded-full shrink-0" style={{ backgroundColor: friendColor }} />
-                  {friendBot.name}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center py-8">
-              <p className="text-text-muted text-sm">Neither bot has Total-scope snapshots yet.</p>
-            </div>
-          )}
         </div>
+
+        {/* Chart — full width, outside the max-w-xl constraint */}
+        {chartData.length > 0 ? (
+          <div className="p-4 pt-4">
+            <div className="text-xs text-text-muted mb-3 font-semibold uppercase tracking-widest">
+              {metricObj?.label} over time{relative ? ' (growth from first snapshot)' : ''}
+            </div>
+            <div style={{ height: 280 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                  <CartesianGrid stroke="var(--color-border-subtle)" strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="date"
+                    tickFormatter={d => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    stroke="var(--color-text-muted)"
+                    style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                    axisLine={{ stroke: 'var(--color-border)' }}
+                    tickLine={{ stroke: 'var(--color-border)' }}
+                  />
+                  <YAxis
+                    tickFormatter={fmt}
+                    stroke="var(--color-text-muted)"
+                    style={{ fontSize: 11, fontFamily: 'Inter, system-ui, sans-serif' }}
+                    axisLine={{ stroke: 'var(--color-border)' }}
+                    tickLine={{ stroke: 'var(--color-border)' }}
+                    width={52}
+                  />
+                  <Tooltip content={props => <CompareTooltip {...props} />} />
+                  <Line type="monotone" dataKey="my" name={myBot.name} stroke={myColor} strokeWidth={2} dot={false} activeDot={{ r: 4, strokeWidth: 0 }} connectNulls />
+                  <Line type="monotone" dataKey="friend" name={friendBot.name} stroke={friendColor} strokeWidth={2} dot={false} activeDot={{ r: 4, strokeWidth: 0 }} connectNulls />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex gap-5 mt-3">
+              <div className="flex items-center gap-2 text-xs text-text-tertiary font-semibold">
+                <div className="w-4 h-0.5 rounded-full shrink-0" style={{ backgroundColor: myColor }} />
+                {myBot.name}
+              </div>
+              <div className="flex items-center gap-2 text-xs text-text-tertiary font-semibold">
+                <div className="w-4 h-0.5 rounded-full shrink-0" style={{ backgroundColor: friendColor }} />
+                {friendBot.name}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center py-8">
+            <p className="text-text-muted text-sm">Neither bot has Total-scope snapshots yet.</p>
+          </div>
+        )}
+        </>
       )}
     </div>
   )

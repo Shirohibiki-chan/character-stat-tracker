@@ -89,24 +89,24 @@ export default function CompareView({ bots }) {
           <div className="flex items-center gap-2 flex-nowrap shrink-0">
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full shrink-0" style={{ background: MY_COLOR }} />
-              <input
-                value={myName}
-                onChange={e => setMyName(e.target.value || 'You')}
-                className="bg-transparent text-xs font-bold text-text-secondary focus:outline-none border-b border-transparent focus:border-border"
-                style={{ width: `${Math.max(myName.length, 2) + 1}ch` }}
+              <span
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={e => setMyName(e.currentTarget.textContent.trim() || 'You')}
+                className="text-xs font-bold text-text-secondary outline-none border-b border-transparent focus:border-border cursor-text whitespace-nowrap"
                 title="Your display name"
-              />
+              >{myName}</span>
             </div>
             <span className="text-text-muted text-xs">vs</span>
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full shrink-0" style={{ background: FRIEND_COLOR }} />
-              <input
-                value={friendName}
-                onChange={e => setFriendName(e.target.value || 'Them')}
-                className="bg-transparent text-xs font-bold text-text-secondary focus:outline-none border-b border-transparent focus:border-border"
-                style={{ width: `${Math.max(friendName.length, 2) + 1}ch` }}
+              <span
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={e => setFriendName(e.currentTarget.textContent.trim() || 'Them')}
+                className="text-xs font-bold text-text-secondary outline-none border-b border-transparent focus:border-border cursor-text whitespace-nowrap"
                 title="Their display name"
-              />
+              >{friendName}</span>
             </div>
           </div>
           <button

@@ -4,6 +4,7 @@
 
 ### Fixes
 - **Compare toolbar — "You" name too far from "vs":** the name inputs had a fixed 80px width, so short labels like "You" left a huge gap before the vs label. Inputs now size to their content.
+- **Compare toolbar — "vs" not centred between the two names:** the dot and name for each side were loose siblings alongside "vs", so the red dot read as part of "vs •Them" instead of belonging to "Them". Each side is now grouped as a tight dot+name pair, with "vs" sitting between the two groups.
 
 ## 2026-05-28
 

@@ -181,11 +181,11 @@ export default function Compare1v1({
           {/* Stat rows */}
           <div className="border border-border rounded-lg overflow-hidden">
             <div className="grid grid-cols-3 py-2 bg-surface-alt border-b border-border">
-              <div className="text-right pr-4 text-[10px] uppercase tracking-[0.2em] font-bold truncate" style={{ color: myColor }}>
+              <div className="text-right pr-4 text-[10px] uppercase tracking-[0.2em] font-bold leading-tight" style={{ color: myColor }}>
                 {myBot.name}
               </div>
               <div className="text-center text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold">Stats</div>
-              <div className="text-left pl-4 text-[10px] uppercase tracking-[0.2em] font-bold truncate" style={{ color: friendColor }}>
+              <div className="text-left pl-4 text-[10px] uppercase tracking-[0.2em] font-bold leading-tight" style={{ color: friendColor }}>
                 {friendBot.name}
               </div>
             </div>

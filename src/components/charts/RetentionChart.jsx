@@ -99,7 +99,6 @@ export default function RetentionChart({ bots, page, setPage, withoutGroup, setW
 
   function handleToggle(val) {
     setWithoutGroup(val)
-    setPage(0)
   }
 
   return (
@@ -108,7 +107,7 @@ export default function RetentionChart({ bots, page, setPage, withoutGroup, setW
       <div className="px-5 py-4 border-b border-border">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <div className="text-sm font-bold text-text-secondary mb-0.5">Average thread length</div>
+            <div className="text-sm font-bold text-text-secondary mb-0.5">Thread Depth</div>
             <p className="text-[13px] text-text-muted">
               Average messages per thread. Higher means users are having longer, deeper conversations — not just dropping in once.
             </p>

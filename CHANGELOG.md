@@ -2,6 +2,12 @@
 
 ## 2026-05-30
 
+### Fixes
+- **Thread Depth — toggle no longer resets page:** switching between "With group chat" and "Without group chat" no longer sends you back to page 1.
+- **Thread Depth — heading now reads "Thread Depth"** instead of "Average thread length".
+
+
+
 ### Additions
 - **Pagination — First/Last buttons:** all paginated lists (Thread Depth, Compare Table columns) now have « and » buttons to jump straight to the first or last page, alongside the existing ← Prev / Next → buttons.
 

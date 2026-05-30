@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 
 const PAGE_SIZE = 20
 const COLOR_WITH    = '#f97316'   // orange  — with group chat (fuller number)
@@ -52,34 +52,27 @@ function BotRow({ bot, rank, score, max, color }) {
   )
 }
 
-function PageControls({ page, pageCount, total, onPrev, onNext }) {
+function PageControls({ page, pageCount, total, onFirst, onPrev, onNext, onLast }) {
   if (pageCount <= 1) return null
   const from = page * PAGE_SIZE + 1
   const to = Math.min((page + 1) * PAGE_SIZE, total)
+  const btn = "px-2 py-1 text-[11px] font-bold text-text-muted hover:text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition"
   return (
     <div className="flex items-center justify-between pt-3 mt-1 border-t border-border">
-      <button
-        onClick={onPrev}
-        disabled={page === 0}
-        className="px-2 py-1 text-[11px] font-bold text-text-muted hover:text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition"
-      >
-        ← Prev
-      </button>
+      <div className="flex items-center gap-1">
+        <button onClick={onFirst} disabled={page === 0} className={btn}>«</button>
+        <button onClick={onPrev}  disabled={page === 0} className={btn}>← Prev</button>
+      </div>
       <span className="text-[11px] text-text-muted num">{from}–{to} of {total}</span>
-      <button
-        onClick={onNext}
-        disabled={page === pageCount - 1}
-        className="px-2 py-1 text-[11px] font-bold text-text-muted hover:text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition"
-      >
-        Next →
-      </button>
+      <div className="flex items-center gap-1">
+        <button onClick={onNext} disabled={page === pageCount - 1} className={btn}>Next →</button>
+        <button onClick={onLast} disabled={page === pageCount - 1} className={btn}>»</button>
+      </div>
     </div>
   )
 }
 
-export default function RetentionChart({ bots }) {
-  const [withoutGroup, setWithoutGroup] = useState(false)
-  const [page, setPage] = useState(0)
+export default function RetentionChart({ bots, page, setPage, withoutGroup, setWithoutGroup }) {
 
   const botsWithSplit = useMemo(
     () => bots.filter(b => b.messagesSolo != null).length,
@@ -170,8 +163,10 @@ export default function RetentionChart({ bots }) {
               page={page}
               pageCount={pageCount}
               total={ranked.length}
+              onFirst={() => setPage(0)}
               onPrev={() => setPage(p => p - 1)}
               onNext={() => setPage(p => p + 1)}
+              onLast={() => setPage(pageCount - 1)}
             />
           </>
         )}

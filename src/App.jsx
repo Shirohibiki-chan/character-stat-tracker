@@ -61,6 +61,8 @@ export default function App() {
   const [showChangelog, setShowChangelog] = useState(false)
   const [spiderMode, setSpiderMode] = useState('gallery')
   const [spiderSelectedIds, setSpiderSelectedIds] = useState([])
+  const [retentionPage, setRetentionPage] = useState(0)
+  const [retentionWithoutGroup, setRetentionWithoutGroup] = useState(false)
   const [adding, setAdding] = useState(false)
   const [detailBotId, setDetailBotId] = useState(null)
   const [editingBotId, setEditingBotId] = useState(null)
@@ -420,7 +422,7 @@ export default function App() {
             {activeView === 'lifespan'  && <LifespanChart  bots={sorted} onViewBot={setDetailBotId} />}
             {activeView === 'heatmap'   && <HeatmapChart   bots={sorted} />}
             {activeView === 'activity'   && <ActivityChart   bots={sorted} />}
-            {activeView === 'retention'  && <RetentionChart  bots={sorted} />}
+            {activeView === 'retention'  && <RetentionChart  bots={sorted} page={retentionPage} setPage={setRetentionPage} withoutGroup={retentionWithoutGroup} setWithoutGroup={setRetentionWithoutGroup} />}
             {activeView === 'compare'    && <CompareView     bots={bots} />}
           </>
         )}

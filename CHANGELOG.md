@@ -3,6 +3,14 @@
 ## 2026-05-30
 
 ### Additions
+- **Pagination — First/Last buttons:** all paginated lists (Thread Depth, Compare Table columns) now have « and » buttons to jump straight to the first or last page, alongside the existing ← Prev / Next → buttons.
+
+### Fixes
+- **Thread Depth — page resets on tab switch:** switching to another main tab and back no longer resets your page position or the with/without group chat toggle — both are remembered for the whole session.
+
+
+
+### Additions
 - **Thread Depth tab:** new standalone tab showing all your bots ranked by average thread length (messages ÷ threads — higher = longer, deeper conversations). Toggle between "With group chat" (orange) and "Without group chat" (sky blue); the without-group mode uses the solo/group split captured by the userscript, and hides bots that don't have that data yet with a count of how many are missing. Paginated 20 at a time.
 
 ### Fixes

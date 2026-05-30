@@ -3,7 +3,11 @@
 ## 2026-05-30
 
 ### Additions
-- **Retention score tab:** new standalone tab showing all your bots ranked by average messages per thread (higher = users are having longer, deeper conversations). Toggle between "With group chat" and "Without group chat" — the without-group mode uses the solo/group split captured by the userscript, and hides bots that don't have that data yet with a count of how many are missing. Paginated 20 at a time.
+- **Thread Depth tab:** new standalone tab showing all your bots ranked by average thread length (messages ÷ threads — higher = longer, deeper conversations). Toggle between "With group chat" (orange) and "Without group chat" (sky blue); the without-group mode uses the solo/group split captured by the userscript, and hides bots that don't have that data yet with a count of how many are missing. Paginated 20 at a time.
+
+### Fixes
+- **Thread Depth tab — rename:** tab was originally called "Retention" which was misleading; renamed to "Thread Depth" with the full title "Average thread length" shown inside the view.
+- **Thread Depth tab — mode colors:** "With group chat" and "Without group chat" now use distinct colors (orange vs sky blue) so it's clear which mode you're in at a glance.
 
 ## 2026-05-29
 

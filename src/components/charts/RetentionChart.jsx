@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react'
 
 const PAGE_SIZE = 20
-const SCORE_COLOR = '#f59e0b'
+const COLOR_WITH    = '#f97316'   // orange  — with group chat (fuller number)
+const COLOR_WITHOUT = '#38bdf8'   // sky     — without group chat (solo only)
 
 function calcScore(bot, withoutGroup) {
   if (!bot.chats) return null
@@ -12,16 +13,16 @@ function calcScore(bot, withoutGroup) {
   return bot.messages / bot.chats
 }
 
-function ScoreBar({ score, max }) {
+function ScoreBar({ score, max, color }) {
   const pct = max > 0 ? Math.min((score / max) * 100, 100) : 0
   return (
     <div className="w-16 h-1.5 bg-surface-alt rounded-full overflow-hidden shrink-0">
-      <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: SCORE_COLOR }} />
+      <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: color }} />
     </div>
   )
 }
 
-function BotRow({ bot, rank, score, max }) {
+function BotRow({ bot, rank, score, max, color }) {
   return (
     <div className="flex items-center gap-3 py-2.5 border-b border-border last:border-0">
       <span className="text-[11px] text-text-muted num w-5 shrink-0 text-right">{rank}</span>
@@ -43,8 +44,8 @@ function BotRow({ bot, rank, score, max }) {
           {bot.messages.toLocaleString()} msg · {bot.chats.toLocaleString()} thread{bot.chats !== 1 ? 's' : ''}
         </div>
       </div>
-      <ScoreBar score={score} max={max} />
-      <span className="num font-bold text-sm shrink-0 w-12 text-right" style={{ color: SCORE_COLOR }}>
+      <ScoreBar score={score} max={max} color={color} />
+      <span className="num font-bold text-sm shrink-0 w-12 text-right" style={{ color }}>
         {score.toFixed(1)}
       </span>
     </div>
@@ -98,6 +99,7 @@ export default function RetentionChart({ bots }) {
     return { ranked, excluded }
   }, [bots, withoutGroup])
 
+  const color = withoutGroup ? COLOR_WITHOUT : COLOR_WITH
   const maxScore = ranked.length > 0 ? ranked[0]._score : 0
   const pageCount = Math.ceil(ranked.length / PAGE_SIZE)
   const slice = ranked.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
@@ -113,7 +115,7 @@ export default function RetentionChart({ bots }) {
       <div className="px-5 py-4 border-b border-border">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <div className="text-sm font-bold text-text-secondary mb-0.5">Retention score</div>
+            <div className="text-sm font-bold text-text-secondary mb-0.5">Average thread length</div>
             <p className="text-[13px] text-text-muted">
               Average messages per thread. Higher means users are having longer, deeper conversations — not just dropping in once.
             </p>
@@ -122,14 +124,14 @@ export default function RetentionChart({ bots }) {
             <button
               onClick={() => handleToggle(false)}
               className={`px-2.5 py-1 text-xs font-semibold rounded transition ${!withoutGroup ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
-              style={!withoutGroup ? { boxShadow: `inset 0 0 0 1px ${SCORE_COLOR}40` } : {}}
+              style={!withoutGroup ? { boxShadow: `inset 0 0 0 1px ${COLOR_WITH}40` } : {}}
             >
               With group chat
             </button>
             <button
               onClick={() => handleToggle(true)}
               className={`px-2.5 py-1 text-xs font-semibold rounded transition ${withoutGroup ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}
-              style={withoutGroup ? { boxShadow: `inset 0 0 0 1px ${SCORE_COLOR}40` } : {}}
+              style={withoutGroup ? { boxShadow: `inset 0 0 0 1px ${COLOR_WITHOUT}40` } : {}}
             >
               Without group chat
             </button>
@@ -161,6 +163,7 @@ export default function RetentionChart({ bots }) {
                 rank={page * PAGE_SIZE + i + 1}
                 score={b._score}
                 max={maxScore}
+                color={color}
               />
             ))}
             <PageControls

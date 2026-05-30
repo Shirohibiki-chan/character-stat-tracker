@@ -75,6 +75,10 @@ Phases 0–7 from `docs/plan.md` are complete. Polish roadmap (this doc) is most
 - **Spider chart:** Treemap tab replaced with Spider. Gallery mode shows a mini-spider per bot (grid); Single mode overlays up to 4 bots on one radar with 6 axes (solo msgs, group msgs, threads, favorites, avg msgs/day, favs per 1K). Selected bots persist across tab navigation via state lifted to App.jsx. `TreemapChart.jsx` is no longer imported or used (file remains on disk but is dead code — can be deleted).
 - **History chart date arrows:** ‹ / › buttons flank the date picker for single-day stepping.
 
+## Recent App Changes (2026-05-30)
+
+- **Retention score tab** (`RetentionChart.jsx`): new standalone view tab ranking all bots by average messages per thread. Toggle between with/without group chat. Without-group mode uses the solo/group split from the userscript; bots without split data are hidden with a count of excluded bots. Paginated 20 per page. Amber (`#f59e0b`) color so it's visually distinct from the three existing metrics.
+
 ## Known Issue (workaround, not a code fix)
 
 Bots imported before the import-side avatar mapping fix landed (Phase 7 late) don't have stored avatar URLs and display as letter-initials in the table. To fix retroactively: re-capture those bots via the userscript and re-import — the import will match them by name and update existing records.

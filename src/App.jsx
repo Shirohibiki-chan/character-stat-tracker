@@ -25,6 +25,7 @@ import BumpChart from './components/charts/BumpChart.jsx'
 import LifespanChart from './components/charts/LifespanChart.jsx'
 import HeatmapChart from './components/charts/HeatmapChart.jsx'
 import ActivityChart from './components/charts/ActivityChart.jsx'
+import RetentionChart from './components/charts/RetentionChart.jsx'
 import CompareView from './components/charts/CompareView.jsx'
 import AddBotModal from './components/modals/AddBotModal.jsx'
 import AddSnapshotModal from './components/modals/AddSnapshotModal.jsx'
@@ -418,8 +419,9 @@ export default function App() {
             {activeView === 'bump'      && <BumpChart      bots={sorted} onViewBot={setDetailBotId} />}
             {activeView === 'lifespan'  && <LifespanChart  bots={sorted} onViewBot={setDetailBotId} />}
             {activeView === 'heatmap'   && <HeatmapChart   bots={sorted} />}
-            {activeView === 'activity'  && <ActivityChart  bots={sorted} />}
-            {activeView === 'compare'   && <CompareView    bots={bots} />}
+            {activeView === 'activity'   && <ActivityChart   bots={sorted} />}
+            {activeView === 'retention'  && <RetentionChart  bots={sorted} />}
+            {activeView === 'compare'    && <CompareView     bots={bots} />}
           </>
         )}
 

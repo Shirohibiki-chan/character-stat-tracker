@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-05-30
+
+### Additions
+- **Retention score tab:** new standalone tab showing all your bots ranked by average messages per thread (higher = users are having longer, deeper conversations). Toggle between "With group chat" and "Without group chat" — the without-group mode uses the solo/group split captured by the userscript, and hides bots that don't have that data yet with a count of how many are missing. Paginated 20 at a time.
+
 ## 2026-05-29
 
 ### Additions
